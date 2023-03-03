@@ -30,6 +30,13 @@ Den kan anvendes via `process.env.PORT`
 ## .gitignore
 En .gitignore fil, indeholder **alt** det som vi ikke ønsker, skal gemmes via GIT. Det er f.eks. vores dependencies, som vi ikke behøver at gemme. Jeg har fundet en til nodejs som indeholder det væsentlige.
 
+## Hent programmet ned første gang.
+Du skal "clone" det her repository ned på din lokale maskine, og vælge en folder som filerne skal ligge i.
+
+I Visual Studio Code kan du bruge din command palette, til at vælge "Git clone" og vælge "Github" som kilde.
+
+Når du er i folderen, skal du åbne en terminal og skrive `npm install`, hvilket installere vores dependencies på din egen maskine (Express og Nodemon)
+
 ## Kør programmet
 Under udvikling, er der lavet et script i package.json som starter nodemon.
 
