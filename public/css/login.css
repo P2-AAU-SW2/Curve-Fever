@@ -193,3 +193,14 @@ input:focus ~ .highlight {
     opacity: 0;
   }
 }
+
+/* Footer */
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: darkslategrey;
+    color: white;
+    text-align: center;
+  }

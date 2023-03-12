@@ -1,8 +1,8 @@
 const express = require('express');
-require('dotenv').config();
 const app = express();
 const logger = require('morgan');
 const path = require('path');
+require('dotenv').config();
 
 //const PORT = process.env.PORT;
 const PORT = 3000;
@@ -21,6 +21,9 @@ app.use('/', indexRouter)
 app.use('/login', loginRouter);
 app.use('/home', homeRouter);
 
+app.get('/version', function(req, res) {
+  res.json({version: process.env.npm_package_version})
+})
 
 app.listen(PORT, HOST, () => {
   console.log(`Running on http://${HOST}:${PORT}`)
