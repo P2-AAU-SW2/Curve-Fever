@@ -4,9 +4,8 @@ const logger = require('morgan');
 const path = require('path');
 require('dotenv').config();
 
-//const PORT = process.env.PORT;
-const PORT = 3000;
-const HOST = process.env.HOST;
+const PORT = process.env.PORT || 3000;
+//const HOST = process.env.HOST;
 
 // Setup
 app.use(logger('dev'));
@@ -25,6 +24,6 @@ app.get('/version', function(req, res) {
   res.json({version: process.env.npm_package_version})
 })
 
-app.listen(PORT, HOST, () => {
-  console.log(`Running on http://${HOST}:${PORT}`)
+app.listen(PORT, () => {
+  console.log(`Running on port ${PORT}`)
 })
