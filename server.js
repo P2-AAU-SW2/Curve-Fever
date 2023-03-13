@@ -4,26 +4,28 @@ const logger = require('morgan');
 const path = require('path');
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3000;
-//const HOST = process.env.HOST;
-
 // Setup
+const PORT = process.env.PORT || 3000;
 app.use(logger('dev'));
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
+app.use(express.urlencoded({ extended: true}));
+
 const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const homeRouter = require('./routes/home');
 
 // Router setup
-app.use('/', indexRouter)
+app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/home', homeRouter);
 
+// Testing
 app.get('/version', function(req, res) {
   res.json({version: process.env.npm_package_version})
 })
 
+// Start server
 app.listen(PORT, () => {
   console.log(`Running on port ${PORT}`)
 })

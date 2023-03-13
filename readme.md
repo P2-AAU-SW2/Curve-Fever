@@ -20,13 +20,6 @@ Det er installeret som en *dev* dependency, dvs. at den ikke kommer med i det en
 npm install --save-dev nodemon
 ```
 
-## .ENV
-En .env fil bruges til "Environment variables", som er en bedre måde globalt og definere variabler på, som påvirker koden når det skal ud i brug.
-
-Jeg har installeret en pakke via `npm install dotenv` og lavet en .env fil som indeholder PORT, som er hvad serveren lytter på.
-
-Den kan anvendes via `process.env.PORT`
-
 ## .gitignore
 En .gitignore fil, indeholder **alt** det som vi ikke ønsker, skal gemmes via GIT. Det er f.eks. vores dependencies, som vi ikke behøver at gemme. Jeg har fundet en til nodejs som indeholder det væsentlige.
 
