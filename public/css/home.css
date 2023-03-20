@@ -15,7 +15,7 @@
 }
 
 .button-input {
-    background-color: rgba(169, 206, 60, 0.75);
+    background-color: var(--green-btn);
     filter: drop-shadow(0px 4px 0px #007C05);
 }
 
@@ -24,7 +24,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--global-font-family);
     margin-bottom: 50px;
 }
 .logo h1 {
@@ -41,7 +41,7 @@
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--global-font-family);
     font-size: 20px;
     font-style: normal;
     font-weight: 700;
