@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="/css/global.css" rel="stylesheet" />
+    <link href="/css/gameMenu.css" rel="stylesheet" /> 
+</head>
+<body>
+    <div class="game-menu-container">
+        <div class="header">
+            <div class="header-container">
+                <div class="icon"></div>
+                <div class="user-info">
+                    <div class="points"></div>
+                    <div class="user-icon"></div>
+                    <div class="user-name"></div>
+                </div>
+            </div>
+        </div>
+        <div class="main-container">
+            <div class="game-btns">
+                <button class="red-btn quickplay button-input">
+                    Quickplay
+                </button>
+                <button class="green-btn join button-input">
+                    Join Game
+                </button>
+                <button class="blue-btn create button-input">
+                    Create Game
+                </button>
+            </div>
+            <div class="shop">
+                <div class="shop-btns">
+                    <button class="skins">Skins</button>
+                    <button class="icons">Icons</button>
+                </div>
+                <div class="content">
+                    <%
+                        for (let i = 0; i < 9; i++) {
+                            if(true) {
+                    %>
+                        <div class="skin-item">
+                            <img src="" alt="skin-item">
+                        </div>
+                    <% } else { %>
+                        <div class="icon-item">
+                            <img src="" alt="icon-item">
+                        </div>
+                    <% }} %>
+                </div>
+            </div>
+        </div>
+        <%- include('footer') %>
+    </div>
+</body>
+</html>
