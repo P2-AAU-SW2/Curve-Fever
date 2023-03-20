@@ -1,4 +1,5 @@
 .login-container {
+    animation: 1s ease-out 0s 1 slideInFromLeft;
     display:flex;
     flex-direction: column;
     width: 350px;
@@ -18,9 +19,28 @@
     filter: drop-shadow(0px 4px 0px #007C05);
 }
 
-.loginFooter {
-    display: inline-flex;
+.logo {
+    display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 50px;
+}
+.logo h1 {
+    font-size: 108px;
+}
+.logo h2 {
+    display: flex;
+    font-size: 75px;
+}
+
+
+.loginFooter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
     font-family: 'Inter', sans-serif;
     font-size: 20px;
     font-style: normal;
@@ -39,3 +59,12 @@
     color: rgba(255, 255, 255, 0.2);
     text-decoration: none;
 }
+
+@keyframes slideInFromLeft {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
