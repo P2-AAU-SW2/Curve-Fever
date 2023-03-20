@@ -1,0 +1,68 @@
+.game-menu-container {
+    position: relative;
+    display: grid;
+    height: 100vh;
+    grid-template-rows: 3.5rem minmax(30rem, calc(100vh - 3.5rem)) 2rem;
+    grid-template-columns: 10% auto 10%;
+}
+
+.header {
+    width: 100%;
+    height: 100%;
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.header-container {
+    width: 20rem;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 25%;
+    margin: auto 0;
+    gap: 1rem;
+}
+
+.quickplay,
+.join,
+.create {
+    max-width: 15rem;
+    max-height: 5rem;
+    font-size: x-large;
+    line-height: normal;
+}
+
+.main-container {
+    grid-area: 2 / 2 / 3 / 3;
+    display: flex;
+}
+
+.footer {
+    grid-area: 3/ 2 / 3 / 3;
+}
+
+.shop {
+    width: 50%;
+    background: linear-gradient(125.56deg, rgba(164, 159, 255, 0.05) 0.65%, rgba(49, 86, 183, 0.15) 99.35%);
+    box-shadow: 0px 4px 15px 1px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    max-height: 20rem;
+    max-width: 30rem;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 2rem, 100%;
+    justify-content: center;
+}
+
+.shop-btns {
+    border: none;
+    font-size: large;
+}
