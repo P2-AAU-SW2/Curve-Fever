@@ -54,15 +54,41 @@
     background: linear-gradient(125.56deg, rgba(164, 159, 255, 0.05) 0.65%, rgba(49, 86, 183, 0.15) 99.35%);
     box-shadow: 0px 4px 15px 1px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-    max-height: 20rem;
-    max-width: 30rem;
     display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: 2rem, 100%;
-    justify-content: center;
+    grid-template-columns: 100%;
+    grid-template-rows: 2rem 18rem;
+    margin: auto 0;
 }
 
 .shop-btns {
+    display: flex;
+    justify-content: center;
+    gap: 5rem;
+}
+
+.shop-btn {
     border: none;
-    font-size: large;
+    background: none !important;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: x-large;
+    font-size: bold;
+    
+}
+
+.content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
+}
+
+.icon-item,
+.skin-item {
+    height: 4.5rem;
+    width: 6.5rem;
+    background: rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(171, 225, 255, 0.5);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
 }

@@ -23,6 +23,7 @@ html {
   background-color: var(--bg-col);
   cursor: default;
   user-select: none;
+  font-family: var(--global-font-family);
 }
 
 body {
