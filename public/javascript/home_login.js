@@ -1,0 +1,3 @@
+function passwordModal() {
+    alert("Hi")
+}
