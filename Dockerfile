@@ -16,5 +16,5 @@ COPY . .
 # Expose port 3000
 EXPOSE 3000
 
-# Run the app.
+# Run the app
 CMD [ "node", "server.js" ]
