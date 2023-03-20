@@ -1,6 +1,28 @@
-* {
-    padding: 0;
+:root {
+    --global-font-family: Verdana, sans-serif;
+    --bg-col: linear-gradient(116.82deg, #062235 16.04%, #163F56 78.55%);
+    --green-btn: rgba(169, 206, 60, 0.9);
+    --red-btn: #D85C57;
+    --blue-btn: rgba(92, 177, 224, 0.9);
+    ---btn: #ff7474;
+    --half-transparent: #FFFFFF80;
+    --menu-shadow: rgba(0, 0, 0, 0.2);
+}
+
+*,
+*::before,
+*::after {
     margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: var(--bg-col);
+    cursor: default;
+    user-select: none;
 }
 
 body{
@@ -45,6 +67,16 @@ form {
     text-align: center;
 }
 
+.red-btn {
+    background: var(--red-btn)
+}
+.green-btn {
+    background: var(--green-btn)
+}
+.blue-btn {
+    background: var(--blue-btn)
+}
+
 .button-input {
     width: 100%;
     border: none;
@@ -58,5 +90,49 @@ form {
     font-weight: 700;
     font-size: 35px;
     line-height: 42px;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.footer {
+    display: flex;
+    font-size: small;
+    width: 32%;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    color: var(--half-transparent);
+}
+
+.footer-item svg {
+    margin-right: 5px;
+}
+
+.footer-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.terms {
+    display: flex;
+    justify-content: center;
+}
+
+.privacy {
+    display: flex;
+    justify-content: center;
+}
+
+.about {
+    display: flex;
+    justify-content: center;
+}
+
+.settings {
+    display: flex;
+    justify-content: center;
 }
 
