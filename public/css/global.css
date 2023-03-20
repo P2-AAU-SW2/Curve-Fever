@@ -1,10 +1,10 @@
 :root {
-    --global-font-family: Verdana, sans-serif;
+  --global-font-family: Verdana, sans-serif;
 }
 
-body{
-    /* Background */
-    background: linear-gradient(116.82deg, #062235 16.04%, #163F56 78.55%);
+body {
+  /* Background */
+  background: linear-gradient(116.82deg, #062235 16.04%, #163f56 78.55%);
 }
 /*
 .button {

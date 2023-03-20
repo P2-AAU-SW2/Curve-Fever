@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('header')%>
+    <link href="/css/gameArea.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="gameContainer">
+      <div class="leaderboard">
+        <ol>
+          <li>
+            <h3>Luca</h3>
+            <small>100</small>
+          </li>
+          <li>
+            <h3>Aneek</h3>
+            <small>90</small>
+          </li>
+          <li>
+            <h3>p1</h3>
+            <small>80</small>
+          </li>
+          <li>
+            <h3>p2</h3>
+            <small>70</small>
+          </li>
+        </ol>
+      </div>
+      <div class="chatroom">
+        <div class="textbox">
+          <ul>
+            <li>
+              <p>Luca: message</p>
+            </li>
+            <li>
+              <p>Aneek: Hej</p>
+            </li>
+          </ul>
+        </div>
+        <div class="chat" type="input">
+          <input placeholder="Chat..." type="text" />
+          <button type="button"></button>
+        </div>
+      </div>
+      <canvas class="gameCanvas"></canvas>
+      <div class="footer"></div>
+    </div>
+  </body>
+</html>

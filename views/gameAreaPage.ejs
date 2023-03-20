@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('header')%>
+    <link href="/css/gameArea.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="gameContainer">
+      <div class="left">
+        <div class="leaderboard">
+          <table class="scoretable">
+            <tr>
+              <td>1</td>
+              <td>Luca</td>
+              <td>100</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Aneek</td>
+              <td>90</td>
+            </tr>
+          </table>
+        </div>
+        <div class="chatroom">
+          <div class="textbox">
+            <ul>
+              <li>
+                <p>Luca: message</p>
+              </li>
+              <li>
+                <p>Aneek: Hej</p>
+              </li>
+            </ul>
+          </div>
+          <form name="chat" action="">
+            <input
+              name="usermsg"
+              placeholder="Chat..."
+              type="text"
+              id="usermsg"
+            />
+            <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+          </form>
+        </div>
+      </div>
+      <canvas class="gameCanvas"></canvas>
+    </div>
+  </body>
+</html>

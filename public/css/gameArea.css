@@ -1,0 +1,82 @@
+.gameContainer {
+  position: absolute;
+  display: grid;
+  grid-template-columns: 25% 75%;
+  grid-template-rows: 100;
+  height: 95%;
+  width: 95%;
+  padding: 10;
+}
+
+.gameCanvas {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  height: 100%;
+  width: 100%;
+  border: 5px solid rgba(171, 225, 255, 0.5);
+  border-radius: 10px;
+}
+
+.left {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  height: 100%;
+  width: 100%;
+}
+
+.chatroom {
+  position: absolute;
+  width: 25%;
+  bottom: 0%;
+}
+
+#usermsg {
+  width: 80%;
+  color: red;
+}
+
+#submitmsg {
+  width: 15%;
+  text-align: center;
+}
+
+#chat {
+  width: 25%;
+}
+
+.textbox {
+  color: white;
+}
+
+.leaderboard {
+  position: relative;
+  top: 5%;
+  color: white;
+  width: 100%;
+  left: 0%;
+}
+
+td:nth-child(1) {
+  width: 20%;
+}
+
+td:nth-child(2) {
+  width: 60%;
+}
+
+td:nth-child(3) {
+  width: 20%;
+  text-align: right;
+}
+
+td {
+  padding: 10px;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  border: 1px solid;
+}
