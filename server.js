@@ -12,15 +12,15 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded({ extended: true}));
 
 const indexRouter = require('./routes/index');
-const loginRouter = require('./routes/login');
 const homeRouter = require('./routes/home');
 const gameMenuRouter = require('./routes/gameMenu');
+const menuRouter = require('./routes/menu');
 
 // Router setup
 app.use('/', indexRouter);
-app.use('/login', loginRouter);
 app.use('/home', homeRouter);
 app.use('/game-menu', gameMenuRouter);
+app.use('/menu', menuRouter);
 
 // Testing
 app.get('/version', function(req, res) {
