@@ -1,5 +1,8 @@
+body {
+    animation: 0.5s ease-out 0s 1 slideInFromLeft;
+}
+
 .login-container {
-    animation: 1s ease-out 0s 1 slideInFromLeft;
     display:flex;
     flex-direction: column;
     width: 350px;
