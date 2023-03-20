@@ -22,7 +22,7 @@
   color: white;
   padding: 15px;
   margin: 0;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: 700;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
@@ -30,9 +30,11 @@
 
 .modal-header button {
   border: none;
-  font-size: 20px;
-  padding: 15px;
+  color: white;
+  font-size: 15px;
+  padding: 10px;
   height: 100%;
+  font-weight: 600;
   border-radius: 10px;
   cursor: pointer;
 }
@@ -40,9 +42,10 @@
   /* Modal Content/Box */
 .modal-container {
   background-color: #1f5b7c;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 15% auto;
   border: 1px solid #888;
-  width: 40%; /* Could be more or less, depending on screen size */
+  width: 95%;
+  max-width: 800px;
   border-radius: 10px;
 }
 

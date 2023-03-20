@@ -121,10 +121,11 @@ form {
 .footer {
   display: flex;
   font-size: small;
-  width: 32%;
+  width: 30%;
   justify-content: space-between;
   align-items: center;
-  margin: auto;
+  flex-wrap: wrap;
+  margin: 50px auto;
   color: var(--half-transparent);
 }
 
@@ -132,10 +133,15 @@ form {
   margin-right: 5px;
 }
 
+.footer-item i {
+  margin-right: 5px;
+}
+
 .footer-item {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 15px;
 }
 
 .terms {
@@ -158,6 +164,6 @@ form {
   justify-content: center;
 }
 
-.footer p:hover {
+.footer-item:hover {
   color: white;
 }
