@@ -30,6 +30,7 @@ body {
   /* Background */
   background: linear-gradient(116.82deg, #062235 16.04%, #163f56 78.55%);
   min-height: 100%;
+  font-family: var(--global-font-family);
 }
 
 form {
@@ -104,7 +105,6 @@ form {
   padding: 0px;
   cursor: pointer;
   border-radius: 10px;
-  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 35px;
