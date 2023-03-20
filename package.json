@@ -2,7 +2,7 @@
   "name": "curve-fever",
   "version": "0.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "devStart": "nodemon server.js"
   },
