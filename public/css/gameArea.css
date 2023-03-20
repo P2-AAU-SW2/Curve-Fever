@@ -1,6 +1,10 @@
+html {
+  font-family: var(--global-font-family);
+}
+
 .gameContainer {
   display: grid;
-  grid-template-columns: 25% 75%;
+  grid-template-columns: 30% 70%;
   grid-template-rows: 100%;
   height: 100%;
   width: 100%;
@@ -8,7 +12,7 @@
 }
 .gameCanvas {
   position: relative;
-  left: 10%;
+  left: 5%;
   grid-column-start: 2;
   grid-column-end: 3;
   border: 5px solid rgba(171, 225, 255, 0.5);
@@ -26,7 +30,7 @@
 
 .chatroom {
   position: absolute;
-  width: 25%;
+  width: 30%;
   bottom: 10%;
 }
 
@@ -40,7 +44,7 @@
 }
 
 #chat {
-  width: 25%;
+  width: 30%;
 }
 
 .textbox {
@@ -49,7 +53,7 @@
 
 .leaderboard {
   position: relative;
-  top: 5%;
+  top: 12%;
   color: white;
   width: 100%;
   left: 0%;
@@ -65,7 +69,7 @@ td:nth-child(2) {
 
 td:nth-child(3) {
   width: 20%;
-  text-align: rig;
+  text-align: right;
 }
 
 td {
@@ -75,5 +79,6 @@ td {
 table {
   table-layout: fixed;
   width: 100%;
-  border: 1px solid;
+  border: 2px solid rgba(171, 225, 255, 0.5);
+  border-radius: 10px;
 }
