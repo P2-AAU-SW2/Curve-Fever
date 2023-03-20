@@ -3,6 +3,7 @@
 <head>
     <%- include("header")%>
     <link href="/css/home.css" rel="stylesheet" />
+    <script src="home_login.js"></script>
 </head>
 <body>
     <div class="logo">
@@ -27,16 +28,17 @@
             </div>
             <div class="input-container">
                 <button type="button" id="loginButton" class="button-input" onclick="location.href = "/home"">
-                    PLAY
+                    LOGIN
                 </button>
+                <div style="width: 30px"></div>
                 <button type="button" id="loginButton" class="button-input" onclick="location.href = "/home"">
-                    PLAY
+                    SIGN UP
                 </button>
             </div>
         </form>
         <div class="loginFooter">
             <p><a href="/home">Play as guest</a></p>
-            <p><a href="#">Forgot password</a></p>
+            <p><a onclick="return passwordModal()">Forgot password</a></p>
         </div>
     </div>
 </body>
