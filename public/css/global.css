@@ -157,3 +157,7 @@ form {
   display: flex;
   justify-content: center;
 }
+
+.footer p:hover {
+  color: white;
+}
