@@ -14,11 +14,13 @@ app.use(express.urlencoded({ extended: true}));
 const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const homeRouter = require('./routes/home');
+const gameMenuRouter = require('./routes/gameMenu');
 
 // Router setup
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/home', homeRouter);
+app.use('/game-menu', gameMenuRouter);
 
 // Testing
 app.get('/version', function(req, res) {
