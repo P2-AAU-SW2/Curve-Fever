@@ -15,17 +15,15 @@ const indexRouter = require("./routes/index");
 const homeRouter = require("./routes/home");
 const gameMenuRouter = require("./routes/gameMenu");
 const menuRouter = require("./routes/menu");
+const gameAreaRouter = require("./routes/gameArea");
 
 // Router setup
 app.use("/", indexRouter);
 app.use("/home", homeRouter);
 app.use("/game-menu", gameMenuRouter);
 app.use("/menu", menuRouter);
-
-app.use("/", indexRouter);
-app.use("/login", loginRouter);
-app.use("/home", homeRouter);
 app.use("/gameArea", gameAreaRouter);
+
 // Testing
 app.get("/version", function (req, res) {
   res.json({ version: process.env.npm_package_version });
