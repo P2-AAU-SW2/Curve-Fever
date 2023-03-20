@@ -16,15 +16,23 @@ body {
     align-items: center;
     flex-direction: column;
     font-family: var(--global-font-family);
-    margin-top: 30px;
+    margin-top: 70px;
     margin-bottom: 50px;
 }
 .logo h1 {
-    font-size: 108px;
+
+    font-size: 100px;
 }
 .logo h2 {
+
     display: flex;
     font-size: 75px;
+}
+
+.logo span {
+    display: block;
+    line-height: 90% !important;
+
 }
 
 
