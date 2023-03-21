@@ -35,14 +35,35 @@ body {
 
 }
 
+.login-container div:nth-child(2) {
+    margin-bottom: 10px !important;
+}
+
+
+.loginOptions {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: row;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    margin: 0px;
+    color: white;
+}
+
+
+.loginOptions p:hover {
+    color: rgba(255, 255, 255, 0.2);
+    text-decoration: underline;
+}
 
 .loginFooter {
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
+    flex-direction: row;
     justify-content: center;
     text-align: center;
-    font-family: var(--global-font-family);
-    font-size: 20px;
     font-style: normal;
     font-weight: 700;
     font-size: 20px;

@@ -1,5 +1,5 @@
-function passwordModal() {
-    //alert("Hi")
+const forgotPasswordP = document.getElementById("forgotPassword")
+
+forgotPasswordP.addEventListener("click", e => {
     document.getElementById('pwd-modal').style.display='block'
-    //console.log("Hello")
-}
+})

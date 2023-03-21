@@ -4,7 +4,7 @@
     <%- include("header")%>
     <link href="/css/home.css" rel="stylesheet" />
     <link href="/css/modal.css" rel="stylesheet" />
-    <script src="/javascript/home_login.js"></script>
+    <script src="/javascript/home_login.js" defer></script>
 </head>
 <body>
     <div class="logo">
@@ -29,19 +29,25 @@
                 <label>Password</label>
                 <i class="fa-solid fa-lock icon"></i>
             </div>
+            <div class="loginOptions">
+                <div class="rememberDiv">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Remember me</label>
+                </div>
+                <p id="forgotPassword">Forgot password?</p>
+            </div>
             <div class="input-container">
-                <button type="button" id="loginButton" class="green-btn button-input" onclick="location.href = '/home'">
-                    LOGIN
-                </button>
-                <div style="width: 30px"></div>
                 <button type="button" id="loginButton" class="blue-btn button-input" onclick="location.href = '/home'">
                     SIGN UP
+                </button>
+                <div style="width: 30px"></div>
+                <button type="button" id="loginButton" class="green-btn button-input" onclick="location.href = '/home'">
+                    LOGIN
                 </button>
             </div>
         </form>
         <div class="loginFooter">
             <p><a href="/home">Play as guest</a></p>
-            <p><a href="javascript:passwordModal();">Forgot password</a></p>
         </div>
     </div>
     <!-- Forgot password modal -->
