@@ -5,8 +5,9 @@ body {
 .login-container {
     display:flex;
     flex-direction: column;
-    width: 350px;
-    height: 300px;
+    width: 90%;
+    max-width: 350px;
+    height: auto;
     margin: auto;
 }
 
