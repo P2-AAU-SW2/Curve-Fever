@@ -6,6 +6,7 @@
   --blue-btn: rgba(92, 177, 224, 0.9);
   ---btn: #ff7474;
   --half-transparent: #ffffff80;
+  --low-contrast: #ffffff40;
   --menu-shadow: rgba(0, 0, 0, 0.2);
 }
 
@@ -103,6 +104,13 @@ input:not(:placeholder-shown) + label {
   transform: translateY(-80%) scale(.7);
 }
 
+.border-container {
+  border: 2px solid rgba(171, 225, 255, 0.5);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
 .red-btn {
   background: var(--red-btn);
   box-shadow: 0px 4px 0px #a84a4a;
@@ -112,7 +120,6 @@ input:not(:placeholder-shown) + label {
   filter: brightness(0.9);
   box-shadow: 0px 6px 0px #a84a4a;
 }
-
 .green-btn {
   background: var(--green-btn);
   box-shadow: 0px 4px 0px #2e9e46;
@@ -130,6 +137,12 @@ input:not(:placeholder-shown) + label {
   transform: translateY(-2px);
   filter: brightness(0.9);
   box-shadow: 0px 6px 0px #008fae;
+}
+
+.red-btn,
+.blue-btn,
+.green-btn {
+  transition: all .15s;
 }
 
 .button-input {
@@ -200,4 +213,31 @@ input:not(:placeholder-shown) + label {
 
 .footer-item:hover {
   color: white;
+}
+
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 1.2rem;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--low-contrast);
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--half-transparent);
+}
+
+@supports (scrollbar-color: var(--low-contrast) transparent) {
+  * {
+    scrollbar-color: var(--low-contrast) transparent;
+    scrollbar-width: thin;
+  }
 }

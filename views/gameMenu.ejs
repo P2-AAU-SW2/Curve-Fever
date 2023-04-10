@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('header')%>
+    <%- include('header') %>
     <link href="/css/gameMenu.css" rel="stylesheet" /> 
 </head>
 <body>
     <div class="game-menu-container">
         <div class="header">
             <div class="header-container">
-                <div class="icon"></div>
+                <%- include('../public/assets/icons/Logo.svg') %>
                 <div class="user-info">
-                    <div class="points"></div>
-                    <div class="user-icon"></div>
-                    <div class="user-name"></div>
+                    <div class="border-container points">0</div>
+                    <i class="fa-solid fa-user icon user-icon"></i>
+                    <div class="user-name">Username</div>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="content">
                     <%
-                        for (let i = 0; i < 9; i++) {
+                        for (let i = 0; i < 11; i++) {
                             if(true) {
                     %>
                         <div class="skin-item">
