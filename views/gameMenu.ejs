@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <%- include('header') %>
-    <link href="/css/gameMenu.css" rel="stylesheet" /> 
-</head>
-<body>
+    <head>
+        <%- include('header') %>
+        <link href="/css/gameMenu.css" rel="stylesheet" /> 
+        <script src="/javascript/gameMenu.js" defer></script>
+    </head>
+    <body>
     <div class="game-menu-container">
         <div class="header">
             <div class="header-container">
@@ -30,26 +31,61 @@
             </div>
             <div class="shop">
                 <div class="shop-btns">
-                    <button class="shop-btn skins-btn">Skins</button>
-                    <button class="shop-btn icons-btn">Icons</button>
+                    <button onclick="changeFocus(true)" id="skins-btn" class="shop-btn active">Skins</button>
+                    <button onclick="changeFocus(false)" id="icons-btn" class="shop-btn">Icons</button>
                 </div>
                 <div class="content">
-                    <%
-                        for (let i = 0; i < 11; i++) {
-                            if(true) {
-                    %>
+                    <% for (let i = 0; i < 11; i++) { %>
                         <div class="skin-item">
-                            <img src="" alt="skin-item">
+                            <img src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
                         </div>
-                    <% } else { %>
-                        <div class="icon-item">
-                            <img src="" alt="icon-item">
-                        </div>
-                    <% }} %>
+                    <% } %>
                 </div>
             </div>
         </div>
         <%- include('footer') %>
     </div>
 </body>
+<script>
+
+let skinsInFocus = '<%- JSON.stringify(skinsInFocus) %>';
+
+function changeFocus(value) {
+    if (skinsInFocus !== value) setFocus();
+    console.log(skinsInFocus)
+    skinsInFocus = value;
+    renderContent();
+}
+
+function setFocus() {
+    var skinsBtn = document.getElementById("skins-btn");
+    var iconsBtn = document.getElementById("icons-btn");
+    skinsBtn.classList.toggle("active");
+    iconsBtn.classList.toggle("active");
+}
+
+function renderContent() {
+    const content = document.querySelector('.content');
+    let html = '';
+    for (let i = 0; i < 11; i++) {
+        if (skinsInFocus) {
+        html += `
+            <div class="skin-item">
+            <img src="/assets/images/line${i + 1}.svg" alt="skin-item">
+            </div>
+        `;
+        } else {
+        html += `
+            <div class="icon-item">
+            <img src="" alt="icon-item">
+            <i class="fa-solid fa-poo" style="color: #804000;"></i>
+            </div>
+        `;
+        }
+    }
+    content.innerHTML = html;
+}
+
+</script>
+
 </html>

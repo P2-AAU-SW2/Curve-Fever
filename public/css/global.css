@@ -169,8 +169,6 @@ input:not(:placeholder-shown) + label {
   width: 30%;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  margin-top: 200px;
   margin-left: auto;
   margin-right: auto;
   color: var(--half-transparent);
