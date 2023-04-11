@@ -30,8 +30,11 @@ html {
 
 .chatroom {
   position: absolute;
+  background-color: rgba(171, 225, 255, 0.1);
+  border-radius: 10px;
   width: 30%;
   bottom: 10%;
+  padding: 10px;
 }
 
 #usermsg {
@@ -39,11 +42,12 @@ html {
 }
 
 #submitmsg {
-  width: 15%;
+  width: 17%;
   text-align: center;
 }
 
 #chat {
+  bottom: 100%;
   width: 30%;
 }
 
