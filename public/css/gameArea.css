@@ -5,22 +5,19 @@ html {
 .gameContainer {
   display: grid;
   grid-template-columns: 30% 70%;
-  grid-template-rows: 100%;
   height: 100%;
   width: 100%;
-  padding: 20px;
+  padding: 30px;
 }
 .gameCanvas {
   display: block;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+  width: min(90vw, 90vh);
+  height: min(90vw, 90vh);
+  margin: 0 auto;
   position: relative;
-  left: 5%;
   grid-column-start: 2;
   grid-column-end: 3;
-  border: 5px solid rgba(171, 225, 255, 0.5);
+  border: 3px solid rgba(171, 225, 255, 0.5);
   border-radius: 10px;
 }
 
@@ -31,38 +28,52 @@ html {
   grid-row-end: 2;
   height: 100%;
   width: 100%;
+  padding-right: 10px;
+
+  font-weight: 700;
+  font-size: 2.5vw;
 }
 
 .chatroom {
-  position: absolute;
   background-color: rgba(171, 225, 255, 0.1);
   border-radius: 10px;
-  width: 30%;
-  bottom: 10%;
+
   padding: 10px;
+  bottom: 7vh;
+  padding-left: 2vw;
+
+  position: relative;
+  margin-top: 10vw;
+
+  font-size: 1.5vw;
 }
 
 #usermsg {
   width: 80%;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 #submitmsg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
   width: 17%;
   text-align: center;
 }
 
-#chat {
-  bottom: 100%;
-  width: 30%;
-}
-
 .textbox {
   color: white;
+  padding-bottom: 10px;
 }
 
 .leaderboard {
   position: relative;
-  top: 12%;
+  top: 0%;
   color: white;
   width: 100%;
   left: 0%;
@@ -77,17 +88,45 @@ td:nth-child(2) {
 }
 
 td:nth-child(3) {
-  width: 20%;
+  width: 30%;
   text-align: right;
 }
 
 td {
-  padding: 10px;
+  padding: 5px;
 }
 
 table {
   table-layout: fixed;
   width: 100%;
-  border: 2px solid rgba(171, 225, 255, 0.5);
+}
+
+.roundwrapper {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 5vh;
+}
+
+.roundcounter {
+  line-height: 60px;
+  position: relative;
+  top: 0;
+  left: 0%;
+  color: white;
+}
+
+.scoretarget {
+  background-color: var(--green-btn);
+  color: white;
+  text-align: center;
+  width: 60px;
+  height: 60px;
+
+  font-size: 40px;
+  line-height: 60px;
+
+  justify-self: flex-end;
+
+  box-shadow: 0px 4px 0px #004a0c;
   border-radius: 10px;
 }
