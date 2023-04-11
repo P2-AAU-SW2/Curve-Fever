@@ -40,35 +40,44 @@ html {
 
   padding: 10px;
   bottom: 7vh;
-  padding-left: 2vw;
 
   position: relative;
   margin-top: 10vw;
 
   font-size: 1.5vw;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 #usermsg {
-  width: 80%;
+  width: 100%;
   background: rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 5px;
+  font-size: 1.5vw;
+
   padding: 5px;
   color: rgba(255, 255, 255, 0.5);
+  position: relative;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 #submitmsg {
+  border: none;
+  background: none;
   position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 17%;
-  text-align: center;
+  right: 14px;
+  bottom: 13px;
+}
+
+#submitmsg:hover {
+  cursor: pointer;
 }
 
 .textbox {
   color: white;
   padding-bottom: 10px;
+  padding-left: 5px;
+  list-style: none;
 }
 
 .leaderboard {

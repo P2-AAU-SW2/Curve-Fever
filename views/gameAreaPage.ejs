@@ -3,7 +3,6 @@
   <head>
     <%- include('header') %>
     <link href="/css/gameArea.css" rel="stylesheet" />
-    <script src="/javascript/gameArea.js"></script>
   </head>
   <body>
     <div class="gameContainer">
@@ -14,61 +13,59 @@
         </div>
 
         <div class="leaderboard">
-          <table class="scoretable">
+          <table id="scoretable">
             <tr>
               <td>1</td>
-              <td style="color: red">Luca</td>
+              <td>Luca</td>
               <td>100</td>
             </tr>
 
             <tr>
               <td>2</td>
-              <td style="color: blue">Aneek</td>
+              <td>Aneek</td>
               <td>90</td>
             </tr>
 
             <tr>
               <td>3</td>
-              <td style="color: green">Oliver</td>
+              <td>Oliver</td>
               <td>80</td>
             </tr>
 
             <tr>
               <td>4</td>
-              <td style="color: purple">Frederik</td>
+              <td>Frederik</td>
               <td>70</td>
             </tr>
 
             <tr>
               <td>5</td>
-              <td style="color: pink">Nicolas</td>
+              <td>Nicolas</td>
               <td>69</td>
             </tr>
 
             <tr>
               <td>6</td>
-              <td style="color: cyan">Farhan</td>
+              <td>Farhan</td>
               <td>60</td>
             </tr>
 
             <tr>
               <td>7</td>
-              <td style="color: orange">Martin</td>
+              <td>Martin</td>
               <td>50</td>
             </tr>
           </table>
         </div>
         <div class="chatroom">
-          <div class="textbox">
-            <ul>
-              <li>
-                <p>Luca: message</p>
-              </li>
-              <li>
-                <p>Aneek: Hej</p>
-              </li>
-            </ul>
-          </div>
+          <ul class="textbox">
+            <li>
+              <p>Luca: message</p>
+            </li>
+            <li>
+              <p>Aneek: Hej</p>
+            </li>
+          </ul>
           <form name="chat" action="">
             <input
               name="usermsg"
@@ -76,11 +73,14 @@
               type="text"
               id="usermsg"
             />
-            <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+            <button name="submitmsg" type="submit" id="submitmsg">
+              <img src="/assets/icons/arrow.svg" alt="Send" />
+            </button>
           </form>
         </div>
       </div>
       <canvas class="gameCanvas"></canvas>
     </div>
+    <script src="/javascript/gameArea.js"></script>
   </body>
 </html>
