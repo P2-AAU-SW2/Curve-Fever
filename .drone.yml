@@ -1,0 +1,13 @@
+kind: pipeline
+type: docker
+steps:
+- name: docker  
+  image: plugins/docker
+  settings:
+    repo: ollioddi/linefever
+    auto_tag: true
+    registry: dockerregistry.ollioddi.dk
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
