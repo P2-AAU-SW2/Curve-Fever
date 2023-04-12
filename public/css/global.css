@@ -1,7 +1,7 @@
 :root {
   --global-font-family: 'Inter', sans-serif;
   /*--bg-col: linear-gradient(116.82deg, #062235 16.04%, #163f56 78.55%);*/
-  --bg-col: green;
+  --bg-col: blue;
   --green-btn: rgba(169, 206, 60, 0.9);
   --red-btn: #d85c57;
   --blue-btn: rgba(92, 177, 224, 0.9);
