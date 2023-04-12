@@ -28,6 +28,35 @@ html {
   height: 100%;
 }
 
+@media only screen and (min-width: 90em) {
+  html {
+      font-size: 110%;
+  }
+}
+@media only screen and (min-width: 75em) {
+  html {
+      font-size: 100%;
+  }
+}
+
+@media only screen and (max-height: 40.625em) and (min-width: 75em) {
+  html {
+      font-size: 90%;
+  }
+}
+
+@media only screen and (max-width: 75em) {
+  html {
+      font-size: 90%;
+  }
+}
+
+@media only screen and (max-width: 56.25em) {
+  html {
+      font-size: 80%;
+  }
+}
+
 body {
   /* Background */
   background: linear-gradient(116.82deg, #062235 16.04%, #163f56 78.55%);
@@ -138,6 +167,15 @@ input:not(:placeholder-shown) + label {
   filter: brightness(0.9);
   box-shadow: 0px 6px 0px #008fae;
 }
+.yellow-btn {
+  background: #f5c83f;
+  box-shadow: 0px 4px 0px #cca632;
+}
+.yellow-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.9);
+  box-shadow: 0px 6px 0px #cca632;
+}
 
 .red-btn,
 .blue-btn,
@@ -167,16 +205,13 @@ input:not(:placeholder-shown) + label {
   display: flex;
   flex-direction: row;
   font-size: small;
-  max-width: 35rem;
+  width: 100%;
+  max-width: 30rem;
   justify-content: space-between;
   align-items: center;
   color: var(--half-transparent);
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 2vh;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  gap: .5rem;
 }
 
 .footer-item svg {
@@ -192,12 +227,6 @@ input:not(:placeholder-shown) + label {
   justify-content: center;
   align-items: center;
   margin: 2px;
-}
-
-@media (max-width: 252px) {
-  .footer {
-    flex-direction: column;
-  }
 }
 
 .terms {
@@ -250,3 +279,4 @@ input:not(:placeholder-shown) + label {
     scrollbar-width: thin;
   }
 }
+
