@@ -138,10 +138,15 @@
         display: block;
     }
 }
+
 @media (max-width: 31.25em) {
-    .logo-icon {
-        display: none;
-    }
+    .logo-icon,
+	.user-icon,
+	.user-info,
+	.user-name{
+		max-width: 100%;
+		min-width: 0;
+	}
 }
 
 .active {
@@ -213,4 +218,10 @@
 
 .logo-icon {
     height: 3.5rem;
+}
+
+.logo {
+	background: transparent;
+	border: 0;
+	cursor: pointer;
 }
