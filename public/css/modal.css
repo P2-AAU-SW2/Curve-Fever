@@ -7,7 +7,6 @@
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   animation:opac 0.8s} @keyframes opac{from{opacity:0} to{opacity:1}
@@ -42,11 +41,13 @@
   /* Modal Content/Box */
 .modal-container {
   background-color: #1f5b7c;
-  margin: 5% auto;
+  margin: 10vh auto;
   border: 1px solid #888;
   width: 95%;
   max-width: 800px;
   border-radius: 10px;
+  max-height: 80vh;
+  overflow-y: scroll;
 }
 
 .modal-content {
