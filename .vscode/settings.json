@@ -1,0 +1,13 @@
+{
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"emmet.includeLanguages": {
+		"ejs": "html"
+	},
+	"[html]": {
+		"editor.defaultFormatter": "j69.ejs-beautify"
+	},
+	"prettier.tabWidth": 4,
+	"prettier.useTabs": false,
+	"editor.detectIndentation": false
+}
