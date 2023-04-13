@@ -212,6 +212,10 @@ input:not(:placeholder-shown) + label {
   color: var(--half-transparent);
   margin: 0 auto;
   gap: .5rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2vh;
 }
 
 .footer-item svg {
