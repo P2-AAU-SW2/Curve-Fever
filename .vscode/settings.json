@@ -8,6 +8,6 @@
 		"editor.defaultFormatter": "j69.ejs-beautify"
 	},
 	"prettier.tabWidth": 4,
-	"prettier.useTabs": true,
+	"prettier.useTabs": false,
 	"editor.detectIndentation": false
 }
