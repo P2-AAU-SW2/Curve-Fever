@@ -6,6 +6,7 @@ steps:
   settings:
     repo: dockerregistry.ollioddi.dk/ollioddi/linefever
     registry: dockerregistry.ollioddi.dk
+    auto_tag: true
     username:
       from_secret: docker_username
     password:
