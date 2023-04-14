@@ -14,4 +14,4 @@ steps:
 
 trigger:
   ref:
-    - refs/tags/prod-*
+    - refs/tags/*
