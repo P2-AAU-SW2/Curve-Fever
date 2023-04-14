@@ -1,4 +1,4 @@
-name: Create Tag
+name: Tag and release
 
 on:
   push:
@@ -15,3 +15,9 @@ jobs:
       with:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         tag_prefix: "prod-"
+    - name: Create a Release
+      uses: elgohr/Github-Release-Action@v4
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      with:
+        title: Release
