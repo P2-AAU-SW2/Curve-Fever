@@ -1,12 +1,16 @@
-- name: Auto tag
-  # You may pin to the exact commit or the version.
-  # uses: Klemensas/action-autotag@380682c329fccb8b270e70e59d40d0e918dc5a0f
-  uses: Klemensas/action-autotag@1.2.3
-  with:
-    # Autotag will look for the package.json file in in this location.
-    package_root: # optional, default is ./
-    # By default, package.json uses semantic versioning, such as "1.0.0". A prefix can be used to add text before the tag name. For example, if tag_prefx is set to "v", then the tag would be labeled as "v1.0.0".
-    tag_prefix: # optional
-    # Text which is applied to the end of the tag.
-    tag_suffix: # optional
-    # This is the annotated commit message associated with the tag. By default, a changelog will be generated from the commits between the latest tag and the new tag (HEAD). This will override that with a hard-coded message.
+name: Create Tag
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: Klemensas/action-autotag@stable
+      with:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        tag_prefix: "prod-"
