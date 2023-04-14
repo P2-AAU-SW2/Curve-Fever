@@ -1,7 +1,7 @@
 kind: pipeline
 type: docker
 steps:
-- name: docker  
+- name: docker_build
   image: plugins/docker
   settings:
     repo: dockerregistry.ollioddi.dk/ollioddi/linefever
@@ -11,9 +11,12 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
-
+- name: publish_release
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: docker_api
+    files: dist/*
 trigger:
-  branch:
-    - main
   ref:
     - refs/tags/*
