@@ -1,6 +1,6 @@
 {
-	"name": "curve-fever",
-	"version": "0.0.3",
+	"name": "line-fever",
+	"version": "0.0.5",
 	"description": "",
 	"main": "server.js",
 	"scripts": {
@@ -9,15 +9,15 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Risobak/Curve-Fever.git"
+		"url": "git+https://github.com/P2-AAU-SW2/Curve-Fever"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/Risobak/Curve-Fever/issues"
+		"url": "https://github.com/P2-AAU-SW2/Curve-Fever"
 	},
-	"homepage": "https://github.com/Risobak/Curve-Fever#readme",
+	"homepage": "https://github.com/P2-AAU-SW2/Curve-Fever#readme",
 	"dependencies": {
 		"dotenv": "^16.0.3",
 		"ejs": "^3.1.8",
