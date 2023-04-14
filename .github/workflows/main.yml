@@ -10,10 +10,3 @@
     # Text which is applied to the end of the tag.
     tag_suffix: # optional
     # This is the annotated commit message associated with the tag. By default, a changelog will be generated from the commits between the latest tag and the new tag (HEAD). This will override that with a hard-coded message.
-    tag_message: # optional
-    # A string denoting changelog format. Supports `{{message}}`, {{messageHeadline}}, `{{author}}` and `{{sha}}`. Defaults to `**1) {{message}}** {{author}}
-(SHA: {{sha}})
-` Only used when tag_message is empty.
-    changelog_structure: # optional
-    # Explicitly set the version here instead of automatically detecting from `package.json`. Useful for non-JavaScript projects where version may be output by a previous action.
-    version: # optional
