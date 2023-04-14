@@ -17,4 +17,6 @@ jobs:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         tag_prefix: "prod-"
     - name: Create a Release
-      uses: auto-it/setup-auto@v1.0.0
+      uses: janrywang/github-tag-release@main
+      with:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
