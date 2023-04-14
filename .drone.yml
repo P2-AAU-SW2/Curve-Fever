@@ -10,3 +10,7 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
+
+trigger:
+  ref:
+    - refs/tags/prod-*
