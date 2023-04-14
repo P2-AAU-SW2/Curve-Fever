@@ -18,7 +18,5 @@ steps:
       from_secret: docker_api
     files: dist/*
 trigger:
-  branch:
-    - main
   ref:
     - refs/tags/*
