@@ -19,4 +19,5 @@ jobs:
     - name: Create a Release
       uses: janrywang/github-tag-release@main
       with:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        github_token: "${{ secrets.GITHUB_TOKEN }}"
+        release_title: "New release"
