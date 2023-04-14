@@ -22,11 +22,12 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v2
-      - uses: CupOfTea696/gh-action-auto-release@v1.0.0
+      - uses: CupOfTea696/gh-action-auto-release@v1.0.2
         with:
           title: "Release: $version"
           tag: "v$semver"
           draft: false
+          regex: "/^Release: #{semver}$/i"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
