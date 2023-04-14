@@ -1,7 +1,7 @@
 {
 	"name": "line-fever",
-	"version": "0.0.1",
-	"description": "",
+	"version": "0.1.0",
+	"description": "Linefever game",
 	"main": "server.js",
 	"scripts": {
 		"devStart": "nodemon server.js",
