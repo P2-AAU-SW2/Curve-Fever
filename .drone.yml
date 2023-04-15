@@ -2,47 +2,39 @@ kind: pipeline
 type: docker
 name: prod
 steps:
-- name: docker_build
-  image: plugins/docker
-  settings:
-    repo: dockerregistry.ollioddi.dk/ollioddi/linefever
-    registry: dockerregistry.ollioddi.dk
-    auto_tag: true
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-- name: publish_release
-  image: plugins/github-release
-  settings:
-  api_key:
-    from_secret: github_api
+    - name: docker_build
+      image: plugins/docker
+      settings:
+          repo: dockerregistry.ollioddi.dk/ollioddi/linefever
+          registry: dockerregistry.ollioddi.dk
+          auto_tag: true
+          username:
+              from_secret: docker_username
+          password:
+              from_secret: docker_password
+    - name: publish_release
+      image: plugins/github-release
+      settings:
+          api_key:
+              from_secret: github_api
 trigger:
-  branch:
-  - main
-  ref:
-  - refs/tags/*
+    ref:
+        - refs/tags/*
 ---
 kind: pipeline
 type: docker
 name: beta
 steps:
-- name: docker_build
-  image: plugins/docker
-    settings:
-      repo: dockerregistry.ollioddi.dk/ollioddi/linefever-beta
-      registry: dockerregistry.ollioddi.dk
-      auto_tag: true
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-- name: publish_release
-image: plugins/github-release
-settings:
-  api_key:
-    from_secret: github_api
+    - name: docker_build
+      image: plugins/docker
+      settings:
+          repo: dockerregistry.ollioddi.dk/ollioddi/linefever-beta
+          registry: dockerregistry.ollioddi.dk
+          auto_tag: true
+          username:
+              from_secret: docker_username
+          password:
+              from_secret: docker_password
 trigger:
-  branch:
-  - develop
-
+    branch:
+        - develop
