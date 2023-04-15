@@ -1,15 +1,52 @@
-body {
-    animation: 0.5s ease-out 0s 1 slideInFromLeft;
+/* Page setup */
+.page-wrapper {
+    --page-size: 30rem;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
 }
 
-.login-container {
-    display:flex;
-    flex-direction: column;
-    width: 90%;
-    max-width: 350px;
-    height: auto;
-    margin: auto;
+.pages {
+    width: 100%;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(2, var(--page-size));
+    justify-content: center;
+    transform: translateX(15rem);
+    transition: all ease 0.2s;
 }
+
+.slide-left {
+    transform: translateX(calc((var(--page-size) / 2) * -1)) !important;
+}
+
+.slide-left > :first-child {
+    visibility: hidden;
+    opacity: 0;
+}
+.slide-left > :last-child {
+    visibility: initial !important;
+    opacity: 1 !important;
+}
+
+.two {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.page {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    transition: all ease 0.2s;
+}
+/* End page */
+
+/* Logo styling */
 
 .logo {
     display: flex;
@@ -21,11 +58,9 @@ body {
     margin-bottom: 50px;
 }
 .logo h1 {
-
     font-size: 100px;
 }
 .logo h2 {
-
     display: flex;
     font-size: 75px;
 }
@@ -33,13 +68,22 @@ body {
 .logo span {
     display: block;
     line-height: 90% !important;
+}
 
+/* End logo */
+
+.login-container {
+    width: 75%;
+    max-width: 350px;
+    height: auto;
+    vertical-align: top;
 }
 
 .login-container div:nth-child(2) {
     margin-bottom: 10px !important;
 }
 
+/* Forgot password & remember */
 
 .loginOptions {
     position: relative;
@@ -54,12 +98,14 @@ body {
     color: white;
 }
 
-
 .loginOptions p:hover {
     color: rgba(255, 255, 255, 0.2);
     text-decoration: underline;
 }
 
+/* end */
+
+/* Login form footer */
 .loginFooter {
     display: inline-flex;
     flex-direction: row;
@@ -72,22 +118,14 @@ body {
     color: rgba(255, 255, 255, 0.2);
 }
 
-.loginFooter a {
+.loginFooter p {
     color: #fff;
     text-decoration: none;
 }
 
-.loginFooter a:hover {
+.loginFooter p:hover {
     color: rgba(255, 255, 255, 0.2);
     text-decoration: none;
 }
 
-@keyframes slideInFromLeft {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
-
+/* End footer */
