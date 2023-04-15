@@ -3,6 +3,7 @@
 <head>
     <%- include("header")%>
     <link href="/css/home.css" rel="stylesheet" />
+    <script src="/javascript/login.js" defer></script>
 </head>
 <body>
     <div class="logo">
@@ -15,21 +16,62 @@
             <span style="color: #EF625A">R</span>
         </h2>
     </div>
-    <div class="login-container">
-        <form>
-            <div class="input-container">
-                <input class="text-input" type="text" placeholder="">
-                <label>Username</label>
-                <i class="fa-solid fa-user icon"></i>
+    <div class="page-wrapper">
+        <div class="pages">
+            <div class="page one">
+                <div class="login-container">
+                    <form>
+                        <div class="input-container">
+                            <input class="text-input" type="text" placeholder="">
+                            <label>Username</label>
+                            <i class="fa-solid fa-user icon"></i>
+                        </div>
+                        <div class="input-container">
+                            <button type="button" id="loginButton" class="green-btn button-input" onclick="location.href = '/game-menu'"">
+                                PLAY
+                            </button>
+                        </div>
+                    </form>
+                    <div class="loginFooter">
+                        <p onClick="slide('next')">Login or sign up</p>
+                    </div>
+                </div>
             </div>
-            <div class="input-container">
-                <button type="button" id="loginButton" class="green-btn button-input" onclick="location.href = '/game-menu'"">
-                    PLAY
-                </button>
+            <div class="page two">
+                <div class="login-container">
+                    <form>
+                        <div class="input-container">
+                            <input class="text-input" type="text" placeholder=" ">
+                            <label>Email</label>
+                            <i class="fa-solid fa-envelope icon"></i>
+                        </div>
+                        <div class="input-container">
+                            <input class="text-input" type="password" placeholder=" ">
+                            <label>Password</label>
+                            <i class="fa-solid fa-lock icon"></i>
+                        </div>
+                        <div class="loginOptions">
+                            <div class="rememberDiv">
+                                <input type="checkbox" id="rememberMe">
+                                <label for="rememberMe">Remember me</label>
+                            </div>
+                            <p id="forgotPassword">Forgot password?</p>
+                        </div>
+                        <div class="input-container">
+                            <button type="button" id="loginButton" class="blue-btn button-input" onclick="location.href = '/home'">
+                                SIGN UP
+                            </button>
+                            <div style="width: 30px"></div>
+                            <button type="button" id="loginButton" class="green-btn button-input" onclick="location.href = '/home'">
+                                LOGIN
+                            </button>
+                        </div>
+                    </form>
+                    <div class="loginFooter">
+                        <p onClick="slide('prev')">Play as guest</p>
+                    </div>
+                </div>
             </div>
-        </form>
-        <div class="loginFooter">
-            <p><a href="/home/login">Login or sign up</a></p>
         </div>
     </div>
     <%- include("footer")%>
