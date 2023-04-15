@@ -15,22 +15,22 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 
 const indexRouter = require("./routes/index");
-const homeRouter = require("./routes/home");
+const loginRouter = require("./routes/login");
 const gameMenuRouter = require("./routes/gameMenu");
 const gameAreaRouter = require("./routes/gameArea");
 
 // Router setup
 app.use("/", indexRouter);
-app.use("/home", homeRouter);
+app.use("/login", loginRouter);
 app.use("/game-menu", gameMenuRouter);
 app.use("/gameArea", gameAreaRouter);
 
 // Testing
 app.get("/version", function (req, res) {
-  res.json({ version: process.env.npm_package_version });
+    res.json({ version: process.env.npm_package_version });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Running on port ${PORT}`);
+    console.log(`Running on port ${PORT}`);
 });
