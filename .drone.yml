@@ -16,7 +16,7 @@ steps:
   settings:
     api_key:
       from_secret: github_api
-    files: dist/*
+    files: *
 trigger:
   ref:
     - refs/tags/*
