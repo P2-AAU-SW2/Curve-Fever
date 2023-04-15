@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include("header")%>
     <link href="/css/login.css" rel="stylesheet" />
     <script src="/javascript/login.js" defer></script>
 </head>
+
 <body>
     <div class="logo">
         <h1><span style="color: white">LINE</span></h1>
@@ -32,9 +34,9 @@
                             </button>
                         </div>
                     </form>
-                    <div class="loginFooter">
-                        <p onClick="slide('next')">Login or sign up</p>
-                    </div>
+                    <div class=" loginFooter">
+                                <p onClick="slide()">Login or sign up</p>
+                        </div>
                 </div>
             </div>
             <div class="page two">
@@ -68,7 +70,7 @@
                         </div>
                     </form>
                     <div class="loginFooter">
-                        <p onClick="slide('prev')">Play as guest</p>
+                        <p onClick="slide()">Play as guest</p>
                     </div>
                 </div>
             </div>
@@ -76,4 +78,5 @@
     </div>
     <%- include("footer")%>
 </body>
+
 </html>

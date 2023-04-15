@@ -1,14 +1,37 @@
 /* Page setup */
 .page-wrapper {
+    --page-size: 30rem;
     width: 100%;
     height: auto;
     overflow: hidden;
 }
 
 .pages {
-    display: flex;
-    width: 200%;
+    width: 100%;
     box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(2, var(--page-size));
+    justify-content: center;
+    transform: translateX(15rem);
+    transition: all ease 0.2s;
+}
+
+.slide-left {
+    transform: translateX(calc((var(--page-size) / 2) * -1)) !important;
+}
+
+.slide-left > :first-child {
+    visibility: hidden;
+    opacity: 0;
+}
+.slide-left > :last-child {
+    visibility: initial !important;
+    opacity: 1 !important;
+}
+
+.two {
+    visibility: hidden;
+    opacity: 0;
 }
 
 .page {
@@ -19,7 +42,7 @@
     justify-content: flex-start;
     flex-direction: column;
     gap: 10px;
-    transition: all 0.7s;
+    transition: all ease 0.2s;
 }
 /* End page */
 
