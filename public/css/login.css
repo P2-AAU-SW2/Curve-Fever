@@ -1,7 +1,3 @@
-body {
-    animation: 0.5s ease-out 0s 1 slideInFromLeft;
-}
-
 /* Page setup */
 .page-wrapper {
     width: 100%;
