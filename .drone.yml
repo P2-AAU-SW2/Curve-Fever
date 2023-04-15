@@ -1,22 +1,21 @@
 kind: pipeline
 type: docker
 steps:
-- name: docker_build
-  image: plugins/docker
-  settings:
-    repo: dockerregistry.ollioddi.dk/ollioddi/linefever
-    registry: dockerregistry.ollioddi.dk
-    auto_tag: true
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-- name: publish_release
-  image: plugins/github-release
-  settings:
-    api_key:
-      from_secret: github_api
-    files: /*
+    - name: docker_build
+      image: plugins/docker
+      settings:
+          repo: dockerregistry.ollioddi.dk/ollioddi/linefever
+          registry: dockerregistry.ollioddi.dk
+          auto_tag: true
+          username:
+              from_secret: docker_username
+          password:
+              from_secret: docker_password
+    - name: publish_release
+      image: plugins/github-release
+      settings:
+          api_key:
+              from_secret: github_api
 trigger:
-  ref:
-    - refs/tags/*
+    ref:
+        - refs/tags/*
