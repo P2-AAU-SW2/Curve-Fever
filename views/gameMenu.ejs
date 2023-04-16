@@ -5,6 +5,7 @@
     <%- include('header') %>
     <link href="/css/gameMenu.css" rel="stylesheet" />
     <link href="/css/modal.css" rel="stylesheet" />
+    <link href="/css/popup-window.css" rel="stylesheet" />
     <script defer src="/javascript/popup-window.js"></script>
 </head>
 
@@ -47,13 +48,14 @@
                     </button>
                       
                     <div class="modal" id="modal<%=i%>">
-                        <div class="modal-container">
+                        <div class="popup-container">
                             <button data-close-button class="close-button">&times;</button>
-                            <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
-                            <button class="blue-btn">
+                            <div class="shop-item pop-up-item">
+                                <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
+                            </div>
+                            <button class="blue-btn buy-btn button-input">
                                 Buy
                             </button>
-                            <div id="overlay"></div>
                         </div>
                     </div>
                     <% } %>
@@ -62,6 +64,7 @@
         </div>
         <%- include('footer') %>
     </div>
+    <div id="overlay"></div>
 </body>
 <script>
     let skinsInFocus = '<%- JSON.stringify(skinsInFocus) %>';
