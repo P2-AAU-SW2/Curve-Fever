@@ -4,7 +4,8 @@
 <head>
     <%- include('header') %>
     <link href="/css/gameMenu.css" rel="stylesheet" />
-    <script src="/javascript/gameMenu.js" defer></script>
+    <link href="/css/modal.css" rel="stylesheet" />
+    <script defer src="/javascript/popup-window.js"></script>
 </head>
 
 <body>
@@ -41,8 +42,19 @@
                 </div>
                 <div class="content">
                     <% for (let i = 0; i < 11; i++) { %>
-                    <div class="shop-item">
+                    <button data-modal-target="#modal<%=i%>" class="shop-item">
                         <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
+                    </button>
+                      
+                    <div class="modal" id="modal<%=i%>">
+                        <div class="modal-container">
+                            <button data-close-button class="close-button">&times;</button>
+                            <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
+                            <button class="blue-btn">
+                                Buy
+                            </button>
+                            <div id="overlay"></div>
+                        </div>
                     </div>
                     <% } %>
                 </div>

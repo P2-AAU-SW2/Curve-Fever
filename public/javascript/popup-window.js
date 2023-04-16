@@ -25,12 +25,14 @@ closeModalButtons.forEach(button => {
 
 function openModal(modal) {
     if (modal == null) return
+    modal.style.display = 'block'
     modal.classList.add('active')
     overlay.classList.add('active')
 }
 
 function closeModal(modal) {
     if (modal == null) return
+    modal.style.display = 'none'
     modal.classList.remove('active')
     overlay.classList.remove('active')
 }
