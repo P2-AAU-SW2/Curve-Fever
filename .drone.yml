@@ -9,7 +9,7 @@ steps:
           registry: dockerregistry.ollioddi.dk
           tags:
               - latest
-              - DRONE_SEMVER_SHORT
+              - ${DRONE_SEMVER_SHORT}
           username:
               from_secret: docker_username
           password:
