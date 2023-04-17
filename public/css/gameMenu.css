@@ -103,10 +103,10 @@
     gap: 1.5rem 1.5rem;
     margin-left: 1rem;
     margin-top: 1rem;
-	margin-right: 1px;
+    margin-right: 1px;
     margin-bottom: 1rem;
     overflow-y: scroll;
-	padding-right: 1rem;
+    padding-right: 1rem;
 }
 
 @media (max-width: 45em) {
@@ -141,12 +141,12 @@
 
 @media (max-width: 31.25em) {
     .logo-icon,
-	.user-icon,
-	.user-info,
-	.user-name{
-		max-width: 100%;
-		min-width: 0;
-	}
+    .user-icon,
+    .user-info,
+    .user-name {
+        max-width: 100%;
+        min-width: 0;
+    }
 }
 
 .active {
@@ -183,7 +183,11 @@
     display: flex;
     align-self: center;
     font-size: 4rem;
-    /* align-items: center; */
+    align-items: center;
+}
+
+.fa-poo {
+    color: #804000;
 }
 
 .user-info {
@@ -221,7 +225,7 @@
 }
 
 .logo {
-	background: transparent;
-	border: 0;
-	cursor: pointer;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
 }

@@ -92,7 +92,7 @@ form {
     grid-template-columns: 100% 10 0;
     border-radius: 10px;
     width: 100%;
-    border: 1px solid grey;
+    border: 1.5px solid rgba(171, 225, 255, 0.5);
     background: rgba(0, 0, 0, 0.2);
     color: rgba(255, 255, 255, 0.8);
     font-style: normal;
@@ -102,6 +102,13 @@ form {
     text-align: left;
     color: white;
     padding-left: 10px;
+    transition: all ease 0.12s;
+}
+
+.text-input:active,
+.text-input:focus {
+    border-color: rgba(171, 225, 255, 1);
+    outline: none;
 }
 
 .input-container label {
@@ -179,7 +186,20 @@ input:not(:placeholder-shown) + label {
 
 .red-btn,
 .blue-btn,
-.green-btn {
+.green-btn,
+.yellow-btn {
+    width: 100%;
+    height: 100%;
+    border: none;
+    color: white;
+    text-decoration: none;
+    padding: 0px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 42px;
     transition: all 0.15s;
 }
 

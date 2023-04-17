@@ -4,8 +4,8 @@
 <head>
     <%- include('header') %>
     <link href="/css/gameMenu.css" rel="stylesheet" />
-    <link href="/css/modal.css" rel="stylesheet" />
-    <script defer src="/javascript/popup-window.js"></script>
+    <link href="/css/menuModal.css" rel="stylesheet" />
+    <script defer src="/javascript/menuModal.js"></script>
 </head>
 
 <body>
@@ -13,58 +13,48 @@
         <div class="header">
             <div class="header-container">
                 <button class="logo" onclick="location.href = '/home'""> <%- include('../public/assets/icons/Logo.svg') %> </button>
-                <div class="user-info">
+                <div class=" user-info">
                     <div class="border-container points">0</div>
                     <i class="fa-solid fa-user icon user-icon"></i>
                     <div class="user-name">Username</div>
-                </div>
             </div>
         </div>
-        <div class="main-container">
-            <div class="game-btns">
-                <button class="red-btn quickplay button-input" onclick="location.href = '/gameArea'"">
+    </div>
+    <div class="main-container">
+        <div class="game-btns">
+            <button class="red-btn quickplay button-input" onclick="location.href = '/gameArea'"">
                     Quickplay
                 </button>
-                <button class=" green-btn join button-input">
-                    Join Game
-                </button>
-                <button class="blue-btn create button-input">
-                    Create Game
-                </button>
-                <button class="yellow-btn shop-game-btn button-input">
-                    Shop
-                </button>
+                <button onclick=" createMenuModal('join')" class=" green-btn join button-input">
+                Join Game
+            </button>
+            <button onclick="createMenuModal('create')" class="blue-btn create button-input">
+                Create Game
+            </button>
+            <button onclick="" class="yellow-btn shop-game-btn button-input">
+                Shop
+            </button>
+        </div>
+        <div class="shop">
+            <div class="shop-btns">
+                <button onclick="changeFocus(true)" id="skins-btn" class="shop-btn active">Skins</button>
+                <button onclick="changeFocus(false)" id="icons-btn" class="shop-btn">Icons</button>
             </div>
-            <div class="shop">
-                <div class="shop-btns">
-                    <button onclick="changeFocus(true)" id="skins-btn" class="shop-btn active">Skins</button>
-                    <button onclick="changeFocus(false)" id="icons-btn" class="shop-btn">Icons</button>
-                </div>
-                <div class="content">
-                    <% for (let i = 0; i < 11; i++) { %>
-                    <button data-modal-target="#modal<%=i%>" class="shop-item">
-                        <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
-                    </button>
-                      
-                    <div class="modal" id="modal<%=i%>">
-                        <div class="modal-container">
-                            <button data-close-button class="close-button">&times;</button>
-                            <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
-                            <button class="blue-btn">
-                                Buy
-                            </button>
-                            <div id="overlay"></div>
-                        </div>
-                    </div>
-                    <% } %>
-                </div>
+            <div class="content">
+                <% for (let i = 0; i < 11; i++) { %>
+                <button onclick="createMenuModal('shop', 'line<%=i+1%>')" class="shop-item">
+                    <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
+                </button>
+                <% } %>
             </div>
         </div>
-        <%- include('footer') %>
     </div>
+    <%- include('footer') %>
+    </div>
+    <%- include('partials/menuModal') %>
 </body>
 <script>
-    let skinsInFocus = '<%- JSON.stringify(skinsInFocus) %>';
+    let skinsInFocus = "<%- JSON.stringify(skinsInFocus) %>";
 
     function changeFocus(value) {
         if (skinsInFocus !== value) {
@@ -72,6 +62,27 @@
             skinsInFocus = value;
             renderContent();
         }
+    }
+
+    function createMenuModal(type, item) {
+        if (type === "create") {
+            menuModal.input.placeholder = "Room name";
+            menuModal.btn1.text = "Team";
+            menuModal.btn1.color = "blue";
+            menuModal.btn2.text = "FFA";
+            menuModal.btn2.color = "green";
+        } else if (type.includes("shop")) {
+            if (type.includes("icon")) menuModal.icon.class = item;
+            else menuModal.image.src = `/assets/images/${item}.svg`;
+            menuModal.text = "Would you like to buy this item for 100 points?";
+            menuModal.btn1.text = "Buy";
+            menuModal.btn1.color = "blue";
+        } else if (type === "join") {
+            menuModal.input.placeholder = "Room name";
+            menuModal.btn1.text = "Join room";
+            menuModal.btn1.color = "red";
+        }
+        createModal();
     }
 
     function setFocus() {
@@ -82,21 +93,25 @@
     }
 
     function renderContent() {
-        const content = document.querySelector('.content');
-        let html = '';
+        const content = document.querySelector(".content");
+        let html = "";
         for (let i = 0; i < 11; i++) {
             if (skinsInFocus) {
                 html += `
-            <div class="shop-item">
-            <img class="shop-item-img" src="/assets/images/line${i + 1}.svg" alt="skin-item">
-            </div>
-        `;
+        <div class="shop-item" onclick="createMenuModal('shop', 'line${
+            i + 1
+        }')">
+        <img class="shop-item-img" src="/assets/images/line${
+            i + 1
+        }.svg" alt="skin-item">
+        </div>
+    `;
             } else {
                 html += `
-            <div class="shop-item">
-            <i class="icon-item fa-solid fa-poo" style="color: #804000;"></i>
-            </div>
-        `;
+        <div onclick="createMenuModal('shop icon', 'fa-solid fa-poo icon-item')" class="shop-item" tabindex="0">
+        <i class="icon-item fa-solid fa-poo"></i>
+        </div>
+    `;
             }
         }
         content.innerHTML = html;
