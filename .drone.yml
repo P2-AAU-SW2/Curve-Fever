@@ -7,7 +7,9 @@ steps:
       settings:
           repo: dockerregistry.ollioddi.dk/ollioddi/linefever
           registry: dockerregistry.ollioddi.dk
-          auto_tag: true
+          tags:
+              - latest
+              - ${DRONE_SEMVER_SHORT}
           username:
               from_secret: docker_username
           password:

@@ -33,19 +33,22 @@
     font-weight: 700;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
-    height: 10vh;
+    height: 60px;
 }
 
 .modal-header button {
     border: none;
     color: white;
     font-size: 15px;
-    padding: 1vw;
-    height: 100%;
+    padding: 5px;
     width: fit-content;
+    height: 100%;
     font-weight: 600;
     border-radius: 10px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Modal Content/Box */
