@@ -4,7 +4,9 @@
 <head>
     <%- include('header') %>
     <link href="/css/gameMenu.css" rel="stylesheet" />
-    <script src="/javascript/gameMenu.js" defer></script>
+    <link href="/css/modal.css" rel="stylesheet" />
+    <link href="/css/popup-window.css" rel="stylesheet" />
+    <script defer src="/javascript/popup-window.js"></script>
 </head>
 
 <body>
@@ -41,8 +43,20 @@
                 </div>
                 <div class="content">
                     <% for (let i = 0; i < 11; i++) { %>
-                    <div class="shop-item">
+                    <button data-modal-target="#modal<%=i%>" class="shop-item">
                         <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
+                    </button>
+                      
+                    <div class="modal" id="modal<%=i%>">
+                        <div class="popup-container">
+                            <button data-close-button class="close-button">&times;</button>
+                            <div class="shop-item pop-up-item">
+                                <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
+                            </div>
+                            <button class="blue-btn buy-btn button-input">
+                                Buy
+                            </button>
+                        </div>
                     </div>
                     <% } %>
                 </div>
@@ -50,6 +64,7 @@
         </div>
         <%- include('footer') %>
     </div>
+    <div id="overlay"></div>
 </body>
 <script>
     let skinsInFocus = '<%- JSON.stringify(skinsInFocus) %>';
