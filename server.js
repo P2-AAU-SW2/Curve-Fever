@@ -3,7 +3,8 @@ const app = express();
 const logger = require("morgan");
 const path = require("path");
 require("dotenv").config();
-const db = require("./modules/database");
+const passport = require("passport");
+const session = require("express-session");
 
 // Setup
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,17 @@ app.use(express.static(path.join(__dirname, "public")));
 // app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
+//session
+app.use(
+    session({
+        secret: "curvefever",
+        resave: false,
+        saveUninitialized: false,
+    })
+);
+app.use(passport.authenticate("session"));
+
+// Routes
 const indexRouter = require("./routes/index");
 const loginRouter = require("./routes/login");
 const gameMenuRouter = require("./routes/gameMenu");

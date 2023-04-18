@@ -1,6 +1,51 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+
+passport.use(
+    new LocalStrategy(
+        { usernameField: "username", passwordField: "password" },
+        async (username, password, done) => {
+            try {
+                const user = await prisma.user.findUnique({
+                    where: { name: username },
+                });
+
+                if (!user) {
+                    return done(null, false, {
+                        message: "Invalid username or password",
+                    });
+                }
+
+                const isPasswordValid = await bcrypt.compare(
+                    password,
+                    user.password
+                );
+
+                if (!isPasswordValid) {
+                    return done(null, false, {
+                        message: "Invalid username or password",
+                    });
+                }
+
+                return done(null, user);
+            } catch (err) {
+                return done(err);
+            }
+        }
+    )
+);
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    const user = await prisma.user.findUnique({ where: { id: id } });
+    done(null, user);
+});
 
 exports.createUser = async (req, res, next) => {
     try {
@@ -24,43 +69,23 @@ exports.createUser = async (req, res, next) => {
             },
         });
         console.log(user);
-        res.redirect("/game-menu");
+
+        // authenticate the user
+        req.login(user, (err) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send("An error occurred while logging in.");
+                return;
+            }
+            res.redirect("/game-menu");
+        });
     } catch (err) {
         console.log(err);
         res.status(500).send("An error occurred while creating the user.");
     }
 };
 
-exports.loginUser = async (req, res, next) => {
-    try {
-        const user = await prisma.user.findUnique({
-            where: {
-                name: req.body.username,
-            },
-        });
-        if (!user) {
-            console.log("User not found");
-            res.status(401).send("Invalid username or password");
-            return;
-        }
-
-        const isPasswordValid = await bcrypt.compare(
-            req.body.password,
-            user.password
-        );
-        if (!isPasswordValid) {
-            console.log("Invalid password");
-            res.status(401).send("Invalid username or password");
-            return;
-        }
-
-        //TODO: Create session/token/cookie
-
-        res.redirect("/game-menu");
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("An error occurred while logging in.");
-    }
-};
-
-// exports.createUser("Karl");
+exports.loginUser = passport.authenticate("local", {
+    successRedirect: "/game-menu",
+    failureRedirect: "/login",
+});
