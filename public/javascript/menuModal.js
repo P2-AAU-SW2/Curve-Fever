@@ -22,6 +22,7 @@ let menuModal = {
     },
     text: "",
 };
+
 let menuModalCpy = JSON.parse(JSON.stringify(menuModal));
 
 modalOverlay.addEventListener("click", () => closeModal());
