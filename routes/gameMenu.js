@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const { ensureAuth } = require("../middlewares/authMiddleware");
 
 let skinsInFocus = true;
 
-router.get("/", function (req, res) {
+router.get("/", ensureAuth, function (req, res) {
     res.render("gameMenu", { skinsInFocus });
 });
 
