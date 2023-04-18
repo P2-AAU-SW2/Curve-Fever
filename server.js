@@ -5,9 +5,6 @@ const path = require("path");
 require("dotenv").config();
 const db = require("./modules/database");
 
-const user = db.createUser("Karl");
-
-console.log(user);
 // Setup
 const PORT = process.env.PORT || 3000;
 app.use(logger("dev"));
