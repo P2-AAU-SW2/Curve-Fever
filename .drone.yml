@@ -27,6 +27,11 @@ kind: pipeline
 type: docker
 name: beta
 steps:
+    - name: test
+      image: node
+      commands:
+          - npm install
+          - npm test
     - name: docker_build
       image: plugins/docker
       settings:
