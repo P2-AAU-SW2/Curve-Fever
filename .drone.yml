@@ -25,7 +25,7 @@ trigger:
 ---
 kind: pipeline
 type: docker
-name: Build beta
+name: build_beta
 steps:
     - name: docker_build
       image: plugins/docker
@@ -41,12 +41,12 @@ trigger:
         - develop
 
 depends_on:
-    - Test beta
+    - test_beta
 
 ---
 kind: pipeline
 type: docker
-name: Test beta
+name: test_beta
 steps:
     - name: test
       image: node
