@@ -25,8 +25,13 @@ trigger:
 ---
 kind: pipeline
 type: docker
-name: build_beta
+name: Build beta
 steps:
+    - name: test
+      image: node
+      commands:
+          - npm install
+          - npm test
     - name: docker_build
       image: plugins/docker
       settings:
@@ -36,23 +41,6 @@ steps:
               from_secret: docker_username
           password:
               from_secret: docker_password
-trigger:
-    branch:
-        - develop
-
-depends_on:
-    - test_beta
-
----
-kind: pipeline
-type: docker
-name: test_beta
-steps:
-    - name: test
-      image: node
-      commands:
-          - npm install
-          - npm test
 trigger:
     branch:
         - develop

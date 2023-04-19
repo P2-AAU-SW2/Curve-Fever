@@ -21,6 +21,6 @@ describe("Test the game menu", () => {
 
 describe("Test the game area", () => {
     test("It should response the GET method", () => {
-        return request(app).get("/gameArea").expect(200);
+        return request(app).get("/gameArea").expect(2010);
     });
 });
