@@ -101,3 +101,79 @@
 .inactive-modal .menu-modal-container {
     transform: translateY(1rem);
 }
+
+.shopModal-cross {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    height: 2rem;
+    width: 2rem;
+    font-size: 1.5rem;
+    color: var(--low-contrast);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    transition: all ease 0.12s;
+}
+.shopModal-cross:hover {
+    color: var(--half-transparent);
+}
+
+.shop-modal-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.shopModal {
+    max-width: 32rem;
+    background: var(--bg-col);
+    box-shadow: 0px 4px 15px 1px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: minmax(25rem, 30rem);
+    grid-template-rows: 2.5rem 21rem;
+    margin: auto 0;
+    align-content: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+    position: absolute;
+    z-index: 3000;
+}
+
+@media screen and (min-width: 35em) {
+    .shopModal,
+    .shop-modal-overlay {
+        display: none;
+    }
+}
+
+.shop-modal-container {
+    transition: transform ease 0.2s;
+    background: linear-gradient(
+        125.56deg,
+        rgba(164, 159, 255, 0.05) 0.65%,
+        rgba(49, 86, 183, 0.15) 99.35%
+    );
+}
+
+.modalContent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 28%;
+    justify-items: center;
+    align-items: center;
+    gap: 1.5rem 1.5rem;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    margin-right: 1px;
+    margin-bottom: 1rem;
+    overflow-y: scroll;
+    padding-right: 1rem;
+}

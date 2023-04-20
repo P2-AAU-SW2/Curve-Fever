@@ -31,7 +31,7 @@
             <button onclick="createMenuModal('create')" class="blue-btn create button-input">
                 Create Game
             </button>
-            <button onclick="" class="yellow-btn shop-game-btn button-input">
+            <button onclick="toggleShop()" class="yellow-btn shop-game-btn button-input">
                 Shop
             </button>
         </div>
@@ -61,6 +61,7 @@
             setFocus();
             skinsInFocus = value;
             renderContent();
+            renderModalContent();
         }
     }
 
@@ -115,6 +116,31 @@
             }
         }
         content.innerHTML = html;
+    }
+
+    function renderModalContent() {
+        const modalContent = document.querySelector(".modalContent");
+        let html = "";
+        for (let i = 0; i < 11; i++) {
+            if (skinsInFocus) {
+                html += `
+        <div class="shop-item" onclick="createMenuModal('shop', 'line${
+            i + 1
+        }')">
+        <img class="shop-item-img" src="/assets/images/line${
+            i + 1
+        }.svg" alt="skin-item">
+        </div>
+    `;
+            } else {
+                html += `
+        <div onclick="createMenuModal('shop icon', 'fa-solid fa-poo icon-item')" class="shop-item" tabindex="0">
+        <i class="icon-item fa-solid fa-poo"></i>
+        </div>
+    `;
+            }
+        }
+        modalContent.innerHTML = html;
     }
 </script>
 
