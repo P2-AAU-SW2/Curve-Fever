@@ -1,11 +1,12 @@
 {
     "name": "line-fever",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Linefever game",
     "main": "server.js",
     "scripts": {
         "devStart": "nodemon server.js",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "test": "jest --coverage"
     },
     "repository": {
         "type": "git",
@@ -30,11 +31,16 @@
         "passport-local": "^1.0.0"
     },
     "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
         "eslint": "^8.38.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^4.2.1",
+        "jest": "^29.5.0",
         "nodemon": "^2.0.21",
         "prettier": "^2.8.7",
-        "prisma": "^4.12.0"
+        "prisma": "^4.12.0",
+        "superagent": "^8.0.9",
+        "supertest": "^6.3.3"
     }
 }
