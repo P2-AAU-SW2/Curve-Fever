@@ -1,5 +1,5 @@
 # Description: Dockerfile for Node.js app
-FROM node:16
+FROM node:18
 
 # Create app directory
 WORKDIR /usr/src/app
