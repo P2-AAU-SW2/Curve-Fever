@@ -24,3 +24,9 @@ describe("Test the game area", () => {
         return request(app).get("/gameArea").expect(200);
     });
 });
+
+describe("Test unknown endpoint", () => {
+    test("It should response the GET method", () => {
+        return request(app).get("/gasdsdgdfg").expect(404);
+    });
+});
