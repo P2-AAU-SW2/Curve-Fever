@@ -6,7 +6,15 @@ const { ensureAuth } = require("../middlewares/authMiddleware");
 let skinsInFocus = true;
 
 router.get("/", ensureAuth, function (req, res) {
-    res.render("gameMenu", { skinsInFocus, user: req.user, version: versionData });
+    let user;
+    if(req.user){
+        user = req.user
+    } else {
+        user = {
+            name: "Development"
+        }
+    }
+    res.render("gameMenu", { skinsInFocus, user: user, version: versionData });
 });
 
 module.exports = router;
