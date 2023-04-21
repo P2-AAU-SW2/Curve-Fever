@@ -20,6 +20,13 @@
         <i class="fa-solid fa-gear"></i>
         <p>Settings</p>
     </div>
+    <% if(version.show) { %>
+        <div class="footer-item version">
+            <p><%= version.environment + " | " + version.version%></p>
+        </div>
+    <% } %>
+
+    </div>
     <!-- Terms modal -->
     <div id="terms-modal" class="modal">
         <div class="modal-container">
