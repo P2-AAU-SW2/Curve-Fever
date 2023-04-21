@@ -5,6 +5,7 @@
     "main": "server.js",
     "scripts": {
         "devStart": "nodemon server.js",
+        "dev": "nodemon server.js",
         "lint": "eslint .",
         "test": "jest --coverage"
     },

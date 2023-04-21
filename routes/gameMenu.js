@@ -1,10 +1,11 @@
 const express = require("express");
+const versionData = require("../modules/version");
 const router = express.Router();
 
 let skinsInFocus = true;
 
 router.get("/", function (req, res) {
-    res.render("gameMenu", { skinsInFocus });
+    res.render("gameMenu", { skinsInFocus, version: versionData });
 });
 
 module.exports = router;
