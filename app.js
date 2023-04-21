@@ -2,10 +2,19 @@ const express = require("express");
 const logger = require("morgan");
 const path = require("path");
 const app = express();
+require("dotenv").config();
 const passport = require("passport");
 const session = require("express-session");
 
-app.use(logger("dev"));
+if (process.env.NODE_ENV === "development") {
+    console.info("Node is running in development mode");
+    app.use(logger("dev"));
+    console.info("Enabling detailed Express logging.");
+} else if (process.env.NODE_ENV === "production") {
+    console.info("Node is running in production mode");
+    app.use(logger("short"));
+}
+
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));

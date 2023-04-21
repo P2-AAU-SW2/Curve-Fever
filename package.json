@@ -5,6 +5,7 @@
     "main": "server.js",
     "scripts": {
         "devStart": "nodemon server.js",
+        "dev": "nodemon server.js",
         "lint": "eslint .",
         "test": "jest --coverage"
     },
@@ -31,8 +32,6 @@
         "passport-local": "^1.0.0"
     },
     "devDependencies": {
-        "babel-cli": "^6.26.0",
-        "babel-preset-env": "^1.7.0",
         "eslint": "^8.38.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^4.2.1",
