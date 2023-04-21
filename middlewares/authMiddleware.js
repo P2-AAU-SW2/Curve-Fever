@@ -1,5 +1,5 @@
 function ensureAuth(req, res, next) {
-    if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "development"){
+    if (process.env.NODE_ENV === "production"){
         if (req.isAuthenticated()) {
             // User is authenticated
             console.log("User is authenticated");
