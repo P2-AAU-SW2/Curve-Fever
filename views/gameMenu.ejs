@@ -31,11 +31,12 @@
             <button onclick="createMenuModal('create')" class="blue-btn create button-input">
                 Create Game
             </button>
-            <button onclick="" class="yellow-btn shop-game-btn button-input">
+            <button onclick="displayShop()" class="yellow-btn shop-game-btn button-input">
                 Shop
             </button>
         </div>
         <div class="shop">
+            <i class="fa-solid fa-xmark modal-cross" onclick="displayShop()" tabindex="0"></i>
             <div class="shop-btns">
                 <button onclick="changeFocus(true)" id="skins-btn" class="shop-btn active">Skins</button>
                 <button onclick="changeFocus(false)" id="icons-btn" class="shop-btn">Icons</button>
@@ -48,6 +49,7 @@
                 <% } %>
             </div>
         </div>
+        <div onclick="displayShop()" class="shop-overlay"></div>
     </div>
     <%- include('footer') %>
     </div>
@@ -55,11 +57,15 @@
 </body>
 <script>
     let skinsInFocus = "<%- JSON.stringify(skinsInFocus) %>";
+    let container = document.querySelector(".main-container");
+
+    container.addEventListener("resize", resizeContainer);
 
     function changeFocus(value) {
         if (skinsInFocus !== value) {
             setFocus();
             skinsInFocus = value;
+            // renderModalContent();
             renderContent();
         }
     }
@@ -90,6 +96,11 @@
         var iconsBtn = document.getElementById("icons-btn");
         skinsBtn.classList.toggle("active");
         iconsBtn.classList.toggle("active");
+    }
+
+    function displayShop() {
+        let shop = document.querySelector(".shop")
+        shop.classList.toggle("show-mini-shop")
     }
 
     function renderContent() {
