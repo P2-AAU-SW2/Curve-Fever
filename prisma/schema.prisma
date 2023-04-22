@@ -17,3 +17,10 @@ model User {
     coins    Int    @default(0)
     password String
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt   DateTime
+}
