@@ -1,9 +1,6 @@
 const modal = document.querySelector(".menu-modal");
 const modalContainer = document.querySelector(".menu-modal-container");
 const modalOverlay = document.querySelector(".menu-modal-overlay");
-const shopContainer = document.querySelector(".shop-modal-container");
-const shopModal = document.querySelector(".shop-modal");
-const shopOverlay = document.querySelector(".shop-modal-overlay");
 
 let menuModal = {
     btn1: {
@@ -29,14 +26,9 @@ let menuModal = {
 let menuModalCpy = JSON.parse(JSON.stringify(menuModal));
 
 modalOverlay.addEventListener("click", () => closeModal());
-shopOverlay.addEventListener("click", () => closeShopModal());
-
 
 function closeModal() {
-    modal.classList.add("inactive-modal");    
-}
-function closeShopModal() {
-    shopModal.classList.add("inactive-modal");  
+    modal.classList.add("inactive-modal");
 }
 // eslint-disable-next-line no-unused-vars
 function createModal() {
@@ -76,32 +68,4 @@ function createModal() {
     modalContainer.innerHTML = html;
     modal.classList.remove("inactive-modal");
     menuModal = JSON.parse(JSON.stringify(menuModalCpy));
-}
-
-function toggleShop() {
-    let html = "";
-    html += `
-        <div class="shopModal">
-            <i class="fa-solid fa-xmark shopModal-cross" onclick="closeShopModal()" tabindex="0"></i>
-            <div class="shop-btns">
-                <button onclick="changeFocus(true)" id="skins-btn" class="shop-btn active">Skins</button>
-                <button onclick="changeFocus(false)" id="icons-btn" class="shop-btn">Icons</button>
-            </div>
-            <div class="modalContent">`;
-            for (let i = 0; i < 11; i++) { 
-                if(skinsInFocus){
-                html += `<button onclick="createMenuModal('shop', 'line${i + 1}')" class="shop-item">
-                    <img class="shop-item-img" src="/assets/images/line${i + 1}.svg" alt="skin-item">
-                </button>`;
-                }else {
-                    html += `<div onclick="createMenuModal('shop icon', 'fa-solid fa-poo icon-item')" class="shop-item" tabindex="0">
-                    <i class="icon-item fa-solid fa-poo"></i>
-                    </div>`;
-                }
-            }
-            html += `</div>
-        </div>`;
-
-    shopContainer.innerHTML = html;
-    shopModal.classList.remove("inactive-modal");
 }

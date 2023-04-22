@@ -33,6 +33,19 @@
     gap: 1rem;
 }
 
+.shop-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: all ease 0.2s;
+    z-index: 100;
+}
+
 .quickplay,
 .join,
 .create,
@@ -59,7 +72,6 @@
 }
 
 .shop {
-    max-width: 32rem;
     background: linear-gradient(
         125.56deg,
         rgba(164, 159, 255, 0.05) 0.65%,
@@ -68,9 +80,10 @@
     box-shadow: 0px 4px 15px 1px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     display: grid;
-    grid-template-columns: minmax(10rem, 30rem);
+    grid-template-columns: minmax(16rem, 30rem);
     grid-template-rows: 2.5rem 22rem;
     margin: auto 0;
+    z-index: 500;
 }
 
 .shop-btns {
@@ -105,6 +118,17 @@
     padding-right: 1rem;
 }
 
+@keyframes moveUp {
+    from {
+        /* transform: translateY(calc(-50% + 1rem)); */
+        opacity: 0;
+    }
+    to {
+        /* transform: translateY(-50%); */
+        opacity: 1;
+    }
+}
+
 @media (max-width: 45em) {
     .content {
         grid-template-columns: repeat(2, 1fr);
@@ -118,7 +142,26 @@
 }
 @media (max-width: 35em) {
     .shop {
-        display: none;
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        background: #153a56;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 1rem;
+    }
+    .content {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .show-mini-shop {
+        visibility: visible;
+        transition: opacity 0.2s ease;
+        opacity: 1;
+        /* animation: moveUp 0.2s ease-in-out; */
+    }
+    .show-mini-shop ~ .shop-overlay {
+        opacity: 1;
+        pointer-events: initial;
     }
     .main-container {
         grid-template-rows: 100%;
@@ -132,6 +175,11 @@
     }
     .shop-game-btn {
         display: block;
+    }
+}
+@media (max-width: 21.85em) {
+    .content {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
