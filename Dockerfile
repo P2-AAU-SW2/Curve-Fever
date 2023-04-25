@@ -9,6 +9,7 @@ COPY package*.json ./
 
 # Building code for production
 RUN npm i --production
+RUN npx prisma generate
 
 # Bundle app source
 COPY . .
