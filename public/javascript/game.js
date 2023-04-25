@@ -34,7 +34,11 @@ form.addEventListener("submit", (e) => {
 });
 
 function displayMessage(message) {
-    const div = document.createElement("div");
-    div.textContent = message;
-    document.getElementById("textbox").append(div);
+    const li = document.createElement("li");
+    const p = document.createElement("p");
+    p.textContent = "Username: " + message;
+    li.appendChild(p);
+    document.getElementById("textbox").appendChild(li);
+    const textbox = document.getElementById("textbox");
+    textbox.scrollTop = textbox.scrollHeight;
 }

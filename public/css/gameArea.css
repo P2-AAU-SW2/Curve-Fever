@@ -1,139 +1,143 @@
 html {
-  font-family: var(--global-font-family);
+    font-family: var(--global-font-family);
 }
 
 .gameContainer {
-  display: grid;
-  grid-template-columns: 30% 70%;
-  height: 100%;
-  width: 100%;
-  padding: 30px;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    height: 100%;
+    width: 100%;
+    padding: 30px;
 }
 .gameCanvas {
-  display: block;
-  width: min(60vw, 90vh);
-  height: min(60vw, 90vh);
-  margin: 0 auto;
-  position: relative;
-  grid-column-start: 2;
-  grid-column-end: 3;
-  border: 3px solid rgba(171, 225, 255, 0.5);
-  border-radius: 10px;
+    display: block;
+    width: min(60vw, 90vh);
+    height: min(60vw, 90vh);
+    margin: 0 auto;
+    position: relative;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    border: 3px solid rgba(171, 225, 255, 0.5);
+    border-radius: 10px;
 }
 
 .left {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 1;
-  grid-row-end: 2;
-  padding-right: 10px;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    padding-right: 10px;
 
-  font-weight: 700;
-  font-size: min(1.5rem, 3vh);
+    font-weight: 700;
+    font-size: min(1.5rem, 3vh);
 }
 
 .chatroom {
-  background-color: rgba(171, 225, 255, 0.1);
-  border-radius: 10px;
-
-  padding: 10px;
-
-
-  position: relative;
-  margin-top: 5vh;
-
-
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    background-color: rgba(171, 225, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    margin-top: 5vh;
+    overflow: hidden;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 #usermsg {
-  width: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  border: none;
-  border-radius: 5px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: none;
+    border-radius: 5px;
 
-
-  padding: 5px;
-  color: rgba(255, 255, 255, 0.5);
-  position: relative;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    color: rgba(255, 255, 255, 0.5);
+    position: relative;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 #submitmsg {
-  border: none;
-  background: none;
-  position: absolute;
-  right: 14px;
-  bottom: 13px;
+    border: none;
+    background: none;
+    position: absolute;
+    right: 14px;
+    bottom: 13px;
 }
 
 #submitmsg:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .textbox {
-  color: white;
-  padding-bottom: 10px;
-  padding-left: 5px;
-  list-style: none;
+    color: white;
+    font-size: 1rem;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    list-style: none;
+    overflow: scroll;
+    max-height: 15rem;
+    min-height: 15rem;
+    word-wrap: break-word;
+}
+
+.textbox li {
+    padding-bottom: 0.5rem;
 }
 
 .leaderboard {
-  position: relative;
-  top: 0%;
-  color: white;
-  width: 100%;
-  left: 0%;
+    position: relative;
+    top: 0%;
+    color: white;
+    width: 100%;
+    left: 0%;
 }
 
 td:nth-child(1) {
-  width: 20%;
+    width: 20%;
 }
 
 td:nth-child(2) {
-  width: 60%;
+    width: 60%;
 }
 
 td:nth-child(3) {
-  width: 30%;
-  text-align: right;
+    width: 30%;
+    text-align: right;
 }
 
 td {
-  padding: 5px;
+    padding: 5px;
 }
 
 table {
-  table-layout: fixed;
-  width: 100%;
+    table-layout: fixed;
+    width: 100%;
 }
 
 .roundwrapper {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 5vh;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 5vh;
 }
 
 .roundcounter {
-  line-height: 60px;
-  position: relative;
-  top: 0;
-  left: 0%;
-  color: white;
+    line-height: 60px;
+    position: relative;
+    top: 0;
+    left: 0%;
+    color: white;
 }
 
 .scoretarget {
-  background-color: var(--green-btn);
-  color: white;
-  text-align: center;
-  width: 60px;
-  height: 60px;
+    background-color: var(--green-btn);
+    color: white;
+    text-align: center;
+    width: 60px;
+    height: 60px;
 
-  font-size: 40px;
-  line-height: 60px;
+    font-size: 40px;
+    line-height: 60px;
 
-  justify-self: flex-end;
+    justify-self: flex-end;
 
-  box-shadow: 0px 4px 0px #004a0c;
-  border-radius: 10px;
+    box-shadow: 0px 4px 0px #004a0c;
+    border-radius: 10px;
 }
