@@ -1,11 +1,12 @@
 const express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 const logger = require("morgan");
 const path = require("path");
 
 const app = express();
-const http = require("http");
-const server = http.createServer(app);
-const io = require("socket.io")(server);
+const httpServer = createServer(app);
+const io = new Server(httpServer);
 
 require("dotenv").config();
 const passport = require("passport");
@@ -22,6 +23,7 @@ if (process.env.NODE_ENV === "development") {
     app.use(logger("short"));
 }
 
+app.set("io", io);
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
@@ -52,16 +54,11 @@ const indexRouter = require("./routes/index");
 const loginRouter = require("./routes/login");
 const gameAreaRouter = require("./routes/game");
 
-const socketMiddleware = (req, res, next) => {
-    req.io = io;
-    next();
-};
-
 // Router setup
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
-app.use("/game", socketMiddleware, gameAreaRouter);
+app.use("/game", gameAreaRouter);
 
 module.exports = app;
-module.exports.server = server;
 module.exports.store = store;
+module.exports.httpServer = httpServer;

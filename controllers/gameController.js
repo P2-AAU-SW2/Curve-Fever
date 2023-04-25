@@ -3,14 +3,21 @@ exports.getGameById = (req, res, next) => {
 };
 
 exports.play = (req, res, next) => {
-    const io = req.io;
-    //console.log(io);
+    const io = req.app.get("io");
 
-    io.on("connection", function (socket) {
-        console.log("User has connected to Index");
-        //ON Events
-        console.log(socket.id);
-        //End ON Events
+    io.on("connection", (socket) => {
+        console.log("User connected", socket.id);
+
+        socket.on("your-event", (data) => {
+            console.log("Received data:", data);
+
+            // Broadcast the data to all connected clients
+            io.emit("your-event", data);
+        });
+
+        socket.on("disconnect", () => {
+            console.log("User disconnected", socket.id);
+        });
     });
 
     res.render("socket");

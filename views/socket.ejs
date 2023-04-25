@@ -5,17 +5,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
-        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-        <script>
-            var socket = io.connect({
-                path: window.location.pathname,
-            });
-            console.log(socket);
-
-            socket.on("connect", () => {
-                console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-            });
-        </script>
     </head>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        var socket = io();
+    </script>
     <body></body>
 </html>
