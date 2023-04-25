@@ -8,6 +8,7 @@ router.get("/", ensureAuth, function (req, res) {
 });
 
 router.get("/play", ensureAuth, gameController.play);
+router.get("/play/:id", ensureAuth, gameController.play);
 
 router.get("/join/:id", ensureAuth, gameController.joinGameById);
 

@@ -8,7 +8,7 @@ const messageInput = document.getElementById("usermsg");
 const form = document.getElementById("form");
 
 const url = window.location.href;
-const gameID = url.slice(url.indexOf("game") + 5);
+const gameID = url.slice(url.indexOf("game") + 5, -12); // 12 tager hensyn for /?valid=true
 
 const socket = io({
     query: {
