@@ -40,15 +40,18 @@ class gameInstances {
 
 let gameManager = new gameInstances();
 
+function logger() {
+    console.log(gameManager.publicGames);
+}
+
+setInterval(logger, 1500);
+
 exports.getGameById = async (req, res, next) => {
-    res.render("game", { roomID: req.body.gameID });
+    res.render("game");
 };
 
 exports.play = async (req, res, next) => {
     const gameID = await gameManager.joinPublic();
-    console.log(gameID);
-    console.log(gameManager.publicGames);
-    req.body.gameID = gameID;
     res.redirect(`/game/${gameID}`);
 };
 

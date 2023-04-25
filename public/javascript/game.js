@@ -22,7 +22,6 @@ socket.on("connect", () => {
 
 socket.on("chat", (message) => {
     displayMessage(message);
-    console.log(message);
 });
 
 form.addEventListener("submit", (e) => {
