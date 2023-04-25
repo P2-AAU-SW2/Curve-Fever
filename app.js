@@ -3,6 +3,10 @@ const logger = require("morgan");
 const path = require("path");
 const app = express();
 require("dotenv").config();
+const passport = require("passport");
+const session = require("express-session");
+const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
+const { PrismaClient } = require("@prisma/client");
 
 if (process.env.NODE_ENV === "development") {
     console.info("Node is running in development mode");
@@ -16,6 +20,26 @@ if (process.env.NODE_ENV === "development") {
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+
+//session
+app.use(
+    session({
+        cookie: {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // ms
+        },
+        secret: "curvefever",
+        resave: true,
+        saveUninitialized: true,
+        store: new PrismaSessionStore(new PrismaClient(), {
+            checkPeriod: 2 * 60 * 1000, //ms
+            dbRecordIdIsSessionId: true,
+            dbRecordIdFunction: undefined,
+        }),
+    })
+);
+app.use(passport.authenticate("session"));
+
+// Routes
 
 const indexRouter = require("./routes/index");
 const loginRouter = require("./routes/login");

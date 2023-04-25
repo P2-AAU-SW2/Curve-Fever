@@ -21,10 +21,16 @@
     },
     "homepage": "https://github.com/P2-AAU-SW2/Curve-Fever#readme",
     "dependencies": {
+        "@prisma/client": "^4.12.0",
+        "@quixo3/prisma-session-store": "^3.1.11",
+        "bcrypt": "^5.1.0",
         "dotenv": "^16.0.3",
         "ejs": "^3.1.8",
         "express": "^4.18.2",
-        "morgan": "^1.10.0"
+        "express-session": "^1.17.3",
+        "morgan": "^1.10.0",
+        "passport": "^0.6.0",
+        "passport-local": "^1.0.0"
     },
     "devDependencies": {
         "eslint": "^8.38.0",
@@ -33,6 +39,7 @@
         "jest": "^29.5.0",
         "nodemon": "^2.0.21",
         "prettier": "^2.8.7",
+        "prisma": "^4.12.0",
         "superagent": "^8.0.9",
         "supertest": "^6.3.3"
     }

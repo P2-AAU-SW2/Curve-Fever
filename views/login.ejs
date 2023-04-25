@@ -41,14 +41,14 @@
             </div>
             <div class="page two">
                 <div class="login-container">
-                    <form>
+                    <form id="authForm">
                         <div class="input-container">
-                            <input class="text-input" type="text" placeholder=" ">
+                            <input class="text-input" type="text" name="username" placeholder=" " id="username">
                             <label>Email</label>
                             <i class="fa-solid fa-envelope icon"></i>
                         </div>
                         <div class="input-container">
-                            <input class="text-input" type="password" placeholder=" ">
+                            <input class="text-input" type="password" name="password" placeholder=" " id="password">
                             <label>Password</label>
                             <i class="fa-solid fa-lock icon"></i>
                         </div>
@@ -60,11 +60,11 @@
                             <p id="forgotPassword">Forgot password?</p>
                         </div>
                         <div class="input-container">
-                            <button type="button" id="loginButton" class="blue-btn button-input" onclick="location.href = '/home'">
+                            <button type="button" id="loginButton" class="blue-btn button-input" onclick="submitSignup()">
                                 SIGN UP
                             </button>
                             <div style="width: 30px"></div>
-                            <button type="button" id="loginButton" class="green-btn button-input" onclick="location.href = '/home'">
+                            <button type="button" id="loginButton" class="green-btn button-input" onclick="submitLogin()">
                                 LOGIN
                             </button>
                         </div>
@@ -77,6 +77,21 @@
         </div>
     </div>
     <%- include("footer")%>
+    <script>
+        function submitSignup() {
+            const form = document.getElementById('authForm');
+            form.action = '/login/createUser';
+            form.method = 'post';
+            form.submit();
+        }
+
+        function submitLogin() {
+            const form = document.getElementById('authForm');
+            form.action = '/login/login';
+            form.method = 'post';
+            form.submit();
+        }
+    </script>
 </body>
 
 </html>
