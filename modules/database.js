@@ -77,7 +77,7 @@ exports.createUser = async (req, res, next) => {
                 res.status(500).send("An error occurred while logging in.");
                 return;
             }
-            res.redirect("/game-menu");
+            res.redirect("/");
         });
     } catch (err) {
         console.log(err);
@@ -86,6 +86,6 @@ exports.createUser = async (req, res, next) => {
 };
 
 exports.loginUser = passport.authenticate("local", {
-    successRedirect: "/game-menu",
+    successRedirect: "/",
     failureRedirect: "/login",
 });
