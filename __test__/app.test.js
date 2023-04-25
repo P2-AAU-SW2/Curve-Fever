@@ -4,7 +4,7 @@ const { store } = require("../app");
 
 describe("Test the root path", () => {
     test("It should response the GET method", () => {
-        return request(app).get("/").expect(302);
+        return request(app).get("/").expect(200);
     });
 });
 
@@ -14,15 +14,9 @@ describe("Test the login path", () => {
     });
 });
 
-describe("Test the game menu", () => {
-    test("It should response the GET method", () => {
-        return request(app).get("/game-menu").expect(200);
-    });
-});
-
 describe("Test the game area", () => {
     test("It should response the GET method", () => {
-        return request(app).get("/gameArea").expect(200);
+        return request(app).get("/game").expect(200);
     });
 });
 
