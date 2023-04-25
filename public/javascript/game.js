@@ -20,7 +20,7 @@ socket.on("connect", () => {
     console.log(socket.id);
 });
 
-socket.on("receieve-message", (message) => {
+socket.on("chat", (message) => {
     displayMessage(message);
     console.log(message);
 });
@@ -29,7 +29,8 @@ form.addEventListener("submit", (e) => {
     e.preventDefault();
     const message = messageInput.value;
     if (message === "") return;
-    socket.emit("send-message", gameID, message);
+    socket.emit("chat", message);
+    displayMessage(message);
     messageInput.value = "";
 });
 

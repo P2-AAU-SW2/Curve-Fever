@@ -29,10 +29,16 @@ module.exports = function (io) {
 };
 */
 
-module.exports = function (io) {
+module.exports = async (io) => {
     io.on("connection", (socket) => {
-        console.log("WS ID " + socket.handshake.query.gameID);
-        socket.join(socket.handshake.query.gameID);
-        socket.to(socket.handshake.query.gameID).emit("user-joined", socket.id);
+        const gameID = socket.handshake.query.gameID;
+
+        socket.join(gameID);
+        //socket.to(gameID).emit("chat", "user: " + socket.id + " joined.");
+
+        socket.on("chat", (message) => {
+            console.log(message);
+            socket.to(gameID).emit("chat", message);
+        });
     });
 };
