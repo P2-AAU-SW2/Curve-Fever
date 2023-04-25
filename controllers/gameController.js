@@ -26,7 +26,7 @@ class gameInstances {
 
     joinByID(id) {
         return new Promise((resolve) => {
-            console.log("here: " + id);
+            //console.log("here: " + id);
             for (let i = 0; i < this.publicGames.length; i++) {
                 if (
                     this.publicGames[i].users < this.MAX_PLAYERS &&
@@ -64,7 +64,7 @@ function logger() {
     console.log(gameManager.publicGames);
 }
 
-setInterval(logger, 1500);
+//setInterval(logger, 1500);
 
 exports.getGameById = async (req, res, next) => {
     const redirected = req.query.valid;
@@ -79,12 +79,12 @@ exports.getGameById = async (req, res, next) => {
 
 exports.play = async (req, res, next) => {
     // Check if it should join a game, or create a new based on if an ID is provided
-    console.log(req.params.id);
+    //console.log(req.params.id);
     if (req.params.id === undefined) {
         gameManager
             .joinPublic()
             .then((id) => {
-                console.log(id);
+                //console.log(id);
                 res.redirect(`/game/${id}/?valid=true`);
             })
             .catch((error) => console.log(error));
