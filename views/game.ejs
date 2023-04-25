@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('header') %>
+        <link href="/css/gameArea.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="gameContainer">
+            <div class="left">
+                <div class="roundwrapper">
+                    <div class="roundcounter">Round 5</div>
+                    <div class="scoretarget">20</div>
+                </div>
+
+                <div class="leaderboard">
+                    <table id="scoretable">
+                        <tr>
+                            <td>1</td>
+                            <td>Luca</td>
+                            <td>100</td>
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>Aneek</td>
+                            <td>90</td>
+                        </tr>
+
+                        <tr>
+                            <td>3</td>
+                            <td>Oliver</td>
+                            <td>80</td>
+                        </tr>
+
+                        <tr>
+                            <td>4</td>
+                            <td>Frederik</td>
+                            <td>70</td>
+                        </tr>
+
+                        <tr>
+                            <td>5</td>
+                            <td>Nicolas</td>
+                            <td>69</td>
+                        </tr>
+
+                        <tr>
+                            <td>6</td>
+                            <td>Farhan</td>
+                            <td>60</td>
+                        </tr>
+
+                        <tr>
+                            <td>7</td>
+                            <td>Martin</td>
+                            <td>50</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="chatroom">
+                    <ul class="textbox" id="textbox"></ul>
+                    <form name="chat" action="" id="form">
+                        <input
+                            name="usermsg"
+                            placeholder="Chat..."
+                            type="text"
+                            id="usermsg"
+                        />
+                        <button name="submitmsg" type="submit" id="submitmsg">
+                            <img src="/assets/icons/arrow.svg" alt="Send" />
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <canvas class="gameCanvas"></canvas>
+        </div>
+        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+        <script src="/javascript/gameArea.js"></script>
+    </body>
+</html>

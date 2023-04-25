@@ -1,18 +1,36 @@
-exports.getGameById = (req, res, next) => {
-    res.send("Game by id");
-};
+class game {
+    constructor(id) {
+        this._id = id;
+        this._players = [];
+    }
 
-exports.play = (req, res, next) => {
+    get id() {
+        return this._id;
+    }
+
+    get players() {
+        return this._players;
+    }
+
+    addPlayer(player) {
+        this._players.push(player);
+    }
+}
+
+let games = [];
+
+exports.getGameById = (req, res, next) => {
     const io = req.app.get("io");
+    const roomId = req.params.id;
 
     io.on("connection", (socket) => {
+        socket.join(roomId);
+        console.log(socket.rooms);
         console.log("User connected", socket.id);
 
-        socket.on("your-event", (data) => {
-            console.log("Received data:", data);
-
-            // Broadcast the data to all connected clients
-            io.emit("your-event", data);
+        socket.on("chat", (msg) => {
+            socket.broadcast.emit("chat", msg);
+            console.log("Received data:", msg);
         });
 
         socket.on("disconnect", () => {
@@ -20,7 +38,11 @@ exports.play = (req, res, next) => {
         });
     });
 
-    res.render("socket");
+    res.render("game");
+};
+
+exports.play = (req, res, next) => {
+    res.send("play");
 };
 
 exports.joinGameById = (req, res, next) => {
