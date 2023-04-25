@@ -5,11 +5,15 @@ for (let i = 0; i < playerCells.length; i++) {
     playerCells[i].style.color = playerColors[i % playerColors.length];
 }
 
-const joinRoomButton = document.getElementById("room-button");
-const roomInput = document.getElementById("usermsg");
+const roomId = document.getElementById("roomId").value; // Assuming you have a hidden input with id "roomId" storing the room id
 const messageInput = document.getElementById("usermsg");
 const form = document.getElementById("form");
 const socket = io();
+
+socket.on("connect", () => {
+    // Join the room upon connecting
+    socket.emit("join-room", roomId);
+});
 
 socket.on("chat", (message) => {
     displayMessage(message);
@@ -19,14 +23,9 @@ socket.on("chat", (message) => {
 form.addEventListener("submit", (e) => {
     e.preventDefault();
     const message = messageInput.value;
-    const room = roomInput.value;
     if (message === "") return;
-    socket.emit("chat", message);
+    socket.emit("chat", roomId, message);
     messageInput.value = "";
-});
-
-joinRoomButton.addEventListener("click", () => {
-    const room = roomInput.value;
 });
 
 function displayMessage(message) {
@@ -34,3 +33,7 @@ function displayMessage(message) {
     div.textContent = message;
     document.getElementById("textbox").append(div);
 }
+
+window.addEventListener("beforeunload", () => {
+    socket.emit("leaveRoom", roomId);
+});

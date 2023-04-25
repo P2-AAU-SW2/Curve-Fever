@@ -13,6 +13,7 @@ const passport = require("passport");
 const session = require("express-session");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
+const socketHandler = require("./modules/socketHandler");
 
 if (process.env.NODE_ENV === "development") {
     console.info("Node is running in development mode");
@@ -58,6 +59,8 @@ const gameAreaRouter = require("./routes/game");
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/game", gameAreaRouter);
+
+socketHandler(io);
 
 module.exports = app;
 module.exports.store = store;

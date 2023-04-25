@@ -14,31 +14,35 @@ class game {
 
     addPlayer(player) {
         this._players.push(player);
+        console.log("Added player", player);
     }
 }
 
-let games = [];
+const games = new Map();
+games.set("15", new game("15"));
 
 exports.getGameById = (req, res, next) => {
-    const io = req.app.get("io");
     const roomId = req.params.id;
-
-    io.on("connection", (socket) => {
-        socket.join(roomId);
-        console.log(socket.rooms);
-        console.log("User connected", socket.id);
-
-        socket.on("chat", (msg) => {
-            socket.broadcast.emit("chat", msg);
-            console.log("Received data:", msg);
-        });
-
-        socket.on("disconnect", () => {
-            console.log("User disconnected", socket.id);
-        });
-    });
-
-    res.render("game");
+    if (!games.has(roomId)) {
+        console.log("Game not found");
+        res.status(404).send("Game not found");
+        return;
+    }
+    const game = games.get(roomId);
+    const players = game.players;
+    if (players.length >= 8) {
+        console.log("Game is full");
+        res.status(404).send("Game is full");
+        return;
+    }
+    if (!players.includes(req.user.id)) {
+        console.log("New user");
+        game.addPlayer(req.user.id);
+        games.set(roomId, game);
+    } else {
+        console.log("User already in game");
+    }
+    res.render("game", { roomId });
 };
 
 exports.play = (req, res, next) => {
