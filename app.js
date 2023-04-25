@@ -1,7 +1,12 @@
 const express = require("express");
 const logger = require("morgan");
 const path = require("path");
+
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const io = require("socket.io")(server);
+
 require("dotenv").config();
 const passport = require("passport");
 const session = require("express-session");
@@ -47,10 +52,16 @@ const indexRouter = require("./routes/index");
 const loginRouter = require("./routes/login");
 const gameAreaRouter = require("./routes/game");
 
+const socketMiddleware = (req, res, next) => {
+    req.io = io;
+    next();
+};
+
 // Router setup
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
-app.use("/game", gameAreaRouter);
+app.use("/game", socketMiddleware, gameAreaRouter);
 
 module.exports = app;
+module.exports.server = server;
 module.exports.store = store;

@@ -3,7 +3,17 @@ exports.getGameById = (req, res, next) => {
 };
 
 exports.play = (req, res, next) => {
-    res.send("Play");
+    const io = req.io;
+    //console.log(io);
+
+    io.on("connection", function (socket) {
+        console.log("User has connected to Index");
+        //ON Events
+        console.log(socket.id);
+        //End ON Events
+    });
+
+    res.render("socket");
 };
 
 exports.joinGameById = (req, res, next) => {
