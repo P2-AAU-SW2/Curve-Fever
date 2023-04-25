@@ -1,52 +1,55 @@
-class game {
-    constructor(id) {
-        this._id = id;
-        this._players = [];
+const { v4: uuidv4 } = require("uuid");
+
+class gameInstances {
+    constructor() {
+        this.MAX_PLAYERS = 6;
+        (this.publicGames = []), (this.privateGames = []);
     }
 
-    get id() {
-        return this._id;
+    joinPublic() {
+        return new Promise((resolve) => {
+            for (let i = 0; i < this.publicGames.length; i++) {
+                if (this.publicGames[i].users < this.MAX_PLAYERS) {
+                    this.publicGames[i].users++;
+                    return resolve(this.publicGames[i].id);
+                }
+            }
+            // Generate a new room if no available
+            const newID = uuidv4();
+            this.publicGames.push({
+                id: newID,
+                users: 1,
+            });
+            return resolve(newID);
+        });
     }
 
-    get players() {
-        return this._players;
-    }
-
-    addPlayer(player) {
-        this._players.push(player);
-        console.log("Added player", player);
+    leaveGame(id) {
+        this.publicGames = this.publicGames.filter((game) => {
+            if (game.id === id) {
+                if (game.users === 1) {
+                    return false;
+                } else {
+                    game.users--;
+                }
+            }
+            return true;
+        });
     }
 }
 
-const games = new Map();
-games.set("15", new game("15"));
+let gameManager = new gameInstances();
 
-exports.getGameById = (req, res, next) => {
-    const roomId = req.params.id;
-    if (!games.has(roomId)) {
-        console.log("Game not found");
-        res.status(404).send("Game not found");
-        return;
-    }
-    const game = games.get(roomId);
-    const players = game.players;
-    if (players.length >= 8) {
-        console.log("Game is full");
-        res.status(404).send("Game is full");
-        return;
-    }
-    if (!players.includes(req.user.id)) {
-        console.log("New user");
-        game.addPlayer(req.user.id);
-        games.set(roomId, game);
-    } else {
-        console.log("User already in game");
-    }
-    res.render("game", { roomId });
+exports.getGameById = async (req, res, next) => {
+    res.render("game", { roomID: req.body.gameID });
 };
 
-exports.play = (req, res, next) => {
-    res.send("play");
+exports.play = async (req, res, next) => {
+    const gameID = await gameManager.joinPublic();
+    console.log(gameID);
+    console.log(gameManager.publicGames);
+    req.body.gameID = gameID;
+    res.redirect(`/game/${gameID}`);
 };
 
 exports.joinGameById = (req, res, next) => {

@@ -1,8 +1,6 @@
+/*
 module.exports = function (io) {
     io.on("connection", (socket) => {
-        let currentRoomId = null;
-        console.log("User connected", socket.id);
-
         socket.on("join-room", (roomId) => {
             console.log(`User ${socket.id} joined room ${roomId}`);
             socket.join(roomId);
@@ -27,5 +25,14 @@ module.exports = function (io) {
                 socket.to(currentRoomId).emit("user-left", socket.id);
             }
         });
+    });
+};
+*/
+
+module.exports = function (io) {
+    io.on("connection", (socket) => {
+        console.log("WS ID " + socket.handshake.query.gameID);
+        socket.join(socket.handshake.query.gameID);
+        socket.to(socket.handshake.query.gameID).emit("user-joined", socket.id);
     });
 };
