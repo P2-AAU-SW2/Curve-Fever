@@ -21,6 +21,12 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 
+const store = new PrismaSessionStore(new PrismaClient(), {
+    checkPeriod: 2 * 60 * 1000, //ms
+    dbRecordIdIsSessionId: true,
+    dbRecordIdFunction: undefined,
+});
+
 //session
 app.use(
     session({
@@ -30,11 +36,7 @@ app.use(
         secret: "curvefever",
         resave: true,
         saveUninitialized: true,
-        store: new PrismaSessionStore(new PrismaClient(), {
-            checkPeriod: 2 * 60 * 1000, //ms
-            dbRecordIdIsSessionId: true,
-            dbRecordIdFunction: undefined,
-        }),
+        store: store,
     })
 );
 app.use(passport.authenticate("session"));
@@ -53,3 +55,4 @@ app.use("/game-menu", gameMenuRouter);
 app.use("/gameArea", gameAreaRouter);
 
 module.exports = app;
+module.exports.store = store;
