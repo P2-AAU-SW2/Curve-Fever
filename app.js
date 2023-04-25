@@ -45,14 +45,12 @@ app.use(passport.authenticate("session"));
 
 const indexRouter = require("./routes/index");
 const loginRouter = require("./routes/login");
-const gameMenuRouter = require("./routes/gameMenu");
-const gameAreaRouter = require("./routes/gameArea");
+const gameAreaRouter = require("./routes/game");
 
 // Router setup
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
-app.use("/game-menu", gameMenuRouter);
-app.use("/gameArea", gameAreaRouter);
+app.use("/game", gameAreaRouter);
 
 module.exports = app;
 module.exports.store = store;
