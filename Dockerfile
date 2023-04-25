@@ -6,9 +6,12 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
+COPY prisma ./prisma/
 
 # Building code for production
 RUN npm i --production
+# Fix database
+RUN npx prisma generate
 
 # Bundle app source
 COPY . .
