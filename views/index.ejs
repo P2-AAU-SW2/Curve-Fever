@@ -5,6 +5,7 @@
     <%- include('header') %>
     <link href="/css/gameMenu.css" rel="stylesheet" />
     <link href="/css/menuModal.css" rel="stylesheet" />
+    <input type="hidden" id="error" value="<%= error ? error : false %>" />
     <script defer src="/javascript/menuModal.js"></script>
 </head>
 
@@ -16,7 +17,7 @@
                 <div class=" user-info">
                     <div class="border-container points">0</div>
                     <i class="fa-solid fa-user icon user-icon"></i>
-                    <div class="user-name"><%= user.name %></div>
+                    <div class="user-name"><%= user.name ? user.name : "Bruh" %></div>
             </div>
         </div>
     </div>
@@ -54,11 +55,10 @@
     <%- include('footer') %>
     </div>
     <%- include('partials/menuModal') %>
-    <% if(err) { %>
+    <% if(error) { %>
         <div id="snackbar"></div>
         <%} %>
     <script src="/javascript/index.js"></script>
-    <script>showSnackbar(error)</script>
 </body>
 
 </html>

@@ -1,7 +1,14 @@
 let skinsInFocus = "<%- JSON.stringify(skinsInFocus) %>";
 let container = document.querySelector(".main-container");
+const error = document.getElementById("error").value;
+console.log(error);
+//container.addEventListener("resize", resizeContainer);
 
-container.addEventListener("resize", resizeContainer);
+document.addEventListener("DOMContentLoaded", () => {
+    if (error) {
+        showSnackbar(error);
+    }
+});
 
 function changeFocus(value) {
     if (skinsInFocus !== value) {
@@ -70,14 +77,15 @@ function renderContent() {
     content.innerHTML = html;
 }
 
+/*
+    The snackbar, is a frontend popup element which shows after the user has been directed to "/", with errors.
+*/
+
 function showSnackbar(error) {
+    console.log("No snack?");
     let snackbar = document.querySelector("#snackbar");
 
-    if (statuscode === null) {
-        snackbar.innerHTML = `${error.message}`;
-    } else {
-        snackbar.innerHTML = `${error.statuscode} | ${error.message}`;
-    }
+    snackbar.innerHTML = `${error}`;
 
     snackbar.className = "show";
     setTimeout(function () {
