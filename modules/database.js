@@ -102,6 +102,18 @@ exports.createGuest = async (req, res, next) => {
     try {
         const guestName = req.body.guestname;
 
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                name: guestName,
+            },
+        });
+        if (existingUser) {
+            //TODO: User exists, so redirect to login with the username
+            console.log("User already exists");
+            res.status(409).send("User already exists");
+            return;
+        }
+
         // Generate a unique ID for the guest user
         const guestId = `guest-${uuidv4()}-${guestName}`;
 
