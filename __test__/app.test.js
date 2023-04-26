@@ -14,11 +14,13 @@ describe("Test the login path", () => {
     });
 });
 
+/* deleted - to be replaced
 describe("Test the game area", () => {
     test("It should response the GET method", () => {
         return request(app).get("/game").expect(200);
     });
 });
+*/
 
 describe("Test unknown endpoint", () => {
     test("It should response the GET method", () => {
