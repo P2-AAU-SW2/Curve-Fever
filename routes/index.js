@@ -3,18 +3,19 @@ const versionData = require("../modules/version");
 const router = express.Router();
 const { ensureAuth } = require("../middlewares/authMiddleware");
 
-let skinsInFocus = true;
+let skinsInFocus = true; // Determines frontend default value
 
 router.get("/", ensureAuth, function (req, res) {
-    let user;
-    if (req.user) {
-        user = req.user;
-    } else {
-        user = {
-            name: "Development",
-        };
-    }
-    res.render("gameMenu", { skinsInFocus, user: user, version: versionData });
+    // Use session to store error data from ErrorHandler on redirect, to be rendered on home screen.
+    const error = req.session.error;
+    delete req.session.error; // Delete the session data for further use.
+
+    res.render("index", {
+        skinsInFocus,
+        user: req.user,
+        version: versionData,
+        error: error ? error : false, // Only if it has a value
+    });
 });
 
 module.exports = router;
