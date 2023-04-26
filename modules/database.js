@@ -47,7 +47,7 @@ passport.deserializeUser(async (id, done) => {
     try {
         // Check if the user ID is for a guest user
         if (id.startsWith("guest-")) {
-            const guestNameIndex = id.indexOf("-", 6) + 1;
+            const guestNameIndex = id.lastIndexOf("-") + 1;
             const guestName = id.substring(guestNameIndex);
             const guestUser = { id: id, name: guestName };
             done(null, guestUser);
