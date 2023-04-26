@@ -64,7 +64,7 @@ function logger() {
     console.log(gameManager.publicGames);
 }
 
-setInterval(logger, 1500);
+//setInterval(logger, 1500);
 
 exports.getGameById = async (req, res, next) => {
     const redirected = req.query.valid;
