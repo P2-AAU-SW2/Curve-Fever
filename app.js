@@ -46,6 +46,7 @@ app.use(
         resave: true,
         saveUninitialized: true,
         store: store,
+        error: false,
     })
 );
 app.use(passport.authenticate("session"));

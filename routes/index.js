@@ -6,12 +6,14 @@ const { ensureAuth } = require("../middlewares/authMiddleware");
 let skinsInFocus = true;
 
 router.get("/", ensureAuth, function (req, res) {
-    console.log(req.user);
+    const error = req.session.error;
+    console.log(error);
+    req.session.destroy();
     res.render("index", {
         skinsInFocus,
         user: req.user,
         version: versionData,
-        err: undefined,
+        err: error ? error : false,
     });
 });
 
