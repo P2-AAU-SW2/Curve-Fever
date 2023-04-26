@@ -11,8 +11,6 @@ html {
 }
 .gameCanvas {
     display: block;
-    width: min(60vw, 90vh);
-    height: min(60vw, 90vh);
     margin: 0 auto;
     position: relative;
     grid-column-start: 2;

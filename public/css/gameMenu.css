@@ -61,6 +61,9 @@
 .shop-game-btn {
     display: none;
 }
+.shop-cross {
+    display: none !important;
+}
 
 .main-container {
     grid-area: 2 / 2 / 3 / 3;
@@ -175,6 +178,9 @@
     }
     .shop-game-btn {
         display: block;
+    }
+    .shop-cross {
+        display: block !important;
     }
 }
 @media (max-width: 21.85em) {

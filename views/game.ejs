@@ -3,6 +3,7 @@
     <head>
         <%- include('header') %>
         <link href="/css/gameArea.css" rel="stylesheet" />
+        <script defer src="/javascript/canvas.js"></script>
     </head>
     <body>
         <div class="gameContainer">
@@ -72,7 +73,12 @@
                     </form>
                 </div>
             </div>
-            <canvas class="gameCanvas"></canvas>
+            <canvas
+                class="gameCanvas"
+                id="gameCanvas"
+                width="500"
+                height="500"
+            ></canvas>
         </div>
         <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
         <script src="/javascript/game.js"></script>
