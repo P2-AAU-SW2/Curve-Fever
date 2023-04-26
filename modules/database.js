@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const { v4: uuidv4 } = require("uuid");
 
 passport.use(
     new LocalStrategy(
@@ -43,8 +44,20 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-    const user = await prisma.user.findUnique({ where: { id: id } });
-    done(null, user);
+    try {
+        // Check if the user ID is for a guest user
+        if (id.startsWith("guest-")) {
+            const guestNameIndex = id.indexOf("-", 6) + 1;
+            const guestName = id.substring(guestNameIndex);
+            const guestUser = { id: id, name: guestName };
+            done(null, guestUser);
+        } else {
+            const user = await prisma.user.findUnique({ where: { id: id } });
+            done(null, user);
+        }
+    } catch (err) {
+        done(err);
+    }
 });
 
 exports.createUser = async (req, res, next) => {
@@ -72,6 +85,29 @@ exports.createUser = async (req, res, next) => {
 
         // authenticate the user
         req.login(user, (err) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send("An error occurred while logging in.");
+                return;
+            }
+            res.redirect("/");
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("An error occurred while creating the user.");
+    }
+};
+
+exports.createGuest = async (req, res, next) => {
+    try {
+        const guestName = req.body.guestname;
+
+        // Generate a unique ID for the guest user
+        const guestId = `guest-${uuidv4()}-${guestName}`;
+
+        const guestUser = { id: guestId, name: guestName };
+
+        req.login(guestUser, (err) => {
             if (err) {
                 console.log(err);
                 res.status(500).send("An error occurred while logging in.");

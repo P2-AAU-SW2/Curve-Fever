@@ -7,12 +7,14 @@ for (let i = 0; i < playerCells.length; i++) {
 const messageInput = document.getElementById("usermsg");
 const form = document.getElementById("form");
 
-const url = window.location.href;
-const gameID = url.slice(url.indexOf("game") + 5, -12); // 12 tager hensyn for /?valid=true
+const gameID = document.getElementById("gameId").value;
+const userID = document.getElementById("userId").value;
+const userName = document.getElementById("userName").value;
 
 const socket = io({
     query: {
         gameID: gameID,
+        userID: userID,
     },
 });
 
@@ -26,8 +28,9 @@ socket.on("chat", (message) => {
 
 form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const message = messageInput.value;
+    let message = messageInput.value;
     if (message === "") return;
+    message = userName + ": " + message;
     socket.emit("chat", message);
     displayMessage(message);
     messageInput.value = "";
@@ -36,7 +39,7 @@ form.addEventListener("submit", (e) => {
 function displayMessage(message) {
     const li = document.createElement("li");
     const p = document.createElement("p");
-    p.textContent = "Username: " + message;
+    p.textContent = message;
     li.appendChild(p);
     document.getElementById("textbox").appendChild(li);
     const textbox = document.getElementById("textbox");

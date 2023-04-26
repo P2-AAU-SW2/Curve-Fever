@@ -11,4 +11,6 @@ router.post("/createUser", db.createUser);
 
 router.post("/login", db.loginUser);
 
+router.post("/guest", db.createGuest);
+
 module.exports = router;
