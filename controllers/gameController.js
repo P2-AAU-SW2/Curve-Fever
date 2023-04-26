@@ -7,6 +7,7 @@ function logger() {
 //setInterval(logger, 3000);
 
 exports.getGameById = async (req, res, next) => {
+    // Call the class/object method "joinById" from "gameClasses". Handle errors by calling global ErrorHandler, which redirects the user.
     gameStates.joinByID(req.params.id, req.user).then(
         (result) => {
             res.render("game", {
@@ -22,10 +23,11 @@ exports.getGameById = async (req, res, next) => {
 };
 
 exports.play = async (req, res, next) => {
+    // Call the class/object method "joinPublic" from "gameClasses" to get a game to join.
     gameStates
         .joinPublic()
         .then((id) => {
-            res.redirect(`/game/${id}`);
+            res.redirect(`/game/${id}`); // Redirect to the game page.
         })
         .catch((error) => next(error));
 };
