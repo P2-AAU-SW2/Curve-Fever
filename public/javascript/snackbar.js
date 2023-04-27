@@ -2,8 +2,13 @@
     The snackbar, is a frontend popup element which shows after the user has been directed to "/", with errors.
 */
 
+document.addEventListener("DOMContentLoaded", () => {
+    if (error) {
+        showSnackbar(error);
+    }
+});
+
 function showSnackbar(error) {
-    console.log("No snack?");
     let snackbar = document.querySelector("#snackbar");
 
     snackbar.innerHTML = `${error}`;

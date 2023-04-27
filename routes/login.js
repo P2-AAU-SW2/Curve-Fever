@@ -4,7 +4,13 @@ const db = require("../modules/database");
 const versionData = require("../modules/version");
 
 router.get("/", function (req, res) {
-    res.render("login", { version: versionData });
+    const error = req.session.error;
+    req.session.error = false;
+
+    res.render("login", {
+        version: versionData,
+        error: error,
+    });
 });
 
 router.post("/createUser", db.createUser);
