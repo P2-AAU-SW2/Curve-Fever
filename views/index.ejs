@@ -5,6 +5,7 @@
     <%- include('header') %>
     <link href="/css/gameMenu.css" rel="stylesheet" />
     <link href="/css/menuModal.css" rel="stylesheet" />
+    <link href="/css/snackbar.css" rel="stylesheet" />
     <input type="hidden" id="error" value="<%= error ? error : false %>" />
     <script defer src="/javascript/menuModal.js"></script>
 </head>
@@ -57,7 +58,9 @@
     <%- include('partials/menuModal') %>
     <% if(error) { %>
         <div id="snackbar"></div>
-        <%} %>
+    <%} %>
+    <script> const error = "<%= error %>"; </script>
+    <script src="/javascript/snackbar.js"></script>
     <script src="/javascript/index.js"></script>
 </body>
 
