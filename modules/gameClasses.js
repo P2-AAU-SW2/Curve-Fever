@@ -41,7 +41,7 @@ class GameStates {
                 ) {
                     this.games[i].players.push(new Player(user));
                     return resolve(this.games[i].id, user);
-                } else if (this.games[i].count > this.MAX_PLAYERS) {
+                } else if (this.games[i].count >= this.MAX_PLAYERS) {
                     reject(new Error("This game is full."));
                 }
             }

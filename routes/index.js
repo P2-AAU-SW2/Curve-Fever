@@ -8,7 +8,7 @@ let skinsInFocus = true; // Determines frontend default value
 router.get("/", ensureAuth, function (req, res) {
     // Use session to store error data from ErrorHandler on redirect, to be rendered on home screen.
     const error = req.session.error;
-    delete req.session.error; // Delete the session data for further use.
+    req.session.error = false;
 
     res.render("index", {
         skinsInFocus,
