@@ -103,7 +103,7 @@ class Curve {
         if (!this.isJumping()) {
             // Check if curve hit its own path. Don't check recent points in path since it can collide with them
             // given the current point is close enough. This logic needs to be different for hitting other players
-            for (let i = 0; i < this.path.length - 10; i++) {
+            for (let i = 0; i < this.path.length - this.lineWidth; i++) {
                 // L2 norm: get shortest distance
                 const distance = Math.sqrt(
                     (this.path[i].x - this.x) ** 2 +
