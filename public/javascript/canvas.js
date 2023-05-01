@@ -23,7 +23,7 @@ class Curve {
         this.lineWidth = lineWidth;
         this.collided = false;
         this.jumps = [];
-        this.jumpFrames = 14;
+        this.jumpFrames = lineWidth * 2;
         this.AccJumpFrames = 0;
         this.jumpChance = 0.0;
         this.jumpFrequency = 0.005;
@@ -51,7 +51,7 @@ class Curve {
                         ctx.moveTo(this.path[i].x, this.path[i].y);
                     } else {
                         i = this.path.length - 1;
-                        const radius = 0.75;
+                        const radius = this.lineWidth * 0.0933 + 0.1;
                         ctx.stroke();
                         ctx.closePath();
                         ctx.beginPath();
