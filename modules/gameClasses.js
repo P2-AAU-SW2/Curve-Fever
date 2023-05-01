@@ -19,8 +19,9 @@ class GameStates {
                     return resolve(this.games[i].id);
                 }
             }
+            
             // Generate a new room if no available, and push it to current games.
-            console.log("No games, creating a new");
+            console.log("No games, creating a new!");
             const newID = uuidv4();
             this.games.push(new Game(newID));
             return resolve(newID);

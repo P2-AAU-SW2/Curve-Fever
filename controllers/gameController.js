@@ -1,8 +1,8 @@
 const gameStates = require("../modules/gameClasses");
 
-function logger() {
+exports.logger = function(gameStates) {
     console.log(gameStates.games[0].players);
-}
+};  
 
 //setInterval(logger, 3000);
 
