@@ -3,7 +3,7 @@
     <head>
         <%- include("header")%>
         <link href="/css/login.css" rel="stylesheet" />
-        <script src="/javascript/login.js" defer></script>
+        <link href="/css/snackbar.css" rel="stylesheet" />
     </head>
 
     <body>
@@ -109,7 +109,12 @@
             </div>
         </div>
         <%- include("footer")%>
+        <% if(error) { %>
+            <div id="snackbar"></div>
+        <%} %>
+
         <script>
+            const error = "<%= error %>";
             function submitSignup() {
                 const form = document.getElementById("authForm");
                 form.action = "/login/createUser";
@@ -131,5 +136,7 @@
                 form.submit();
             }
         </script>
+        <script src="/javascript/snackbar.js"></script>
+        <script src="/javascript/login.js"></script>
     </body>
 </html>

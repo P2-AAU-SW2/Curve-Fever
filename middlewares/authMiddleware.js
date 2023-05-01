@@ -1,4 +1,5 @@
 function ensureAuth(req, res, next) {
+    console.log("User before checking for auth:" + req.user);
     if (process.env.NODE_ENV === "production") {
         if (req.isAuthenticated()) {
             // User is authenticated
@@ -6,8 +7,10 @@ function ensureAuth(req, res, next) {
             return next();
         } else {
             // User is not authenticated
-            res.redirect("/login");
-            console.log("User is not authenticated");
+            const error = new Error("You must be logged in to view this page.");
+            error.status = 401;
+            error.redirectTo = "/login";
+            next(error);
         }
     } else {
         if (req.isAuthenticated()) {
@@ -16,7 +19,7 @@ function ensureAuth(req, res, next) {
             return next();
         } else {
             // Log user in to development user
-            console.log("User is not authenticated");
+            console.log("Logging in to dev user");
             const devUser = {
                 id: "4c1b3248-563f-4e17-b6a5-c6bbe59b0af3",
                 name: "Development",
@@ -27,11 +30,14 @@ function ensureAuth(req, res, next) {
             };
             req.login(devUser, (err) => {
                 if (err) {
-                    console.log(err);
-                    res.status(500).send("An error occurred while logging in.");
-                    return;
+                    const error = new Error(
+                        "An error occurred while logging in."
+                    );
+                    error.status = 500;
+                    error.redirectTo = "/login";
+                    return next(error);
                 }
-                next();
+                next(err);
             });
         }
     }
