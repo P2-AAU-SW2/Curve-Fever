@@ -19,11 +19,13 @@
                     <i class="fa-solid fa-user icon user-icon"></i>
                     <div class="user-name"><%= user.name ? user.name : "Bruh" %></div>
             </div>
+            <form action="login/logout" method="POST">
+                <button class="green-btn quickplay button-input">
+                        Log Out
+                </button>
+            </form>
         </div>
     </div>
-    <form action="login/logout" method="POST">
-        <button type="submit">Log Out</button>
-    </form>
     <div class="main-container">
         <div class="game-btns">
             <button class="red-btn quickplay button-input" onclick="location.href = '/game/play'"">
