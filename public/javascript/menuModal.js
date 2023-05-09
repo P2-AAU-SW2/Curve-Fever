@@ -6,10 +6,12 @@ let menuModal = {
     btn1: {
         text: "",
         color: "blue",
+        href: "",
     },
     btn2: {
         text: "",
         color: "green",
+        href: "",
     },
     input: {
         placeholder: "",
@@ -47,13 +49,13 @@ function createModal() {
     }
     if (menuModal.input.placeholder) {
         html += `<div class="menu-modal-input-container">
-                    <input type="text" class="text-input" placeholder="${menuModal.input.placeholder}">
+                    <input type="text" id="modalInput" class="text-input" placeholder="${menuModal.input.placeholder}">
                     <i class="fa-solid fa-pen"></i>
                 </div>`;
     }
     if (menuModal.btn1.text) {
         html += `<div class="menu-modal-btns">
-                    <button class="${menuModal.btn1.color}-btn">
+                    <button onclick="${menuModal.btn1.onClick}" class="${menuModal.btn1.color}-btn">
                         ${menuModal.btn1.text}
                     </button>`;
 

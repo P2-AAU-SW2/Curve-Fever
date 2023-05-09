@@ -2,12 +2,6 @@ let skinsInFocus = "<%- JSON.stringify(skinsInFocus) %>";
 let container = document.querySelector(".main-container");
 //container.addEventListener("resize", resizeContainer);
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (error) {
-        showSnackbar(error);
-    }
-});
-
 function changeFocus(value) {
     if (skinsInFocus !== value) {
         setFocus();
@@ -34,8 +28,19 @@ function createMenuModal(type, item) {
         menuModal.input.placeholder = "Room name";
         menuModal.btn1.text = "Join room";
         menuModal.btn1.color = "red";
+        menuModal.btn1.onClick = "joinButton()";
     }
     createModal();
+}
+
+function joinButton() {
+    let textInput = document.getElementById("modalInput").value;
+
+    if (textInput != "") {
+        window.location.href = `/game/${textInput}`;
+    } else {
+        showSnackbar("Please enter a game ID");
+    }
 }
 
 function setFocus() {
