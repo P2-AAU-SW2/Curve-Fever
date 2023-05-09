@@ -145,7 +145,7 @@ class Curve {
 }
 
 // Create a curve instance
-const curve = new Curve(
+var curve = new Curve(
     canvas.width / 2,
     canvas.height / 2,
     0,
@@ -178,7 +178,6 @@ document.addEventListener("keyup", (event) => {
     }
 });
 
-curve.init();
 // Main game loop
 function gameLoop() {
     // we need to clear the canvas for every frame so the line fx. is smooth
@@ -188,7 +187,82 @@ function gameLoop() {
 
         requestAnimationFrame(gameLoop);
     }
+    // add for loop for every player
+    else if (curve.collided) {
+        round++;
+        startGame();
+    }
 }
 
 // Start the game loop
-gameLoop();
+// Set round to 1
+let round = 1;
+function startGame() {
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "bolder 55px Arial";
+    ctx.fillStyle = "#FFFFFF";
+    // Check if the game is over
+    if (round === 6) {
+        // Draw the winner
+        const text = "You're the winner";
+        const textWidth = ctx.measureText(text).width;
+        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+        return;
+    } else {
+        // Draw the current round
+        const text = "Round " + round;
+        const textWidth = ctx.measureText(text).width;
+        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+    }
+
+    console.log(round);
+
+    ctx.font = "bolder 60px Arial";
+    ctx.fillStyle = "#FFFFFF";
+    setTimeout(function () {
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // draw "3" on the canvas
+        ctx.fillText("3", canvas.width / 2, canvas.height / 2);
+
+        // Wait for 1 second
+        setTimeout(function () {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw "2" on the canvas
+            ctx.fillText("2", canvas.width / 2, canvas.height / 2);
+
+            // Wait for 1 second
+            setTimeout(function () {
+                // Clear the canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw "1" on the canvas
+                ctx.fillText("1", canvas.width / 2, canvas.height / 2);
+
+                // Wait for 1 second
+                setTimeout(function () {
+                    // Clear the canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // Reset the curve's properties
+                    curve = new Curve(
+                        canvas.width / 2,
+                        canvas.height / 2,
+                        0,
+                        "#32BEFF",
+                        1.5,
+                        7
+                    );
+                    // Initialize the curve
+                    curve.init();
+                    // Start the game loop
+                    gameLoop();
+                }, 1000);
+            }, 1000);
+        }, 1000);
+    }, 1000);
+}
+
+startGame();
