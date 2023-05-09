@@ -14,7 +14,7 @@ const ErrorHandler = (err, req, res, next) => {
 
     // Redirect path
     const redirectTo = err.redirectTo || "/";
-    console.log(req.session);
+    console.log(req.session); // LOG SESSION
     console.log(
         "ErrorHandler: status: " +
             status +

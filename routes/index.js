@@ -10,8 +10,8 @@ router.get("/", ensureAuth, function (req, res) {
     const errorMsg = req.session.errorMessage;
     const errorStatus = req.session.errorStatus;
 
-    console.log("HERE " + errorMsg + errorStatus);
-    console.log(req.session);
+    console.log("HERE " + errorMsg + errorStatus); // LOG SESSION
+    console.log(req.session); // LOG SESSION
     req.session.errorMessage = undefined;
     req.session.errorStatus = undefined;
 
