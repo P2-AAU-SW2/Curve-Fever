@@ -10,10 +10,6 @@ const gameController = require("../controllers/gameController");
 router.get("/play", ensureAuth, gameController.play); // Request a current or new game. Redirects to /play/:id
 router.get("/play/:id", ensureAuth, gameController.play); // Join the game with an ID.
 
-router.get("/join/:id", ensureAuth, gameController.joinGameById);
-
-router.get("/create", ensureAuth, gameController.createGame);
-
-router.get("/:id", ensureAuth, gameController.getGameById);
+router.get("/:id", ensureAuth, gameController.getGameById); // Actually responsible for viewing the game page
 
 module.exports = router;
