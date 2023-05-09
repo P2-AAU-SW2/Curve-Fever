@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const { v4: uuidv4 } = require("uuid");
 
 passport.use(
     new LocalStrategy(
@@ -43,8 +44,20 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-    const user = await prisma.user.findUnique({ where: { id: id } });
-    done(null, user);
+    try {
+        // Check if the user ID is for a guest user
+        if (id.startsWith("guest-")) {
+            const guestNameIndex = id.lastIndexOf("-") + 1;
+            const guestName = id.substring(guestNameIndex);
+            const guestUser = { id: id, name: guestName };
+            done(null, guestUser);
+        } else {
+            const user = await prisma.user.findUnique({ where: { id: id } });
+            done(null, user);
+        }
+    } catch (err) {
+        done(err);
+    }
 });
 
 exports.createUser = async (req, res, next) => {
@@ -55,9 +68,10 @@ exports.createUser = async (req, res, next) => {
             },
         });
         if (existingUser) {
-            console.log("User already exists");
-            res.status(409).send("User already exists");
-            return;
+            const error = new Error("User already exists");
+            error.status = 409;
+            error.redirectTo = "/login";
+            return next(error);
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -73,19 +87,84 @@ exports.createUser = async (req, res, next) => {
         // authenticate the user
         req.login(user, (err) => {
             if (err) {
-                console.log(err);
-                res.status(500).send("An error occurred while logging in.");
-                return;
+                const error = new Error("An error occurred while logging in.");
+                error.status = 500;
+                error.redirectTo = "/login";
+                return next(error);
             }
             res.redirect("/");
         });
     } catch (err) {
-        console.log(err);
-        res.status(500).send("An error occurred while creating the user.");
+        const error = new Error("An error occurred while creating the user.");
+        error.status = 500;
+        error.redirectTo = "/login";
+        return next(error);
     }
 };
 
-exports.loginUser = passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-});
+exports.createGuest = async (req, res, next) => {
+    try {
+        const guestName = req.body.guestname;
+
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                name: guestName,
+            },
+        });
+        if (existingUser) {
+            //TODO: User exists, so redirect to login with the username
+            const error = new Error("User already exists");
+            error.status = 409;
+            error.redirectTo = "/login";
+            return next(error);
+        }
+
+        // Generate a unique ID for the guest user
+        const guestId = `guest-${uuidv4()}-${guestName}`;
+
+        const guestUser = { id: guestId, name: guestName };
+
+        req.login(guestUser, (err) => {
+            if (err) {
+                const error = new Error("An error occurred while logging in.");
+                error.status = 500;
+                error.redirectTo = "/login";
+                return next(error);
+            }
+            res.redirect("/");
+        });
+    } catch (err) {
+        const error = new Error("An error occurred while creating the user.");
+        error.status = 500;
+        error.redirectTo = "/login";
+        return next(error);
+    }
+};
+
+exports.loginUser = (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+        if (err) {
+            const error = new Error("An error occurred while logging in.");
+            error.status = 500;
+            error.redirectTo = "/login";
+            return next(error);
+        }
+
+        if (!user) {
+            const error = new Error("Invalid username or password");
+            error.status = 401;
+            error.redirectTo = "/login";
+            return next(error);
+        }
+
+        req.login(user, (err) => {
+            if (err) {
+                const error = new Error("An error occurred while logging in.");
+                error.status = 500;
+                error.redirectTo = "/login";
+                return next(error);
+            }
+            res.redirect("/");
+        });
+    })(req, res, next);
+};

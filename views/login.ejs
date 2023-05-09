@@ -1,97 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <%- include("header")%>
+        <link href="/css/login.css" rel="stylesheet" />
+        <link href="/css/snackbar.css" rel="stylesheet" />
+    </head>
 
-<head>
-    <%- include("header")%>
-    <link href="/css/login.css" rel="stylesheet" />
-    <script src="/javascript/login.js" defer></script>
-</head>
-
-<body>
-    <div class="logo">
-        <h1><span style="color: white">LINE</span></h1>
-        <h2>
-            <span style="color: #A574AA">F</span>
-            <span style="color: #5CB1E0">E</span>
-            <span style="color: #A9CE3C">V</span>
-            <span style="color: #FFCE3A">E</span>
-            <span style="color: #EF625A">R</span>
-        </h2>
-    </div>
-    <div class="page-wrapper">
-        <div class="pages">
-            <div class="page one">
-                <div class="login-container">
-                    <form>
-                        <div class="input-container">
-                            <input class="text-input" type="text" placeholder="">
-                            <label>Username</label>
-                            <i class="fa-solid fa-user icon"></i>
-                        </div>
-                        <div class="input-container">
-                            <button type="button" id="loginButton" class="green-btn button-input" onclick="location.href = '/'"">
-                                PLAY
-                            </button>
-                        </div>
-                    </form>
-                    <div class=" loginFooter">
-                                <p onClick="slide()">Login or sign up</p>
-                        </div>
-                </div>
-            </div>
-            <div class="page two">
-                <div class="login-container">
-                    <form id="authForm">
-                        <div class="input-container">
-                            <input class="text-input" type="text" name="username" placeholder=" " id="username">
-                            <label>Email</label>
-                            <i class="fa-solid fa-envelope icon"></i>
-                        </div>
-                        <div class="input-container">
-                            <input class="text-input" type="password" name="password" placeholder=" " id="password">
-                            <label>Password</label>
-                            <i class="fa-solid fa-lock icon"></i>
-                        </div>
-                        <div class="loginOptions">
-                            <div class="rememberDiv">
-                                <input type="checkbox" id="rememberMe">
-                                <label for="rememberMe">Remember me</label>
+    <body>
+        <div class="logo">
+            <h1><span style="color: white">LINE</span></h1>
+            <h2>
+                <span style="color: #a574aa">F</span>
+                <span style="color: #5cb1e0">E</span>
+                <span style="color: #a9ce3c">V</span>
+                <span style="color: #ffce3a">E</span>
+                <span style="color: #ef625a">R</span>
+            </h2>
+        </div>
+        <div class="page-wrapper">
+            <div class="pages">
+                <div class="page one">
+                    <div class="login-container">
+                        <form id="guestForm">
+                            <div class="input-container">
+                                <input
+                                    class="text-input"
+                                    type="text"
+                                    name="guestname"
+                                    placeholder=""
+                                    id="guestname"
+                                />
+                                <label>Username</label>
+                                <i class="fa-solid fa-user icon"></i>
                             </div>
-                            <p id="forgotPassword">Forgot password?</p>
+                            <div class="input-container">
+                                <button
+                                    type="button"
+                                    id="loginButton"
+                                    class="green-btn button-input"
+                                    onclick="submitGuest()"
+                                >
+                                    PLAY
+                                </button>
+                            </div>
+                        </form>
+                        <div class="loginFooter">
+                            <p onClick="slide()">Login or sign up</p>
                         </div>
-                        <div class="input-container">
-                            <button type="button" id="loginButton" class="blue-btn button-input" onclick="submitSignup()">
-                                SIGN UP
-                            </button>
-                            <div style="width: 30px"></div>
-                            <button type="button" id="loginButton" class="green-btn button-input" onclick="submitLogin()">
-                                LOGIN
-                            </button>
+                    </div>
+                </div>
+                <div class="page two">
+                    <div class="login-container">
+                        <form id="authForm">
+                            <div class="input-container">
+                                <input
+                                    class="text-input"
+                                    type="text"
+                                    name="username"
+                                    placeholder=" "
+                                    id="username"
+                                />
+                                <label>Email</label>
+                                <i class="fa-solid fa-envelope icon"></i>
+                            </div>
+                            <div class="input-container">
+                                <input
+                                    class="text-input"
+                                    type="password"
+                                    name="password"
+                                    placeholder=" "
+                                    id="password"
+                                />
+                                <label>Password</label>
+                                <i class="fa-solid fa-lock icon"></i>
+                            </div>
+                            <div class="loginOptions">
+                                <div class="rememberDiv">
+                                    <input type="checkbox" id="rememberMe" />
+                                    <label for="rememberMe">Remember me</label>
+                                </div>
+                                <p id="forgotPassword">Forgot password?</p>
+                            </div>
+                            <div class="input-container">
+                                <button
+                                    type="button"
+                                    id="loginButton"
+                                    class="blue-btn button-input"
+                                    onclick="submitSignup()"
+                                >
+                                    SIGN UP
+                                </button>
+                                <div style="width: 30px"></div>
+                                <button
+                                    type="button"
+                                    id="loginButton"
+                                    class="green-btn button-input"
+                                    onclick="submitLogin()"
+                                >
+                                    LOGIN
+                                </button>
+                            </div>
+                        </form>
+                        <div class="loginFooter">
+                            <p onClick="slide()">Play as guest</p>
                         </div>
-                    </form>
-                    <div class="loginFooter">
-                        <p onClick="slide()">Play as guest</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <%- include("footer")%>
-    <script>
-        function submitSignup() {
-            const form = document.getElementById('authForm');
-            form.action = '/login/createUser';
-            form.method = 'post';
-            form.submit();
-        }
+        <%- include("footer")%>
+        <% if(error) { %>
+            <div id="snackbar"></div>
+        <%} %>
 
-        function submitLogin() {
-            const form = document.getElementById('authForm');
-            form.action = '/login/login';
-            form.method = 'post';
-            form.submit();
-        }
-    </script>
-</body>
+        <script>
+            const error = "<%= error %>";
+            function submitSignup() {
+                const form = document.getElementById("authForm");
+                form.action = "/login/createUser";
+                form.method = "post";
+                form.submit();
+            }
 
+            function submitLogin() {
+                const form = document.getElementById("authForm");
+                form.action = "/login/login";
+                form.method = "post";
+                form.submit();
+            }
+
+            function submitGuest() {
+                const form = document.getElementById("guestForm");
+                form.action = "/login/guest";
+                form.method = "post";
+                form.submit();
+            }
+        </script>
+        <script src="/javascript/snackbar.js"></script>
+        <script src="/javascript/login.js"></script>
+    </body>
 </html>
