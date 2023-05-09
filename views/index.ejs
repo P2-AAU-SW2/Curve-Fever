@@ -55,10 +55,10 @@
     <%- include('footer') %>
     </div>
     <%- include('partials/menuModal') %>
-    <% if(error) { %>
+    <% if(errorMsg != undefined) { %>
         <div id="snackbar"></div>
     <%} %>
-    <script> const error = "<%= error %>"; </script>
+    <script>const errorMsg = "<%= errorMsg %>"; const errorStatus = Number.parseInt("<%= errorStatus%>") </script>
     <script src="/javascript/snackbar.js"></script>
     <script src="/javascript/index.js"></script>
 </body>

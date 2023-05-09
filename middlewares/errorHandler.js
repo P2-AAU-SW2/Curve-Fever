@@ -4,15 +4,27 @@ so that i can be used after a redirect @routes/index.js
 */
 
 const ErrorHandler = (err, req, res, next) => {
-    const errStatus = err.status || 500;
-    const errMsg = err.message || "Something went wrong";
+    // HTTP Status code
+    const status = err.status || 500;
+    req.session.error.status = 500;
+
+    // Error message
+    const msg = err.message || "Something went wrong";
+    req.session.error.msg = msg;
+
+    // Redirect path
     const redirectTo = err.redirectTo || "/";
 
-    req.session.error = errMsg;
-
     console.log(
-        "ErrorHandler: " + errStatus + " | " + errMsg + " | " + redirectTo
+        "ErrorHandler: status: " +
+            status +
+            " | message: " +
+            msg +
+            " | redirect to: " +
+            redirectTo
     );
+
+    // Redirect
     res.redirect(redirectTo);
 };
 

@@ -5,12 +5,18 @@ const versionData = require("../modules/version");
 
 // GET method to render the login page.
 router.get("/", function (req, res) {
-    const error = req.session.error; // Extract any errors from session storage
-    req.session.error = false; // Reset the error status, since session is persistent.
+    const errorMsg = req.session.error.msg;
+    const errorStatus = req.session.error.status;
+
+    req.session.error = {
+        status: undefined,
+        msg: undefined,
+    }; // Reset the error status, since session is persistent.
 
     res.render("login", {
         version: versionData, // Pass the version of our program
-        error: error ? error : false, // Only pass errors if not undefined
+        errorMsg: errorMsg != undefined ? errorMsg : false,
+        errorStatus: errorStatus != undefined ? errorStatus : false, // Only pass errors if not undefined
     });
 });
 

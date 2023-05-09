@@ -7,14 +7,20 @@ let skinsInFocus = true; // Determines frontend default value
 
 // GET method to render the index page. ensureAuth is a middleware for authenticating.
 router.get("/", ensureAuth, function (req, res) {
-    const error = req.session.error; // Extract any errors from session storage
-    req.session.error = false; // Reset the error status, since session is persistent.
+    const errorMsg = req.session.error.msg;
+    const errorStatus = req.session.error.status;
+
+    req.session.error = {
+        status: undefined,
+        msg: undefined,
+    }; // Reset the error status, since session is persistent.
 
     res.render("index", {
         skinsInFocus, // Frontend default
         user: req.user, // User information, such as username
         version: versionData, // Show the game version
-        error: error ? error : false, // Only pass errors if not undefined
+        errorMsg: errorMsg != undefined ? errorMsg : false,
+        errorStatus: errorStatus != undefined ? errorStatus : false, // Only pass errors if not undefined
     });
 });
 

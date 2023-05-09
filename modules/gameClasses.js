@@ -19,7 +19,7 @@ class GameStates {
                     return resolve(this.games[i].id);
                 }
             }
-            
+
             // Generate a new room if no available, and push it to current games.
             console.log("No games, creating a new!");
             const newID = uuidv4();
@@ -46,7 +46,9 @@ class GameStates {
                     reject(new Error("This game is full."));
                 }
             }
-            reject(new Error("Game does not exist."));
+            const err = new Error("Game does not exist.");
+            err.status = 404;
+            reject(err);
         });
     }
     /*

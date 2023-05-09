@@ -9,7 +9,7 @@ exports.logger = function (gameStates) {
 exports.getGameById = async (req, res, next) => {
     // Call the class/object method "joinById" from "gameClasses". Handle errors by calling global ErrorHandler, which redirects the user.
     gameStates.joinByID(req.params.id, req.user).then(
-        (result) => {
+        () => {
             res.render("game", {
                 userName: req.user.name,
                 userId: req.user.id,

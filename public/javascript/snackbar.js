@@ -3,18 +3,26 @@
 */
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (error) {
-        showSnackbar(error);
+    if (errorMsg != "false") {
+        showSnackbar(errorMsg, errorStatus);
     }
 });
 
-function showSnackbar(error) {
+function showSnackbar(message, status) {
     let snackbar = document.querySelector("#snackbar");
 
-    snackbar.innerHTML = `${error}`;
+    // Check if a HTTP status code is provided, else just show the message.
+    if (status != undefined) {
+        snackbar.innerHTML = `${status} | ${message}`;
+    } else {
+        snackbar.innerHTML = `${message}`;
+    }
 
+    // Add the show class to the snackbar element
     snackbar.className = "show";
+
+    // Remove the snackbar after a set timeout
     setTimeout(function () {
         snackbar.className = snackbar.className.replace("show", "");
-    }, 3000);
+    }, 6000);
 }

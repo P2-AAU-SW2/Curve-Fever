@@ -109,12 +109,14 @@
             </div>
         </div>
         <%- include("footer")%>
-        <% if(error) { %>
+        <% if(errorMsg != undefined) { %>
             <div id="snackbar"></div>
         <%} %>
 
         <script>
-            const error = "<%= error %>";
+            const errorMsg = "<%= errorMsg %>";
+            const errorStatus = Number.parseInt("<%= errorStatus%>") ;
+            
             function submitSignup() {
                 const form = document.getElementById("authForm");
                 form.action = "/login/createUser";
