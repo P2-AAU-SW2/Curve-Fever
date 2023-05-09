@@ -106,6 +106,15 @@ exports.createGuest = async (req, res, next) => {
     try {
         const guestName = req.body.guestname;
 
+        if (guestName.length < 3) {
+            const error = new Error(
+                "Guest name must be at least 3 characters long."
+            );
+            error.status = 400;
+            error.redirectTo = "/login";
+            return next(error);
+        }
+
         const existingUser = await prisma.user.findUnique({
             where: {
                 name: guestName,
@@ -167,4 +176,16 @@ exports.loginUser = (req, res, next) => {
             res.redirect("/");
         });
     })(req, res, next);
+};
+
+exports.logoutUser = (req, res, next) => {
+    req.logout(function (err) {
+        if (err) {
+            const error = new Error("An error occurred while logging out.");
+            error.status = 500;
+            error.redirectTo = "/";
+            return next(error);
+        }
+        res.redirect("/login");
+    });
 };

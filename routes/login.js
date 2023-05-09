@@ -23,4 +23,7 @@ router.post("/login", db.loginUser);
 // POST method to play as guest
 router.post("/guest", db.createGuest);
 
+// POST method to logout
+router.post("/logout", db.logoutUser);
+
 module.exports = router;
