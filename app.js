@@ -19,7 +19,7 @@ const socketHandler = require("./modules/socketHandler");
 // Setup
 if (process.env.NODE_ENV === "development") {
     console.info("Node is running in development mode");
-    app.use(logger("dev"));
+    //app.use(logger("dev"));
     console.info("Enabling detailed Express logging.");
 } else if (process.env.NODE_ENV === "production") {
     console.info("Node is running in production mode");
@@ -37,6 +37,8 @@ const store = new PrismaSessionStore(new PrismaClient(), {
     dbRecordIdIsSessionId: true,
     dbRecordIdFunction: undefined,
 });
+
+let sess = {};
 
 app.use(
     session({
