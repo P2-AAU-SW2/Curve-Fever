@@ -142,17 +142,98 @@ class Curve {
     toggleJump() {
         this.jumps.push(this.path.length);
     }
+
+    startPos(randomNum) {
+        let x, y, direction;
+        switch (randomNum) {
+            case 0:
+                // Top Mid
+                x = canvas.width / 2;
+                y = canvas.height * 0.1;
+                direction = Math.random() * Math.PI;
+                break;
+            case 1:
+                // Top Left
+                x = canvas.width * 0.1;
+                y = canvas.height * 0.1;
+                direction = Math.random() * (Math.PI / 2);
+                break;
+            case 2:
+                // Top Right
+                x = canvas.width * 0.9;
+                y = canvas.height * 0.1;
+                direction = Math.PI / 2 + (Math.random() * Math.PI) / 2;
+                break;
+            case 3:
+                // Bottom Mid
+                x = canvas.width / 2;
+                y = canvas.height * 0.9;
+                direction = Math.PI + Math.random() * Math.PI;
+                break;
+            case 4:
+                // Bottom Left
+                x = canvas.width * 0.1;
+                y = canvas.height * 0.9;
+                direction =
+                    Math.PI / 2 + Math.random() * (Math.PI + Math.PI / 2);
+                break;
+            case 5:
+                // Bottom Right
+                x = canvas.width * 0.9;
+                y = canvas.height * 0.9;
+                direction = Math.PI + Math.random() * (Math.PI / 2);
+                break;
+            case 6:
+                // Left Mid
+                x = canvas.width * 0.1;
+                y = canvas.height / 2;
+                direction = Math.PI + Math.PI / 2 + Math.random() * Math.PI;
+                break;
+            case 7:
+                // Right Mid
+                x = canvas.width * 0.9;
+                y = canvas.height / 2;
+                direction = Math.PI / 2 + Math.random() * Math.PI;
+                break;
+            case 8:
+                // Center
+                x = canvas.width / 2;
+                y = canvas.height / 2;
+                direction = Math.random() * (Math.PI + Math.PI / 2);
+                break;
+            case 9:
+                // Center Right Top
+                x = canvas.width * 0.7;
+                y = canvas.height * 0.3;
+                direction = Math.random() * (Math.PI + Math.PI / 2);
+                break;
+            case 10:
+                // Center Right Bottom
+                x = canvas.width * 0.7;
+                y = canvas.height * 0.7;
+                direction = Math.random() * (Math.PI + Math.PI / 2);
+                break;
+            case 11:
+                // Center Left Top
+                x = canvas.width * 0.3;
+                y = canvas.height * 0.3;
+                direction = Math.random() * (Math.PI + Math.PI / 2);
+                break;
+            case 12:
+                // Center Left Bottom
+                x = canvas.width * 0.3;
+                y = canvas.height * 0.7;
+                direction = Math.random() * (Math.PI + Math.PI / 2);
+                break;
+            default:
+                break;
+        }
+        return { x, y, direction };
+    }
 }
 
 // Create a curve instance
-var curve = new Curve(
-    canvas.width / 2,
-    canvas.height / 2,
-    0,
-    "#32BEFF",
-    1.5,
-    7
-);
+var curve = new Curve();
 
 // Object to store the state of the arrow keys
 const keyState = {
@@ -178,6 +259,48 @@ document.addEventListener("keyup", (event) => {
     }
 });
 
+function countDown() {
+    ctx.font = "bolder 60px Arial";
+    ctx.fillStyle = "#FFFFFF";
+    setTimeout(function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // draw "3" on the canvas
+        ctx.fillText("3", canvas.width / 2, canvas.height / 2);
+        // Wait for 1 second
+        setTimeout(function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw "2" on the canvas
+            ctx.fillText("2", canvas.width / 2, canvas.height / 2);
+            // Wait for 1 second
+            setTimeout(function () {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Draw "1" on the canvas
+                ctx.fillText("1", canvas.width / 2, canvas.height / 2);
+            }, 1000);
+        }, 1000);
+    }, 1000);
+}
+
+function roundTracker() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "bolder 55px Arial";
+    ctx.fillStyle = "#FFFFFF";
+    //
+    // TODO: show the winner and leaderboard
+    //
+    if (round === 6) {
+        // Draw the winner
+        const text = "You're the winner";
+        const textWidth = ctx.measureText(text).width;
+        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+    } else {
+        // Draw the current round
+        const text = "Round " + round;
+        const textWidth = ctx.measureText(text).width;
+        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+    }
+}
+
 // Main game loop
 function gameLoop() {
     // we need to clear the canvas for every frame so the line fx. is smooth
@@ -187,7 +310,9 @@ function gameLoop() {
 
         requestAnimationFrame(gameLoop);
     }
-    // add for loop for every player
+    //
+    // MISSING!: add check for every player collision
+    //
     else if (curve.collided) {
         round++;
         startGame();
@@ -198,71 +323,33 @@ function gameLoop() {
 // Set round to 1
 let round = 1;
 function startGame() {
-    // Clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "bolder 55px Arial";
-    ctx.fillStyle = "#FFFFFF";
-    // Check if the game is over
+    // Draw the current round
+    roundTracker();
+    // If 5 rounds have passed, end the game
     if (round === 6) {
-        // Draw the winner
-        const text = "You're the winner";
-        const textWidth = ctx.measureText(text).width;
-        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
         return;
-    } else {
-        // Draw the current round
-        const text = "Round " + round;
-        const textWidth = ctx.measureText(text).width;
-        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
     }
-
-    console.log(round);
-
-    ctx.font = "bolder 60px Arial";
-    ctx.fillStyle = "#FFFFFF";
+    // Draw the countdown
+    countDown();
+    // Wait for countdown
     setTimeout(function () {
         // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // draw "3" on the canvas
-        ctx.fillText("3", canvas.width / 2, canvas.height / 2);
-
-        // Wait for 1 second
-        setTimeout(function () {
-            // Clear the canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw "2" on the canvas
-            ctx.fillText("2", canvas.width / 2, canvas.height / 2);
-
-            // Wait for 1 second
-            setTimeout(function () {
-                // Clear the canvas
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // Draw "1" on the canvas
-                ctx.fillText("1", canvas.width / 2, canvas.height / 2);
-
-                // Wait for 1 second
-                setTimeout(function () {
-                    // Clear the canvas
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    // Reset the curve's properties
-                    curve = new Curve(
-                        canvas.width / 2,
-                        canvas.height / 2,
-                        0,
-                        "#32BEFF",
-                        1.5,
-                        7
-                    );
-                    // Initialize the curve
-                    curve.init();
-                    // Start the game loop
-                    gameLoop();
-                }, 1000);
-            }, 1000);
-        }, 1000);
-    }, 1000);
+        // Set the curve's properties
+        let randomNum = Math.floor(Math.random() * 13);
+        curve = new Curve(
+            curve.startPos(randomNum).x,
+            curve.startPos(randomNum).y,
+            curve.startPos(randomNum).direction,
+            "#32BEFF",
+            1.5,
+            7
+        );
+        // Initialize the curve
+        curve.init();
+        // Start the game loop
+        gameLoop();
+    }, 4000);
 }
 
 startGame();
