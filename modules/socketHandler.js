@@ -16,8 +16,13 @@ module.exports = async (io) => {
             socket.to(gameID).emit("chat", profanity.censor(message));
         });
 
+        socket.on("newPlayer", (players) => {
+            socket.to(gameID).emit("newPlayer", players[players.length - 1]);
+        });
+
         // Handle client disconnect, by error or on purpose. Removes the player from the gamestate logic.
         socket.on("disconnect", () => {
+            socket.to(gameID).emit("leaveGame", userID);
             console.log("Disconnect: " + gameID);
             gameStates.leaveGame(gameID, userID);
         });

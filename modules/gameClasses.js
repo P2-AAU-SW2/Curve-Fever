@@ -19,7 +19,7 @@ class GameStates {
                     return resolve(this.games[i].id);
                 }
             }
-            
+
             // Generate a new room if no available, and push it to current games.
             console.log("No games, creating a new!");
             const newID = uuidv4();
@@ -40,8 +40,10 @@ class GameStates {
                     this.games[i].count < this.MAX_PLAYERS &&
                     this.games[i].id == id
                 ) {
-                    this.games[i].players.push(new Player(user));
-                    return resolve(this.games[i].id, user);
+                    this.games[i].players.push(
+                        new Player(user, getColor(this.games[i].players))
+                    );
+                    return resolve(this.games[i]);
                 } else if (this.games[i].count >= this.MAX_PLAYERS) {
                     reject(new Error("This game is full."));
                 }
@@ -67,6 +69,24 @@ class GameStates {
                 return true;
             }
         });
+    }
+}
+
+function getColor(players) {
+    const playerColors = [
+        "#32BEFF",
+        "#FF6DDE",
+        "#FFF116",
+        "#B9FF32",
+        "#FF6D6D",
+    ];
+    if (players.length) {
+        for (let i in playerColors) {
+            let col = playerColors[i];
+            if (players.every((player) => player.color !== col)) return col;
+        }
+    } else {
+        return playerColors[0];
     }
 }
 
@@ -97,9 +117,10 @@ class Game {
 
 // Class for players to store data.
 class Player {
-    constructor(user) {
-        this._username = user.name;
-        this._userId = user.id;
+    constructor(user, playerCol) {
+        this.username = user.name;
+        this.color = playerCol;
+        this.userId = user.id;
     }
 }
 
