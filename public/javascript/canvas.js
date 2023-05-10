@@ -8,6 +8,7 @@
 // ];
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+const roundCounter = document.getElementById("roundCounter");
 
 // Define a simple curve object with a position, direction, color, and speed
 class Curve {
@@ -298,6 +299,7 @@ function roundTracker() {
         const text = "Round " + round;
         const textWidth = ctx.measureText(text).width;
         ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+        roundCounter.innerHTML = "Round " + round;
     }
 }
 
