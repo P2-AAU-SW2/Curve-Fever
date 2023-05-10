@@ -1,11 +1,3 @@
-// const playerColors = ["#32BEFF", "#FF6DDE", "#FFF116", "#B9FF32", "#FF6D6D"];
-// const playerNames = [
-//     "Player 1",
-//     "Player 2",
-//     "Player 3",
-//     "Player 4",
-//     "Player 5",
-// ];
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -204,65 +196,43 @@ function startGame() {
     ctx.fillStyle = "#FFFFFF";
     // Check if the game is over
     if (round === 6) {
-        // Draw the winner
-        const text = "You're the winner";
-        const textWidth = ctx.measureText(text).width;
-        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+        displayText("You're the winner");
         return;
-    } else {
-        // Draw the current round
-        const text = "Round " + round;
+    } else displayText("Round " + round);
+
+    ctx.font = "bolder 60px Arial";
+    ctx.fillStyle = "#FFFFFF";
+    let count = 1;
+    let countdown = setInterval(() => {
+        count <= 3 ? displayCountdown(count) : start();
+        count++;
+    }, 1000);
+
+    function displayText(text) {
         const textWidth = ctx.measureText(text).width;
         ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
     }
 
-    console.log(round);
+    function displayCountdown(i) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+        ctx.fillText(String(i), canvas.width / 2, canvas.height / 2); // draw countdown on the canvas
+    }
 
-    ctx.font = "bolder 60px Arial";
-    ctx.fillStyle = "#FFFFFF";
-    setTimeout(function () {
-        // Clear the canvas
+    function start() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // draw "3" on the canvas
-        ctx.fillText("3", canvas.width / 2, canvas.height / 2);
-
-        // Wait for 1 second
-        setTimeout(function () {
-            // Clear the canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw "2" on the canvas
-            ctx.fillText("2", canvas.width / 2, canvas.height / 2);
-
-            // Wait for 1 second
-            setTimeout(function () {
-                // Clear the canvas
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // Draw "1" on the canvas
-                ctx.fillText("1", canvas.width / 2, canvas.height / 2);
-
-                // Wait for 1 second
-                setTimeout(function () {
-                    // Clear the canvas
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    // Reset the curve's properties
-                    curve = new Curve(
-                        canvas.width / 2,
-                        canvas.height / 2,
-                        0,
-                        "#32BEFF",
-                        1.5,
-                        7
-                    );
-                    // Initialize the curve
-                    curve.init();
-                    // Start the game loop
-                    gameLoop();
-                }, 1000);
-            }, 1000);
-        }, 1000);
-    }, 1000);
+        // Reset the curve's properties
+        curve = new Curve(
+            canvas.width / 2,
+            canvas.height / 2,
+            0,
+            "#32BEFF",
+            1.5,
+            7
+        );
+        curve.init(); // Initialize the curve
+        clearInterval(countdown); // Stop interval
+        gameLoop(); // Start the game loop
+    }
 }
 
 startGame();
