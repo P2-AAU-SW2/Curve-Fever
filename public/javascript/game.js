@@ -2,6 +2,10 @@
 const messageInput = document.getElementById("usermsg");
 const form = document.getElementById("form");
 const scoretable = document.querySelector("#scoretable tbody");
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const warmupBtn = document.getElementById("warmup-btn");
+// const roundCounter = document.getElementById("roundCounter");
 
 const socket = io({
     query: {
@@ -29,6 +33,93 @@ socket.on("leaveGame", (userID) => {
             rerenderScoretable();
             break;
         }
+    }
+});
+socket.on("updatePosition", (player) => {
+    let i = players.findIndex((el) => el.userId === player.userId);
+    players[i] = player;
+    // If the current player collided clear interval
+    if (player.collided && player.userId === curPlayer.userId) {
+        clearInterval(window.gameLoop);
+        warmupBtn.classList.remove("display-none");
+    }
+    draw(players);
+});
+
+function draw(players) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    players.forEach((player) => {
+        if (player.isMoving) {
+            ctx.strokeStyle = player.color;
+            ctx.fillStyle = player.color;
+            ctx.lineWidth = player.lineWidth;
+            ctx.lineCap = "round";
+            const radius = player.lineWidth * 0.0933 + 0.1;
+            if (player.isFlying) {
+                ctx.beginPath();
+                ctx.arc(player.x, player.y, radius * 5, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.closePath();
+            } else if (player.path.length > 1) {
+                // Draws the entire path for every animation frame so the line is smooth
+                ctx.beginPath();
+                ctx.moveTo(player.path[0].x, player.path[0].y);
+                for (let i = 1, j = 0; i < player.path.length; i++) {
+                    if (i == player.jumps[j]) {
+                        // Draws the gaps in the line. Checks if the jump value is closed with another value
+                        if (player.jumps.length > j + 1) {
+                            i = player.jumps[j + 1];
+                            if (player.jumps.length >= j + 2) j += 2;
+                            ctx.moveTo(player.path[i].x, player.path[i].y);
+                        }
+                    } else {
+                        ctx.lineTo(player.path[i].x, player.path[i].y);
+                    }
+                }
+                // If line is currently jumping then draw line as a dot
+                if (player.isJumping || player.isFlying) {
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.beginPath();
+                    ctx.arc(player.x, player.y, radius, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.closePath();
+                }
+                ctx.stroke();
+                ctx.closePath();
+            }
+        }
+    });
+}
+
+// Object to store the state of the arrow keys
+const keyState = {
+    ArrowLeft: 0,
+    ArrowRight: 0,
+};
+warmupBtn.addEventListener("click", startWarmup);
+function startWarmup() {
+    warmupBtn.classList.add("display-none");
+    window.gameLoop = setInterval(() => {
+        socket.emit("updatePosition", keyState);
+    }, 1000 / 60);
+}
+
+// Update keyState based on keydown and keyup events
+document.addEventListener("keydown", (event) => {
+    let key = event.key;
+    if (!keyState[key]) {
+        if (key == "ArrowLeft") {
+            keyState[key] = keyState.ArrowRight + 1;
+        } else if (key == "ArrowRight") {
+            keyState[key] = keyState.ArrowLeft + 1;
+        }
+    }
+});
+
+document.addEventListener("keyup", (event) => {
+    if (event.key in keyState) {
+        keyState[event.key] = 0;
     }
 });
 

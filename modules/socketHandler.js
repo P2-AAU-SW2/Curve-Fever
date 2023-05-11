@@ -12,12 +12,17 @@ module.exports = async (io) => {
 
         // Listen for "chat" events and emit to other users in the same room. Use profanity filter to filter out bad words.
         socket.on("chat", (message) => {
-            console.log(message);
             socket.to(gameID).emit("chat", profanity.censor(message));
         });
 
         socket.on("newPlayer", (players) => {
             socket.to(gameID).emit("newPlayer", players[players.length - 1]);
+        });
+
+        socket.on("updatePosition", (keyState) => {
+            let game = gameStates.getGame(gameID);
+            let player = game.updatePosition(userID, keyState);
+            io.in(gameID).emit("updatePosition", player);
         });
 
         // Handle client disconnect, by error or on purpose. Removes the player from the gamestate logic.

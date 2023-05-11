@@ -28,6 +28,9 @@
                             </tr>
                         <% } %>
                     </table>
+                    <div class="loading">
+                        <span class="loader"></span>
+                    </div>
                 </div>
                 <div class="chatroom">
                     <ul class="textbox" id="textbox"></ul>
@@ -44,12 +47,17 @@
                     </form>
                 </div>
             </div>
-            <canvas
-                class="gameCanvas"
-                id="gameCanvas"
-                width="500"
-                height="500"
-            ></canvas>
+            <div class="canvas-container">
+                <div class="btn-game-container">
+                    <button class="blue-btn" id="warmup-btn">Warm Up</button>
+                </div>
+                <canvas
+                    class="gameCanvas"
+                    id="gameCanvas"
+                    width="500"
+                    height="500"
+                ></canvas>
+            </div>
         </div>
         <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
         <script src="/javascript/game.js"></script>

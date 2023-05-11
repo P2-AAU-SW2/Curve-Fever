@@ -1,6 +1,6 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-const roundCounter = document.getElementById("roundCounter");
+// const canvas = document.getElementById("gameCanvas");
+// const ctx = canvas.getContext("2d");
+// const roundCounter = document.getElementById("roundCounter");
 
 // Define a simple curve object with a position, direction, color, and speed
 class Curve {
@@ -38,11 +38,13 @@ class Curve {
             ctx.moveTo(this.path[0].x, this.path[0].y);
             for (let i = 1, j = 0; i < this.path.length; i++) {
                 if (i == this.jumps[j]) {
+                    // Draws the gaps in the line
                     if (this.jumps.length > j + 1) {
                         i = this.jumps[j + 1];
                         if (this.jumps.length >= j + 2) j += 2;
                         ctx.moveTo(this.path[i].x, this.path[i].y);
                     } else {
+                        // If line is currently jumping then draw line as a dot
                         i = this.path.length - 1;
                         const radius = this.lineWidth * 0.0933 + 0.1;
                         ctx.stroke();
@@ -229,49 +231,49 @@ class Curve {
 var curve = new Curve();
 
 // Object to store the state of the arrow keys
-const keyState = {
-    ArrowLeft: 0,
-    ArrowRight: 0,
-};
+// const keyState = {
+//     ArrowLeft: 0,
+//     ArrowRight: 0,
+// };
 
-// Update keyState based on keydown and keyup events
-document.addEventListener("keydown", (event) => {
-    let key = event.key;
-    if (!keyState[key]) {
-        if (key == "ArrowLeft") {
-            keyState[key] = keyState.ArrowRight + 1;
-        } else if (key == "ArrowRight") {
-            keyState[key] = keyState.ArrowLeft + 1;
-        }
-    }
-});
+// // Update keyState based on keydown and keyup events
+// document.addEventListener("keydown", (event) => {
+//     let key = event.key;
+//     if (!keyState[key]) {
+//         if (key == "ArrowLeft") {
+//             keyState[key] = keyState.ArrowRight + 1;
+//         } else if (key == "ArrowRight") {
+//             keyState[key] = keyState.ArrowLeft + 1;
+//         }
+//     }
+// });
 
-document.addEventListener("keyup", (event) => {
-    if (event.key in keyState) {
-        keyState[event.key] = 0;
-    }
-});
+// document.addEventListener("keyup", (event) => {
+//     if (event.key in keyState) {
+//         keyState[event.key] = 0;
+//     }
+// });
 
-function roundTracker() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "bolder 55px Arial";
-    ctx.fillStyle = "#FFFFFF";
-    //
-    // TODO: show the winner and leaderboard
-    //
-    if (round === 6) {
-        // Draw the winner
-        const text = "You're the winner";
-        const textWidth = ctx.measureText(text).width;
-        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
-    } else {
-        // Draw the current round
-        const text = "Round " + round;
-        const textWidth = ctx.measureText(text).width;
-        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
-        roundCounter.innerHTML = "Round " + round;
-    }
-}
+// function roundTracker() {
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+//     ctx.font = "bolder 55px Arial";
+//     ctx.fillStyle = "#FFFFFF";
+//     //
+//     // TODO: show the winner and leaderboard
+//     //
+//     if (round === 6) {
+//         // Draw the winner
+//         const text = "You're the winner";
+//         const textWidth = ctx.measureText(text).width;
+//         ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+//     } else {
+//         // Draw the current round
+//         const text = "Round " + round;
+//         const textWidth = ctx.measureText(text).width;
+//         ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+//         roundCounter.innerHTML = "Round " + round;
+//     }
+// }
 
 // Main game loop
 function gameLoop() {
@@ -296,7 +298,7 @@ function gameLoop() {
 let round = 1;
 function startGame() {
     // Draw the current round
-    roundTracker();
+    // roundTracker();
     // If 5 rounds have passed, end the game
     if (round === 6) {
         displayText("You're the winner");
@@ -339,4 +341,4 @@ function startGame() {
     }
 }
 
-startGame();
+// startGame();

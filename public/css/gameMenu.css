@@ -61,7 +61,7 @@
 .shop-game-btn {
     display: none;
 }
-.shop-cross {
+.shop > .modal-cross {
     display: none !important;
 }
 
@@ -179,7 +179,7 @@
     .shop-game-btn {
         display: block;
     }
-    .shop-cross {
+    .shop > .modal-cross {
         display: block !important;
     }
 }

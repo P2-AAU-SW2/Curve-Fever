@@ -11,8 +11,8 @@ exports.getGameById = async (req, res, next) => {
     gameStates.joinByID(req.params.id, req.user).then(
         (result) => {
             res.render("game", {
-                players: result._players,
-                curPlayer: result._players[result._players.length - 1],
+                players: result.playersDTO,
+                curPlayer: result.playerDTO(req.user.id),
                 gameId: req.params.id,
             });
         },
