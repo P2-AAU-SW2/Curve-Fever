@@ -326,4 +326,8 @@ class Player {
 
 const gameStates = new GameStates();
 
-module.exports = gameStates;
+module.exports = {
+    gameStates: gameStates,
+    Game: Game,
+    generatePlayer: generatePlayer,
+};

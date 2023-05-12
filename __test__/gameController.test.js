@@ -1,8 +1,6 @@
-const gameStates = require("../modules/gameClasses");
-const { logger } = require("../controllers/gameController");
+const { gameStates, Game, generatePlayer } = require("../modules/gameClasses");
+const { logger, getGameById, play } = require("../controllers/gameController");
 const { ErrorHandler } = require("../middlewares/errorHandler");
-const { getGameById } = require("../controllers/gameController");
-const { play } = require("../controllers/gameController");
 
 // logger test
 describe("logger", () => {
@@ -43,12 +41,11 @@ describe("logger", () => {
 });
 
 // getGameById test
-// *****UPDATE TESTS FOR GETGAMEBYID*****
 describe("getGameById", () => {
-    let req, res, next;
+    let game, req, res, next;
 
     // Mock the request and response objects
-    beforeEach(() => {
+    beforeAll(() => {
         req = {
             params: {
                 id: "666",
@@ -59,6 +56,11 @@ describe("getGameById", () => {
             },
         };
 
+        game = new Game(req.params.id);
+        game.players.push(generatePlayer(req.user, game.players));
+    });
+
+    beforeEach(() => {
         res = {
             render: jest.fn(),
         };
@@ -73,7 +75,7 @@ describe("getGameById", () => {
 
     test("should call joinById method from gameStates with correct parameters", async () => {
         // Mock the joinById method
-        gameStates.joinByID = jest.fn().mockResolvedValue({});
+        gameStates.joinByID = jest.fn().mockResolvedValue(game);
         // Call the function to be tested
         await getGameById(req, res, next);
         // Check that joinById was called with correct parameters
@@ -84,17 +86,17 @@ describe("getGameById", () => {
     });
 
     test("should render game template with correct data when joinById succeeds", async () => {
-        gameStates.joinByID = jest.fn().mockResolvedValue({});
+        gameStates.joinByID = jest.fn().mockResolvedValue(game);
         await getGameById(req, res, next);
 
         expect(res.render).toHaveBeenCalledWith("game", {
-            userName: req.user.name,
-            userId: req.user.id,
+            players: game.playersDTO,
+            curPlayer: game.playerDTO(req.user.id),
             gameId: req.params.id,
         });
     });
 
-    test.only("should call next with error when joinById fails", async () => {
+    test("should call next with error when joinById fails", async () => {
         const error = new Error("Join failed");
         gameStates.joinByID = jest.fn().mockRejectedValue(error);
         await getGameById(req, res, next);
