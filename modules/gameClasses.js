@@ -126,6 +126,13 @@ class Game {
         return player.playerDTO();
     }
 }
+// updateGamePosition(userId, keyState) {
+//     let player = this.player(userId);
+//     if (player.roundRanking == 2) this.players.resetState();
+//     player.keyState = keyState;
+//     player.update(this.players);
+//     return player.playerDTO();
+// }
 
 function generateDTO(state) {
     let obj = {};
@@ -149,10 +156,10 @@ function generatePlayer(user, players) {
     return new Player(
         user,
         getColor(players),
-        canvas.width / 2,
-        canvas.height / 2,
+        canvas.width * (Math.random() * 0.7 + 0.15),
+        canvas.width * (Math.random() * 0.7 + 0.15),
         7,
-        0,
+        Math.random() * (Math.PI + Math.PI / 2),
         1.5,
         { ArrowLeft: 0, ArrowRight: 0 },
         canvas
@@ -213,6 +220,8 @@ class Player {
         this.isJumping = false;
         this.isFlying = true;
         this.isMoving = false;
+        this.leaderboardRanking = 0;
+        this.roundRanking = 0;
     }
 
     // Data Transfer Object (DTO)
@@ -310,8 +319,9 @@ class Player {
 
     resetState() {
         // FIND BETTER DYNAMIC SOLUTION
-        this.x = this.canvas.width / 2;
-        this.y = this.canvas.height / 2;
+        this.x = this.canvas.width * (Math.random() * 0.7 + 0.15);
+        this.y = this.canvas.width * (Math.random() * 0.7 + 0.15);
+        this.direction = Math.random() * (Math.PI + Math.PI / 2);
         this.path = [];
         this.collided = false;
         this.jumps = [];

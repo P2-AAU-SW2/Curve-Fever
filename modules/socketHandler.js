@@ -19,11 +19,20 @@ module.exports = async (io) => {
             socket.to(gameID).emit("newPlayer", players[players.length - 1]);
         });
 
+        socket.on("roomFull", () => {
+            io.in(gameID).emit("roomFull");
+        });
+
         socket.on("updatePosition", (keyState) => {
             let game = gameStates.getGame(gameID);
             let player = game.updatePosition(userID, keyState);
-            io.in(gameID).emit("updatePosition", player);
+            let players = game._players;
+            io.in(gameID).emit("updatePosition", player, players);
         });
+
+        // socket.on("playerWon", () => {
+        //     io.in(gameID).emit("playerWon");
+        // });
 
         // Handle client disconnect, by error or on purpose. Removes the player from the gamestate logic.
         socket.on("disconnect", () => {

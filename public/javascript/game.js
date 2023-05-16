@@ -17,15 +17,21 @@ const socket = io({
 socket.on("connect", () => {
     console.log(players);
     socket.emit("newPlayer", players);
+    if (players.length === 2) {
+        console.log("Room full");
+        socket.emit("roomFull");
+    }
 });
 
 socket.on("chat", (message) => {
     displayMessage(message);
 });
+
 socket.on("newPlayer", (player) => {
     console.log(player);
     displayScoreboard(player);
 });
+
 socket.on("leaveGame", (userID) => {
     for (let i in players) {
         if (userID === players[i].userId) {
@@ -35,16 +41,75 @@ socket.on("leaveGame", (userID) => {
         }
     }
 });
-socket.on("updatePosition", (player) => {
+const collisionOrder = [];
+
+socket.on("updatePosition", (player, players) => {
     let i = players.findIndex((el) => el.userId === player.userId);
     players[i] = player;
+
     // If the current player collided clear interval
-    if (player.collided && player.userId === curPlayer.userId) {
+    if (
+        player.collided &&
+        player.userId === curPlayer.userId &&
+        players.length < 2
+    ) {
         clearInterval(window.gameLoop);
         warmupBtn.classList.remove("display-none");
+    } else if (player.collided && player.userId === curPlayer.userId) {
+        collisionOrder.push(player.userId);
+        console.log(collisionOrder);
+        console.log(collisionOrder.length);
+        player.roundRanking = collisionOrder.length % 5;
     }
+
+    if (collisionOrder.length === players.length) {
+        clearInterval(window.gameLoop);
+        socket.emit("roomFull", players);
+    }
+
     draw(players);
 });
+
+socket.on("roomFull", () => {
+    console.log("Game started");
+    clearInterval(window.gameLoop);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    warmupBtn.classList.add("display-none");
+    startCountdown().then(() => {
+        startRound();
+    });
+});
+
+// socket.on("playerWon", (players) => {
+//     console.log("Player won");
+//     socket.emit("roomFull", players);
+// });
+
+function startCountdown() {
+    console.log("Starting countdown");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "bolder 60px Arial";
+    ctx.fillStyle = "#FFFFFF";
+    let count = 3;
+    return new Promise((resolve) => {
+        var countdown = setInterval(() => {
+            count === 0
+                ? (clearInterval(countdown), resolve())
+                : displayCountdown(count);
+            count--;
+        }, 1000);
+        function displayCountdown(i) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            ctx.fillText(String(i), canvas.width / 2, canvas.height / 2); // draw countdown on the canvas
+        }
+    });
+}
+
+function startRound() {
+    window.gameLoop = setInterval(() => {
+        socket.emit("updatePosition", keyState);
+    }, 1000 / 60);
+}
 
 function draw(players) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
