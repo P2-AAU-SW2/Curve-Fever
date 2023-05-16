@@ -17,7 +17,7 @@ const socket = io({
 socket.on("connect", () => {
     console.log(players);
     socket.emit("newPlayer", players);
-    if (players.length === 2) {
+    if (players.length === 6) {
         console.log("Room full");
         socket.emit("roomFull");
     }
@@ -51,7 +51,7 @@ socket.on("updatePosition", (player, players) => {
     if (
         player.collided &&
         player.userId === curPlayer.userId &&
-        players.length < 2
+        players.length < 6
     ) {
         clearInterval(window.gameLoop);
         warmupBtn.classList.remove("display-none");
@@ -59,7 +59,7 @@ socket.on("updatePosition", (player, players) => {
         collisionOrder.push(player.userId);
         console.log(collisionOrder);
         console.log(collisionOrder.length);
-        player.roundRanking = collisionOrder.length % 5;
+        player.roundRanking = collisionOrder.length % 6;
     }
 
     if (collisionOrder.length === players.length) {
@@ -108,7 +108,7 @@ function startCountdown() {
 function startRound() {
     window.gameLoop = setInterval(() => {
         socket.emit("updatePosition", keyState);
-    }, 1000 / 60);
+    }, 1000 / 120);
 }
 
 function draw(players) {
@@ -167,7 +167,7 @@ function startWarmup() {
     warmupBtn.classList.add("display-none");
     window.gameLoop = setInterval(() => {
         socket.emit("updatePosition", keyState);
-    }, 1000 / 60);
+    }, 1000 / 120);
 }
 
 // Update keyState based on keydown and keyup events
