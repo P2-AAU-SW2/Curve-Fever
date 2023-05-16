@@ -1,4 +1,4 @@
-const gameStates = require("./gameClasses");
+const { gameStates } = require("./gameClasses");
 const profanity = require("@2toad/profanity").profanity;
 
 module.exports = async (io) => {

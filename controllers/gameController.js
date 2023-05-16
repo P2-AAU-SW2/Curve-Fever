@@ -1,4 +1,4 @@
-const gameStates = require("../modules/gameClasses");
+const { gameStates } = require("../modules/gameClasses");
 
 exports.logger = function (gameStates) {
     console.log(gameStates.games[0].players);
