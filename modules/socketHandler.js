@@ -25,16 +25,41 @@ module.exports = async (io) => {
             io.in(gameID).emit("roomFull");
         });
 
-        socket.on("updatePosition", (keyState) => {
+        socket.on("warmUpUpdatePosition", (keyState) => {
             let game = gameStates.getGame(gameID);
-            let player = game.updatePosition(userID, keyState);
+            let player = game.warmUpUpdatePosition(userID, keyState);
             // Add the update to the map
             game.updates.set(userID, player);
+        });
+
+        socket.on("gameUpdatePosition", (keyState) => {
+            let game = gameStates.getGame(gameID);
+            let player = game.gameUpdatePosition(userID, keyState);
+            let colliedPlayers = game.players.filter((p) => p.collided);
+
+            if (colliedPlayers.length === game.players.length - 1) {
+                game.roundFinish(colliedPlayers);
+                socket.to(gameID).emit("renderScoreTable", game.players);
+                io.in(gameID).emit("roomFull");
+            }
+
+            // Add the update to the map
+            game.updates.set(userID, player);
+        });
+
+        socket.on("warmUpStart", () => {
+            let game = gameStates.getGame(gameID);
+            game.startWarmUp(io, gameID);
         });
 
         socket.on("gameStart", () => {
             let game = gameStates.getGame(gameID);
             game.startGame(io, gameID);
+        });
+
+        socket.on("endGame", () => {
+            let game = gameStates.getGame(gameID);
+            game.endGame(io, gameID);
         });
 
         // socket.on("playerWon", () => {

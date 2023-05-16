@@ -14,18 +14,18 @@ passport.use(
                     where: { name: username },
                 });
 
-                if (!user) {
-                    return done(null, false, {
-                        message: "Invalid username or password",
-                    });
-                }
+                // if (!user) {
+                //     return done(null, false, {
+                //         message: "Invalid username or password",
+                //     });
+                // }
 
                 const isPasswordValid = await bcrypt.compare(
                     password,
                     user.password
                 );
 
-                if (!isPasswordValid) {
+                if (!user || !isPasswordValid) {
                     return done(null, false, {
                         message: "Invalid username or password",
                     });

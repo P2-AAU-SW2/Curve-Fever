@@ -123,19 +123,29 @@ class Game {
         return this._players.includes(player);
     }
 
-    updatePosition(userId, keyState) {
+    warmUpUpdatePosition(userId, keyState) {
         let player = this.player(userId);
-        if (player.collided) player.resetState();
+        player.keyState = keyState;
+        if (player.collided) {
+            player.resetState();
+        }
+        player.update(this.players);
+        player.updateWarmUp(this.players);
+        return player.playerDTO();
+    }
+
+    gameUpdatePosition(userId, keyState) {
+        let player = this.player(userId);
         player.keyState = keyState;
         player.update(this.players);
         return player.playerDTO();
     }
 
-    startGame(io, gameID) {
+    startWarmUp(io, gameID) {
         this.interval = setInterval(() => {
             // Emit the batched updates at a fixed interval
             io.in(gameID).emit(
-                "updatePositions",
+                "warmUpUpdatePosition",
                 Array.from(this.updates.values())
             );
             // Clear the updates for the next interval
@@ -143,17 +153,42 @@ class Game {
         }, 1000 / 60);
     }
 
+    startGame(io, gameID) {
+        this.players.forEach((player) => {
+            player.resetState();
+        });
+        this.interval = setInterval(() => {
+            // Emit the batched updates at a fixed interval
+            io.in(gameID).emit(
+                "gameUpdatePosition",
+                Array.from(this.updates.values())
+            );
+            // Clear the updates for the next interval
+            this.updates.clear();
+        }, 1000 / 60);
+    }
+
+    roundFinish(colliedPlayers) {
+        console.log(colliedPlayers.userId);
+        colliedPlayers.forEach((colliedPlayer) => {
+            let player = this.players.find((p) => p == colliedPlayer);
+            player.roundRanking += colliedPlayers.indexOf(colliedPlayer);
+            console.log(player.roundRanking + "\n" + colliedPlayer);
+        });
+
+        let roundWinner = this.players.find((player) => !player.collided);
+        roundWinner.roundRanking += this.players.length - 1;
+
+        console.log(roundWinner.roundRanking + "\n" + roundWinner);
+        this.players.forEach((player) => {
+            player.resetState();
+        });
+    }
+
     endGame() {
         clearInterval(this.interval);
     }
 }
-// updateGamePosition(userId, keyState) {
-//     let player = this.player(userId);
-//     if (player.roundRanking == 2) this.players.resetState();
-//     player.keyState = keyState;
-//     player.update(this.players);
-//     return player.playerDTO();
-// }
 
 function generateDTO(state) {
     let obj = {};
@@ -271,8 +306,13 @@ class Player {
             // Add the current position to the path
             if (!this.isJumping && !this.isFlying)
                 this.path.push({ x: this.x, y: this.y });
-        } else {
-            this.path = []; // *****Only in warmup
+        }
+    }
+
+    updateWarmUp(players) {
+        this.collision(players);
+        if (this.collided) {
+            this.path = [];
             this.isMoving = false;
         }
     }

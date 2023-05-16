@@ -17,8 +17,14 @@ const socket = io({
 socket.on("connect", () => {
     console.log(players);
     socket.emit("newPlayer", players);
-    if (players.length === 6) {
-        console.log("Room full");
+    if (players.length === 3) {
+        socket.emit(
+            "chat",
+            "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
+        );
+        displayMessage(
+            "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
+        );
         socket.emit("roomFull");
     }
 });
@@ -41,9 +47,8 @@ socket.on("leaveGame", (userID) => {
         }
     }
 });
-// const collisionOrder = [];
 
-socket.on("updatePositions", (updatedPlayers) => {
+socket.on("warmUpUpdatePosition", (updatedPlayers) => {
     updatedPlayers.forEach((updatedPlayer) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
         players[i] = updatedPlayer;
@@ -61,6 +66,15 @@ socket.on("updatePositions", (updatedPlayers) => {
     });
 });
 
+socket.on("gameUpdatePosition", (updatedPlayers) => {
+    updatedPlayers.forEach((updatedPlayer) => {
+        let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
+        players[i] = updatedPlayer;
+
+        draw(players);
+    });
+});
+
 socket.on("roomFull", () => {
     console.log("Game started");
     clearInterval(window.gameLoop);
@@ -71,16 +85,17 @@ socket.on("roomFull", () => {
     });
 });
 
-// socket.on("playerWon", (players) => {
-//     console.log("Player won");
-//     socket.emit("roomFull", players);
-// });
+socket.on("renderScoreTable", (updatedPlayers) => {
+    updatedPlayers.forEach((updatedPlayer) => {
+        let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
+        players[i] = updatedPlayer;
+    });
+    rerenderScoretable();
+});
 
 function startCountdown() {
     console.log("Starting countdown");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "bolder 60px Arial";
-    ctx.fillStyle = "#FFFFFF";
     let count = 3;
     return new Promise((resolve) => {
         var countdown = setInterval(() => {
@@ -90,6 +105,8 @@ function startCountdown() {
             count--;
         }, 1000);
         function displayCountdown(i) {
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = "bolder 60px Arial";
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
             ctx.fillText(String(i), canvas.width / 2, canvas.height / 2); // draw countdown on the canvas
         }
@@ -99,7 +116,7 @@ function startCountdown() {
 function startRound() {
     socket.emit("gameStart");
     window.gameLoop = setInterval(() => {
-        socket.emit("updatePosition", keyState);
+        socket.emit("gameUpdatePosition", keyState);
     }, 1000 / 60);
 }
 
@@ -156,10 +173,10 @@ const keyState = {
 };
 warmupBtn.addEventListener("click", startWarmup);
 function startWarmup() {
-    socket.emit("gameStart");
+    socket.emit("warmUpStart");
     warmupBtn.classList.add("display-none");
     window.gameLoop = setInterval(() => {
-        socket.emit("updatePosition", keyState);
+        socket.emit("warmUpUpdatePosition", keyState);
     }, 1000 / 60);
 }
 
@@ -208,7 +225,7 @@ function displayScoreboard(newPlayer) {
     html += `<tr id="player${newPlayer.color}">
                 <td>${players.length}</td>
                 <td style="color: ${newPlayer.color}">${newPlayer.username}</td>
-                <td>0</td>
+                <td>0</</td>
             </tr>`;
     scoretable.innerHTML = html;
 }
@@ -219,7 +236,7 @@ function rerenderScoretable() {
         html += `<tr id="player${players[i].color}">
             <td>${i + 1}</td>
             <td style="color: ${players[i].color};">${players[i].username}</td>
-            <td>0</td>
+            <td>${players[i].roundRanking}</td>
         </tr>`;
     }
     scoretable.innerHTML = html;
