@@ -55,6 +55,7 @@ socket.on("updatePosition", (player, players) => {
     ) {
         clearInterval(window.gameLoop);
         warmupBtn.classList.remove("display-none");
+    }
     // } else if (player.collided && player.userId === curPlayer.userId) {
     //     collisionOrder.push(player.userId);
     //     console.log(collisionOrder);
