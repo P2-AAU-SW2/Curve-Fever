@@ -20,15 +20,21 @@ module.exports = async (io) => {
         });
 
         socket.on("roomFull", () => {
+            let game = gameStates.getGame(gameID);
+            game.startGame(io, gameID);
             io.in(gameID).emit("roomFull");
         });
 
         socket.on("updatePosition", (keyState) => {
             let game = gameStates.getGame(gameID);
-            console.time("updatePosition");
             let player = game.updatePosition(userID, keyState);
-            console.timeEnd("updatePosition");
-            io.in(gameID).emit("updatePosition", player);
+            // Add the update to the map
+            game.updates.set(userID, player);
+        });
+
+        socket.on("gameStart", () => {
+            let game = gameStates.getGame(gameID);
+            game.startGame(io, gameID);
         });
 
         // socket.on("playerWon", () => {

@@ -43,28 +43,22 @@ socket.on("leaveGame", (userID) => {
 });
 // const collisionOrder = [];
 
-socket.on("updatePosition", (player) => {
-    let i = players.findIndex((el) => el.userId === player.userId);
-    players[i] = player;
+socket.on("updatePositions", (updatedPlayers) => {
+    updatedPlayers.forEach((updatedPlayer) => {
+        let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
+        players[i] = updatedPlayer;
 
-    // If the current player collided clear interval
-    if (player.collided && player.userId === curPlayer.userId) {
-        clearInterval(window.gameLoop);
-        warmupBtn.classList.remove("display-none");
-    }
-    // } else if (player.collided && player.userId === curPlayer.userId) {
-    //     collisionOrder.push(player.userId);
-    //     console.log(collisionOrder);
-    //     console.log(collisionOrder.length);
-    //     player.roundRanking = collisionOrder.length % 6;
-    // }
+        // If the current player collided clear interval
+        if (
+            updatedPlayer.collided &&
+            updatedPlayer.userId === curPlayer.userId
+        ) {
+            clearInterval(window.gameLoop);
+            warmupBtn.classList.remove("display-none");
+        }
 
-    // if (collisionOrder.length === players.length) {
-    //     clearInterval(window.gameLoop);
-    //     socket.emit("roomFull", players);
-    // }
-
-    draw(players);
+        draw(players);
+    });
 });
 
 socket.on("roomFull", () => {
@@ -103,6 +97,7 @@ function startCountdown() {
 }
 
 function startRound() {
+    socket.emit("gameStart");
     window.gameLoop = setInterval(() => {
         socket.emit("updatePosition", keyState);
     }, 1000 / 60);
@@ -161,6 +156,7 @@ const keyState = {
 };
 warmupBtn.addEventListener("click", startWarmup);
 function startWarmup() {
+    socket.emit("gameStart");
     warmupBtn.classList.add("display-none");
     window.gameLoop = setInterval(() => {
         socket.emit("updatePosition", keyState);
