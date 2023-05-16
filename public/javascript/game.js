@@ -41,7 +41,7 @@ socket.on("leaveGame", (userID) => {
         }
     }
 });
-const collisionOrder = [];
+// const collisionOrder = [];
 
 socket.on("updatePosition", (player, players) => {
     let i = players.findIndex((el) => el.userId === player.userId);
@@ -55,17 +55,17 @@ socket.on("updatePosition", (player, players) => {
     ) {
         clearInterval(window.gameLoop);
         warmupBtn.classList.remove("display-none");
-    } else if (player.collided && player.userId === curPlayer.userId) {
-        collisionOrder.push(player.userId);
-        console.log(collisionOrder);
-        console.log(collisionOrder.length);
-        player.roundRanking = collisionOrder.length % 6;
-    }
+    // } else if (player.collided && player.userId === curPlayer.userId) {
+    //     collisionOrder.push(player.userId);
+    //     console.log(collisionOrder);
+    //     console.log(collisionOrder.length);
+    //     player.roundRanking = collisionOrder.length % 6;
+    // }
 
-    if (collisionOrder.length === players.length) {
-        clearInterval(window.gameLoop);
-        socket.emit("roomFull", players);
-    }
+    // if (collisionOrder.length === players.length) {
+    //     clearInterval(window.gameLoop);
+    //     socket.emit("roomFull", players);
+    // }
 
     draw(players);
 });
