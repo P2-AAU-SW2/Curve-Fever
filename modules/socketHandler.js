@@ -25,7 +25,9 @@ module.exports = async (io) => {
 
         socket.on("updatePosition", (keyState) => {
             let game = gameStates.getGame(gameID);
+            console.time("updatePosition");
             let player = game.updatePosition(userID, keyState);
+            console.timeEnd("updatePosition");
             let players = game._players;
             io.in(gameID).emit("updatePosition", player, players);
         });
