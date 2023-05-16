@@ -84,6 +84,7 @@ class Game {
         this._id = id;
         this._players = [];
         this._playerParking = [];
+        this._updates = new Map();
     }
 
     get id() {
@@ -96,6 +97,10 @@ class Game {
 
     get count() {
         return this._players.length + this._playerParking.length;
+    }
+
+    get updates() {
+        return this._updates;
     }
 
     player(id) {
@@ -124,6 +129,22 @@ class Game {
         player.keyState = keyState;
         player.update(this.players);
         return player.playerDTO();
+    }
+
+    startGame(io, gameID) {
+        this.interval = setInterval(() => {
+            // Emit the batched updates at a fixed interval
+            io.in(gameID).emit(
+                "updatePositions",
+                Array.from(this.updates.values())
+            );
+            // Clear the updates for the next interval
+            this.updates.clear();
+        }, 1000 / 60);
+    }
+
+    endGame() {
+        clearInterval(this.interval);
     }
 }
 // updateGamePosition(userId, keyState) {
