@@ -231,7 +231,9 @@ class Player {
 
     update(players) {
         if (!this.isMoving) this.isMoving = true;
+        console.time("collision");
         this.collision(players);
+        console.timeEnd("collision");
         if (!this.collided) {
             this.jumping();
             // Update direction based on keyState

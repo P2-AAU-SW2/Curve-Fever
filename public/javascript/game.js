@@ -43,16 +43,12 @@ socket.on("leaveGame", (userID) => {
 });
 // const collisionOrder = [];
 
-socket.on("updatePosition", (player, players) => {
+socket.on("updatePosition", (player) => {
     let i = players.findIndex((el) => el.userId === player.userId);
     players[i] = player;
 
     // If the current player collided clear interval
-    if (
-        player.collided &&
-        player.userId === curPlayer.userId &&
-        players.length < 6
-    ) {
+    if (player.collided && player.userId === curPlayer.userId) {
         clearInterval(window.gameLoop);
         warmupBtn.classList.remove("display-none");
     }
