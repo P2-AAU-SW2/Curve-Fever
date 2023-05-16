@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require("uuid");
+
 function ensureAuth(req, res, next) {
     console.log("User before checking for auth:" + req.user);
     if (process.env.NODE_ENV === "production") {
@@ -21,7 +23,7 @@ function ensureAuth(req, res, next) {
             // Log user in to development user
             console.log("Logging in to dev user");
             const devUser = {
-                id: "4c1b3248-563f-4e17-b6a5-c6bbe59b0af3",
+                id: uuidv4(),
                 name: "Development",
                 score: 0,
                 coins: 0,

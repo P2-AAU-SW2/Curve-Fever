@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('header') %>
+    <link href="/css/gameMenu.css" rel="stylesheet" />
+    <link href="/css/menuModal.css" rel="stylesheet" />
+    <script defer src="/javascript/menuModal.js"></script>
+</head>
+
+<body>
+    <div class="game-menu-container">
+        <div class="header">
+            <div class="header-container">
+                <button class="logo" onclick="location.href = '/'""> <%- include('../public/assets/icons/Logo.svg') %> </button>
+                <div class=" user-info">
+                    <div class="border-container points">0</div>
+                    <i class="fa-solid fa-user icon user-icon"></i>
+                    <div class="user-name"><%= user.name %></div>
+            </div>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="game-btns">
+            <button class="red-btn quickplay button-input" onclick="location.href = '/game/play'"">
+                    Quickplay
+                </button>
+                <button onclick=" createMenuModal('join')" class=" green-btn join button-input">
+                Join Game
+            </button>
+            <button onclick="createMenuModal('create')" class="blue-btn create button-input">
+                Create Game
+            </button>
+            <button onclick="displayShop()" class="yellow-btn shop-game-btn button-input">
+                Shop
+            </button>
+        </div>
+        <div class="shop">
+            <i class="fa-solid fa-xmark shop-cross modal-cross" onclick="displayShop()" tabindex="0"></i>
+            <div class="shop-btns">
+                <button onclick="changeFocus(true)" id="skins-btn" class="shop-btn active">Skins</button>
+                <button onclick="changeFocus(false)" id="icons-btn" class="shop-btn">Icons</button>
+            </div>
+            <div class="content">
+                <% for (let i = 0; i < 11; i++) { %>
+                <button onclick="createMenuModal('shop', 'line<%=i+1%>')" class="shop-item">
+                    <img class="shop-item-img" src="/assets/images/line<%=i+1%>.svg" alt="skin-item">
+                </button>
+                <% } %>
+            </div>
+        </div>
+        <div onclick="displayShop()" class="shop-overlay"></div>
+    </div>
+    <%- include('footer') %>
+    </div>
+    <%- include('partials/menuModal') %>
+</body>
+<script>
+    let skinsInFocus = "<%- JSON.stringify(skinsInFocus) %>";
+    let container = document.querySelector(".main-container");
+
+    container.addEventListener("resize", resizeContainer);
+
+    function changeFocus(value) {
+        if (skinsInFocus !== value) {
+            setFocus();
+            skinsInFocus = value;
+            renderContent();
+        }
+    }
+
+    function createMenuModal(type, item) {
+        if (type === "create") {
+            menuModal.input.placeholder = "Room name";
+            menuModal.btn1.text = "Team";
+            menuModal.btn1.color = "blue";
+            menuModal.btn2.text = "FFA";
+            menuModal.btn2.color = "green";
+        } else if (type.includes("shop")) {
+            if (type.includes("icon")) menuModal.icon.class = item;
+            else menuModal.image.src = `/assets/images/${item}.svg`;
+            menuModal.text = "Would you like to buy this item for 100 points?";
+            menuModal.btn1.text = "Buy";
+            menuModal.btn1.color = "blue";
+        } else if (type === "join") {
+            menuModal.input.placeholder = "Room name";
+            menuModal.btn1.text = "Join room";
+            menuModal.btn1.color = "red";
+        }
+        createModal();
+    }
+
+    function setFocus() {
+        var skinsBtn = document.getElementById("skins-btn");
+        var iconsBtn = document.getElementById("icons-btn");
+        skinsBtn.classList.toggle("active");
+        iconsBtn.classList.toggle("active");
+    }
+
+    function displayShop() {
+        let shop = document.querySelector(".shop")
+        shop.classList.toggle("show-mini-shop")
+    }
+
+    function renderContent() {
+        const content = document.querySelector(".content");
+        let html = "";
+        for (let i = 0; i < 11; i++) {
+            if (skinsInFocus) {
+                html += `
+        <div class="shop-item" onclick="createMenuModal('shop', 'line${
+            i + 1
+        }')">
+        <img class="shop-item-img" src="/assets/images/line${
+            i + 1
+        }.svg" alt="skin-item">
+        </div>
+    `;
+            } else {
+                html += `
+        <div onclick="createMenuModal('shop icon', 'fa-solid fa-poo icon-item')" class="shop-item" tabindex="0">
+        <i class="icon-item fa-solid fa-poo"></i>
+        </div>
+    `;
+            }
+        }
+        content.innerHTML = html;
+    }
+</script>
+
+</html>

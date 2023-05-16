@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
 
 passport.use(
     new LocalStrategy(
-        { usernameField: "username", passwordField: "password" },
+        // { usernameField: "username", passwordField: "password" },
         async (username, password, done) => {
             try {
                 const user = await prisma.user.findUnique({

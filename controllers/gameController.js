@@ -1,8 +1,8 @@
-const gameStates = require("../modules/gameClasses");
+const { gameStates } = require("../modules/gameClasses");
 
-exports.logger = function(gameStates) {
+exports.logger = function (gameStates) {
     console.log(gameStates.games[0].players);
-};  
+};
 
 //setInterval(logger, 3000);
 
@@ -11,8 +11,8 @@ exports.getGameById = async (req, res, next) => {
     gameStates.joinByID(req.params.id, req.user).then(
         (result) => {
             res.render("game", {
-                userName: req.user.name,
-                userId: req.user.id,
+                players: result.playersDTO,
+                curPlayer: result.playerDTO(req.user.id),
                 gameId: req.params.id,
             });
         },
@@ -32,10 +32,10 @@ exports.play = async (req, res, next) => {
         .catch((error) => next(error));
 };
 
-exports.joinGameById = (req, res, next) => {
+exports.joinGameById = (req, res) => {
     res.send("Join game by id");
 };
 
-exports.createGame = (req, res, next) => {
+exports.createGame = (req, res) => {
     res.send("Create game");
 };

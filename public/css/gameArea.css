@@ -11,8 +11,6 @@ html {
 }
 .gameCanvas {
     display: block;
-    width: min(60vw, 90vh);
-    height: min(60vw, 90vh);
     margin: 0 auto;
     position: relative;
     grid-column-start: 2;
@@ -140,4 +138,35 @@ table {
 
     box-shadow: 0px 4px 0px #004a0c;
     border-radius: 10px;
+}
+
+.canvas-container {
+    position: relative;
+    height: min-content;
+}
+
+.btn-game-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#warmup-btn {
+    padding: 0 1rem;
+    max-height: 4rem;
+    max-width: fit-content;
+    z-index: 100;
+    text-align: center;
+}
+
+.loading {
+    height: 5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
