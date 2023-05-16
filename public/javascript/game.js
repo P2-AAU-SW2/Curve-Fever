@@ -108,7 +108,7 @@ function startCountdown() {
 function startRound() {
     window.gameLoop = setInterval(() => {
         socket.emit("updatePosition", keyState);
-    }, 1000 / 120);
+    }, 1000 / 60);
 }
 
 function draw(players) {
@@ -167,7 +167,7 @@ function startWarmup() {
     warmupBtn.classList.add("display-none");
     window.gameLoop = setInterval(() => {
         socket.emit("updatePosition", keyState);
-    }, 1000 / 120);
+    }, 1000 / 60);
 }
 
 // Update keyState based on keydown and keyup events
