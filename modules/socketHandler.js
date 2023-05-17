@@ -19,41 +19,47 @@ module.exports = async (io) => {
             socket.to(gameID).emit("newPlayer", players[players.length - 1]);
         });
 
-        socket.on("roomFull", () => {
+        socket.on("startRound", () => {
             let game = gameStates.getGame(gameID);
             game.startGame(io, gameID);
-            io.in(gameID).emit("roomFull");
+            io.in(gameID).emit("startRound");
         });
 
-        socket.on("warmUpUpdatePosition", (keyState) => {
+        socket.on("updatePosition", (keyState) => {
             let game = gameStates.getGame(gameID);
-            let player = game.warmUpUpdatePosition(userID, keyState);
-            // Add the update to the map
-            game.updates.set(userID, player);
-        });
+            let player = game.updatePosition(userID, keyState);
+            if (game.mode === "game") {
+                let collidedPlayers = game.players.filter((p) => p.collided);
 
-        socket.on("gameUpdatePosition", (keyState) => {
-            let game = gameStates.getGame(gameID);
-            let player = game.gameUpdatePosition(userID, keyState);
-            let colliedPlayers = game.players.filter((p) => p.collided);
-
-            if (colliedPlayers.length === game.players.length - 1) {
-                game.roundFinish(colliedPlayers);
-                socket.to(gameID).emit("renderScoreTable", game.players);
-                io.in(gameID).emit("roomFull");
+                if (collidedPlayers.length === game.players.length - 1) {
+                    game.roundFinish(collidedPlayers);
+                    socket.to(gameID).emit("renderScoreTable", game.players);
+                    io.in(gameID).emit("startRound");
+                }
             }
 
             // Add the update to the map
             game.updates.set(userID, player);
         });
 
-        socket.on("warmUpStart", () => {
-            let game = gameStates.getGame(gameID);
-            game.startWarmUp(io, gameID);
-        });
+        // socket.on("gameUpdatePosition", (keyState) => {
+        //     let game = gameStates.getGame(gameID);
+        //     let player = game.gameUpdatePosition(userID, keyState);
+        //     let collidedPlayers = game.players.filter((p) => p.collided);
 
-        socket.on("gameStart", () => {
+        //     if (collidedPlayers.length === game.players.length - 1) {
+        //         game.roundFinish(collidedPlayers);
+        //         socket.to(gameID).emit("renderScoreTable", game.players);
+        //         io.in(gameID).emit("startRound");
+        //     }
+
+        //     // Add the update to the map
+        //     game.updates.set(userID, player);
+        // });
+
+        socket.on("gameStart", (mode) => {
             let game = gameStates.getGame(gameID);
+            game.mode = mode;
             game.startGame(io, gameID);
         });
 

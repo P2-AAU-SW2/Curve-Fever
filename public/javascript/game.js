@@ -6,7 +6,7 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const warmupBtn = document.getElementById("warmup-btn");
 // const roundCounter = document.getElementById("roundCounter");
-
+var mode = "warmUp";
 const socket = io({
     query: {
         gameID: gameId,
@@ -17,7 +17,7 @@ const socket = io({
 socket.on("connect", () => {
     console.log(players);
     socket.emit("newPlayer", players);
-    if (players.length === 3) {
+    if (players.length === 6) {
         socket.emit(
             "chat",
             "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
@@ -25,7 +25,7 @@ socket.on("connect", () => {
         displayMessage(
             "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
         );
-        socket.emit("roomFull");
+        socket.emit("startRound");
     }
 });
 
@@ -48,7 +48,7 @@ socket.on("leaveGame", (userID) => {
     }
 });
 
-socket.on("warmUpUpdatePosition", (updatedPlayers) => {
+socket.on("updatePosition", (updatedPlayers) => {
     updatedPlayers.forEach((updatedPlayer) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
         players[i] = updatedPlayer;
@@ -59,23 +59,23 @@ socket.on("warmUpUpdatePosition", (updatedPlayers) => {
             updatedPlayer.userId === curPlayer.userId
         ) {
             clearInterval(window.gameLoop);
-            warmupBtn.classList.remove("display-none");
+            if (mode === "warmUp") warmupBtn.classList.remove("display-none");
         }
 
         draw(players);
     });
 });
 
-socket.on("gameUpdatePosition", (updatedPlayers) => {
-    updatedPlayers.forEach((updatedPlayer) => {
-        let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
-        players[i] = updatedPlayer;
+// socket.on("updatePosition", (updatedPlayers) => {
+//     updatedPlayers.forEach((updatedPlayer) => {
+//         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
+//         players[i] = updatedPlayer;
 
-        draw(players);
-    });
-});
+//         draw(players);
+//     });
+// });
 
-socket.on("roomFull", () => {
+socket.on("startRound", () => {
     console.log("Game started");
     clearInterval(window.gameLoop);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -114,9 +114,10 @@ function startCountdown() {
 }
 
 function startRound() {
-    socket.emit("gameStart");
+    mode = "game";
+    socket.emit("gameStart", mode);
     window.gameLoop = setInterval(() => {
-        socket.emit("gameUpdatePosition", keyState);
+        socket.emit("updatePosition", keyState);
     }, 1000 / 60);
 }
 
@@ -166,7 +167,7 @@ function draw(players) {
                 ctx.stroke();
                 ctx.closePath();
             }
-        }
+        } else console.log(player.isMoving);
     });
 }
 
@@ -184,10 +185,10 @@ const keyState = {
 };
 warmupBtn.addEventListener("click", startWarmup);
 function startWarmup() {
-    socket.emit("warmUpStart");
+    socket.emit("gameStart", "warmUp");
     warmupBtn.classList.add("display-none");
     window.gameLoop = setInterval(() => {
-        socket.emit("warmUpUpdatePosition", keyState);
+        socket.emit("updatePosition", keyState);
     }, 1000 / 60);
 }
 

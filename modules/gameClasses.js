@@ -85,6 +85,8 @@ class Game {
         this._players = [];
         this._playerParking = [];
         this._updates = new Map();
+        this._rounds = 0;
+        this.mode = "warmUp";
     }
 
     get id() {
@@ -123,44 +125,47 @@ class Game {
         return this._players.includes(player);
     }
 
-    warmUpUpdatePosition(userId, keyState) {
+    updatePosition(userId, keyState) {
         let player = this.player(userId);
         player.keyState = keyState;
-        if (player.collided) {
-            player.resetState();
+        if (player.collided && this.mode === "warmUp") player.resetState();
+        player.update(this.players);
+        if (player.collided && this.mode === "warmUp") {
+            player.path = [];
+            player.isMoving = false;
         }
-        player.update(this.players);
-        player.updateWarmUp(this.players);
         return player.playerDTO();
     }
 
-    gameUpdatePosition(userId, keyState) {
-        let player = this.player(userId);
-        player.keyState = keyState;
-        player.update(this.players);
-        return player.playerDTO();
-    }
+    // gameUpdatePosition(userId, keyState) {
+    //     let player = this.player(userId);
+    //     player.keyState = keyState;
+    //     player.update(this.players);
+    //     return player.playerDTO();
+    // }
 
-    startWarmUp(io, gameID) {
-        this.interval = setInterval(() => {
-            // Emit the batched updates at a fixed interval
-            io.in(gameID).emit(
-                "warmUpUpdatePosition",
-                Array.from(this.updates.values())
-            );
-            // Clear the updates for the next interval
-            this.updates.clear();
-        }, 1000 / 60);
-    }
+    // startWarmUp(io, gameID) {
+    //     if (this.interval) clearInterval(this.interval);
+    //     this.interval = setInterval(() => {
+    //         // Emit the batched updates at a fixed interval
+    //         io.in(gameID).emit(
+    //             "warmUpUpdatePosition",
+    //             Array.from(this.updates.values())
+    //         );
+    //         // Clear the updates for the next interval
+    //         this.updates.clear();
+    //     }, 1000 / 60);
+    // }
 
     startGame(io, gameID) {
+        if (this.interval) clearInterval(this.interval);
         this.players.forEach((player) => {
             player.resetState();
         });
         this.interval = setInterval(() => {
             // Emit the batched updates at a fixed interval
             io.in(gameID).emit(
-                "gameUpdatePosition",
+                "updatePosition",
                 Array.from(this.updates.values())
             );
             // Clear the updates for the next interval
@@ -168,12 +173,12 @@ class Game {
         }, 1000 / 60);
     }
 
-    roundFinish(colliedPlayers) {
-        console.log(colliedPlayers.userId);
-        colliedPlayers.forEach((colliedPlayer) => {
-            let player = this.players.find((p) => p == colliedPlayer);
-            player.roundRanking += colliedPlayers.indexOf(colliedPlayer);
-            console.log(player.roundRanking + "\n" + colliedPlayer);
+    roundFinish(collidedPlayers) {
+        console.log(collidedPlayers.userId);
+        collidedPlayers.forEach((collidedPlayer) => {
+            let player = this.players.find((p) => p == collidedPlayer);
+            player.roundRanking += collidedPlayers.indexOf(collidedPlayer);
+            console.log(player.roundRanking + "\n" + collidedPlayer);
         });
 
         let roundWinner = this.players.find((player) => !player.collided);
@@ -261,7 +266,7 @@ class Player {
         this.color = color;
         this.speed = speed;
         this.path = [];
-        this.turnSpeed = 0.065;
+        this.turnSpeed = 0.05;
         this.turnDirection = 0;
         this.lineWidth = lineWidth;
         this.collided = false;
@@ -306,14 +311,6 @@ class Player {
             // Add the current position to the path
             if (!this.isJumping && !this.isFlying)
                 this.path.push({ x: this.x, y: this.y });
-        }
-    }
-
-    updateWarmUp(players) {
-        this.collision(players);
-        if (this.collided) {
-            this.path = [];
-            this.isMoving = false;
         }
     }
 
