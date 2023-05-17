@@ -124,7 +124,7 @@ class Game {
     playerExists(player) {
         return this._players.includes(player);
     }
-
+    // Hello
     updatePosition(userId, keyState) {
         let player = this.player(userId);
         player.keyState = keyState;
