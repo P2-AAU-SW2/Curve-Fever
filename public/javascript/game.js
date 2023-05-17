@@ -129,12 +129,9 @@ function draw(players) {
             ctx.lineWidth = player.lineWidth;
             ctx.lineCap = "round";
             const radius = player.lineWidth * 0.0933 + 0.1;
-            if (player.isFlying) {
-                ctx.beginPath();
-                ctx.arc(player.x, player.y, radius * 5, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.closePath();
-            } else if (player.path.length > 1) {
+            if (player.isFlying || player.path.length === 1)
+                drawDot(player, radius * 5);
+            else if (player.path.length > 1) {
                 // Draws the entire path for every animation frame so the line is smooth
                 ctx.beginPath();
                 ctx.moveTo(player.path[0].x, player.path[0].y);
@@ -143,6 +140,16 @@ function draw(players) {
                         // Draws the gaps in the line. Checks if the jump value is closed with another value
                         if (player.jumps.length > j + 1) {
                             i = player.jumps[j + 1];
+                            // If the position in the path is equal to the current player position after a jump then there is not enough points to make a line, therefore we need to draw a dot instead
+                            if (
+                                player.path[i].x === player.x &&
+                                player.path[i].y === player.y
+                            ) {
+                                ctx.stroke();
+                                ctx.closePath();
+                                drawDot(player, radius);
+                                break;
+                            }
                             if (player.jumps.length >= j + 2) j += 2;
                             ctx.moveTo(player.path[i].x, player.path[i].y);
                         }
@@ -154,16 +161,20 @@ function draw(players) {
                 if (player.isJumping || player.isFlying) {
                     ctx.stroke();
                     ctx.closePath();
-                    ctx.beginPath();
-                    ctx.arc(player.x, player.y, radius, 0, 2 * Math.PI);
-                    ctx.fill();
-                    ctx.closePath();
+                    drawDot(player, radius);
                 }
                 ctx.stroke();
                 ctx.closePath();
             }
         }
     });
+}
+
+function drawDot(player, radius) {
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, radius, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.closePath();
 }
 
 // Object to store the state of the arrow keys
