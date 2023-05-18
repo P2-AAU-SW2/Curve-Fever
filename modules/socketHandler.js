@@ -30,11 +30,6 @@ module.exports = async (io) => {
             }
         });
 
-        // socket.on("startRound", () => {
-        //     game.startGame(io);
-        //     io.in(gameID).emit("startRound");
-        // });
-
         socket.on("updatePosition", (keyState) => {
             let player = game.updatePosition(userID, keyState);
             if (game.mode === "game") {
@@ -48,21 +43,6 @@ module.exports = async (io) => {
             }
         });
 
-        // socket.on("gameUpdatePosition", (keyState) => {
-        //     let game = gameStates.getGame(gameID);
-        //     let player = game.gameUpdatePosition(userID, keyState);
-        //     let collidedPlayers = game.players.filter((p) => p.collided);
-
-        //     if (collidedPlayers.length === game.players.length - 1) {
-        //         game.roundFinish(collidedPlayers);
-        //         socket.to(gameID).emit("renderScoreTable", game.players);
-        //         io.in(gameID).emit("startRound");
-        //     }
-
-        //     // Add the update to the map
-        //     game.updates.set(userID, player);
-        // });
-
         socket.on("warmUp", () => {
             let player = game.player(userID);
             player.resetState();
@@ -75,10 +55,6 @@ module.exports = async (io) => {
         socket.on("endGame", () => {
             game.endGame(io, gameID);
         });
-
-        // socket.on("playerWon", () => {
-        //     io.in(gameID).emit("playerWon");
-        // });
 
         // Handle client disconnect, by error or on purpose. Removes the player from the gamestate logic.
         socket.on("disconnect", () => {

@@ -17,16 +17,6 @@ const socket = io({
 socket.on("connect", () => {
     console.log(players);
     socket.emit("newPlayer", players);
-    // if (players.length === 2) {
-    //     socket.emit(
-    //         "chat",
-    //         "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
-    //     );
-    //     displayMessage(
-    //         "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
-    //     );
-    //     socket.emit("startRound");
-    // }
 });
 
 socket.on("chat", (message) => {
@@ -48,7 +38,6 @@ socket.on("leaveGame", (userID) => {
 });
 
 socket.on("updatePosition", (updatedPlayers) => {
-    console.log(updatedPlayers);
     updatedPlayers.forEach((updatedPlayer) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
         players[i] = updatedPlayer;
@@ -80,23 +69,6 @@ function displayCountdown(i) {
     ctx.fillText(String(i), canvas.width / 2, canvas.height / 2); // draw countdown on the canvas
 }
 
-// socket.on("updatePosition", (updatedPlayers) => {
-//     updatedPlayers.forEach((updatedPlayer) => {
-//         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
-//         players[i] = updatedPlayer;
-
-//         draw(players);
-//     });
-// });
-
-// socket.on("startRound", () => {
-//     console.log("Game started");
-//     clearInterval(window.gameLoop);
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-//     startRound();
-// });
-
 socket.on("renderScoreTable", (updatedPlayers) => {
     updatedPlayers.forEach((updatedPlayer) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
@@ -110,34 +82,6 @@ socket.on("renderScoreTable", (updatedPlayers) => {
 socket.on("gameNotFound", function () {
     window.location.href = "/"; // redirects to home page
 });
-
-// function startCountdown() {
-//     console.log("Starting countdown");
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-//     let count = 3;
-//     return new Promise((resolve) => {
-//         var countdown = setInterval(() => {
-//             count === 0
-//                 ? (clearInterval(countdown), resolve())
-//                 : displayCountdown(count);
-//             count--;
-//         }, 1000);
-//         function displayCountdown(i) {
-//             ctx.fillStyle = "#FFFFFF";
-//             ctx.font = "bolder 60px Arial";
-//             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-//             ctx.fillText(String(i), canvas.width / 2, canvas.height / 2); // draw countdown on the canvas
-//         }
-//     });
-// }
-
-// function startRound() {
-//     mode = "game";
-//     socket.emit("gameStart", mode);
-//     window.gameLoop = setInterval(() => {
-//         socket.emit("updatePosition", keyState);
-//     }, 1000 / 60);
-// }
 
 function draw(players) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);

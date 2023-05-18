@@ -171,26 +171,6 @@ class Game {
         }, 1000);
     }
 
-    // gameUpdatePosition(userId, keyState) {
-    //     let player = this.player(userId);
-    //     player.keyState = keyState;
-    //     player.update(this.players);
-    //     return player.playerDTO();
-    // }
-
-    // startWarmUp(io, gameID) {
-    //     if (this.interval) clearInterval(this.interval);
-    //     this.interval = setInterval(() => {
-    //         // Emit the batched updates at a fixed interval
-    //         io.in(gameID).emit(
-    //             "warmUpUpdatePosition",
-    //             Array.from(this.updates.values())
-    //         );
-    //         // Clear the updates for the next interval
-    //         this.updates.clear();
-    //     }, 1000 / 60);
-    // }
-
     startGame(io) {
         clearInterval(this.interval);
         // this.players.forEach((player) => {
@@ -216,16 +196,6 @@ class Game {
 
     roundFinish(io) {
         clearInterval(this.interval);
-        // collidedPlayers.forEach((collidedPlayer) => {
-        //     let player = this.players.find((p) => p == collidedPlayer);
-        //     player.roundScore += collidedPlayers.indexOf(collidedPlayer);
-        //     console.log(player.roundScore + "\n" + collidedPlayer);
-        // });
-
-        // let roundWinner = this.players.find((player) => !player.collided);
-        // roundWinner.roundScore += this.players.length - 1;
-
-        // console.log(roundWinner.roundScore + "\n" + roundWinner);
         this.players.forEach((player) => {
             player.resetState();
         });
