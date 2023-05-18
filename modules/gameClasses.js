@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 6; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 5; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -134,7 +134,41 @@ class Game {
             player.path = [];
             player.isMoving = false;
         }
-        return player.playerDTO();
+        let playerDTO = player.playerDTO();
+        // Add the update to the map
+        this.updates.set(userId, playerDTO);
+        return playerDTO;
+    }
+
+    updateLeaderBoard(io, score) {
+        let collidedPlayers = this.players.filter((p) => !p.collided);
+        collidedPlayers.forEach((player) => {
+            player.roundScore = score;
+            player.leaderboardScore++;
+        });
+
+        // console.log(leaderboard);
+        io.in(this.id).emit("renderScoreTable", this.playersDTO);
+    }
+
+    async countdown(io) {
+        // Clear and reset state
+        clearInterval(this.interval);
+        this.updates.clear();
+        this.players.forEach((player) => {
+            player.resetState();
+            player.isMoving = true;
+            this.updates.set(player.userId, player.playerDTO());
+        });
+
+        // Initialize countdown
+        let count = 3;
+        this.interval = setInterval(() => {
+            if (count <= 0) {
+                clearInterval(this.interval);
+                this.startGame(io);
+            } else io.in(this.id).emit("countdown", count--);
+        }, 1000);
     }
 
     // gameUpdatePosition(userId, keyState) {
@@ -157,37 +191,45 @@ class Game {
     //     }, 1000 / 60);
     // }
 
-    startGame(io, gameID) {
-        if (this.interval) clearInterval(this.interval);
-        this.players.forEach((player) => {
-            player.resetState();
-        });
+    startGame(io) {
+        clearInterval(this.interval);
+        // this.players.forEach((player) => {
+        //     player.resetState();
+        // });
+        // this.updates.clear();
         this.interval = setInterval(() => {
             // Emit the batched updates at a fixed interval
-            io.in(gameID).emit(
-                "updatePosition",
-                Array.from(this.updates.values())
-            );
-            // Clear the updates for the next interval
-            this.updates.clear();
+            let updatedPlayers = Array.from(this.updates.values());
+            if (updatedPlayers.length) {
+                io.in(this.id).emit("updatePosition", updatedPlayers);
+                this.updates.clear(); // Clear updates for next interval
+            } else if (this.mode === "warmUp") {
+                // If every player has collided then clear the interval
+                let collisions = this.players.filter(
+                    (el) => el.collided
+                ).length;
+                if (this.players.length === collisions)
+                    clearInterval(this.interval);
+            }
         }, 1000 / 60);
     }
 
-    roundFinish(collidedPlayers) {
-        console.log(collidedPlayers.userId);
-        collidedPlayers.forEach((collidedPlayer) => {
-            let player = this.players.find((p) => p == collidedPlayer);
-            player.roundRanking += collidedPlayers.indexOf(collidedPlayer);
-            console.log(player.roundRanking + "\n" + collidedPlayer);
-        });
+    roundFinish(io) {
+        clearInterval(this.interval);
+        // collidedPlayers.forEach((collidedPlayer) => {
+        //     let player = this.players.find((p) => p == collidedPlayer);
+        //     player.roundScore += collidedPlayers.indexOf(collidedPlayer);
+        //     console.log(player.roundScore + "\n" + collidedPlayer);
+        // });
 
-        let roundWinner = this.players.find((player) => !player.collided);
-        roundWinner.roundRanking += this.players.length - 1;
+        // let roundWinner = this.players.find((player) => !player.collided);
+        // roundWinner.roundScore += this.players.length - 1;
 
-        console.log(roundWinner.roundRanking + "\n" + roundWinner);
+        // console.log(roundWinner.roundScore + "\n" + roundWinner);
         this.players.forEach((player) => {
             player.resetState();
         });
+        this.countdown(io);
     }
 
     endGame() {
@@ -209,6 +251,8 @@ function generateDTO(state) {
     obj.isJumping = state.isJumping;
     obj.isFlying = state.isFlying;
     obj.isMoving = state.isMoving;
+    obj.leaderboardScore = state.leaderboardScore;
+    obj.roundScore = state.roundScore;
     return obj;
 }
 
@@ -281,8 +325,8 @@ class Player {
         this.isJumping = false;
         this.isFlying = true;
         this.isMoving = false;
-        this.leaderboardRanking = 0;
-        this.roundRanking = 0;
+        this.leaderboardScore = 0;
+        this.roundScore = 0;
     }
 
     // Data Transfer Object (DTO)
@@ -292,9 +336,9 @@ class Player {
 
     update(players) {
         if (!this.isMoving) this.isMoving = true;
-        console.time("collision");
+        // console.time("collision");
         this.collision(players);
-        console.timeEnd("collision");
+        // console.timeEnd("collision");
         if (!this.collided) {
             this.jumping();
             // Update direction based on keyState
@@ -391,6 +435,7 @@ class Player {
         this.isJumping = false;
         this.isFlying = true;
         this.isMoving = false;
+        this.roundScore = 0;
     }
 }
 

@@ -24,27 +24,28 @@ module.exports = async (io) => {
 
         socket.on("newPlayer", (players) => {
             socket.to(gameID).emit("newPlayer", players[players.length - 1]);
+            if (players.length >= gameStates.MAX_PLAYERS) {
+                game.mode = "game";
+                game.countdown(io);
+            }
         });
 
-        socket.on("startRound", () => {
-            game.startGame(io, gameID);
-            io.in(gameID).emit("startRound");
-        });
+        // socket.on("startRound", () => {
+        //     game.startGame(io);
+        //     io.in(gameID).emit("startRound");
+        // });
 
         socket.on("updatePosition", (keyState) => {
             let player = game.updatePosition(userID, keyState);
             if (game.mode === "game") {
-                let collidedPlayers = game.players.filter((p) => p.collided);
+                let score = game.players.filter((p) => p.collided).length + 1;
 
-                if (collidedPlayers.length === game.players.length - 1) {
-                    game.roundFinish(collidedPlayers);
-                    socket.to(gameID).emit("renderScoreTable", game.players);
-                    io.in(gameID).emit("startRound");
+                if (player.collided) {
+                    game.updateLeaderBoard(io, score);
+                } else if (score >= game.players.length) {
+                    game.roundFinish(io);
                 }
             }
-
-            // Add the update to the map
-            game.updates.set(userID, player);
         });
 
         // socket.on("gameUpdatePosition", (keyState) => {
@@ -62,9 +63,13 @@ module.exports = async (io) => {
         //     game.updates.set(userID, player);
         // });
 
-        socket.on("gameStart", (mode) => {
-            game.mode = mode;
-            game.startGame(io, gameID);
+        socket.on("warmUp", () => {
+            let player = game.player(userID);
+            player.resetState();
+            player.isMoving = true;
+            game.updates.set(userID, game.playerDTO(userID));
+            // game.mode = "warmUp";
+            game.startGame(io);
         });
 
         socket.on("endGame", () => {

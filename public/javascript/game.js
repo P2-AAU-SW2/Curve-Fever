@@ -17,16 +17,16 @@ const socket = io({
 socket.on("connect", () => {
     console.log(players);
     socket.emit("newPlayer", players);
-    if (players.length === 6) {
-        socket.emit(
-            "chat",
-            "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
-        );
-        displayMessage(
-            "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
-        );
-        socket.emit("startRound");
-    }
+    // if (players.length === 2) {
+    //     socket.emit(
+    //         "chat",
+    //         "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
+    //     );
+    //     displayMessage(
+    //         "ANNOUCEMENT! <br> Game starting in 3 seconds, GET READY!"
+    //     );
+    //     socket.emit("startRound");
+    // }
 });
 
 socket.on("chat", (message) => {
@@ -34,7 +34,6 @@ socket.on("chat", (message) => {
 });
 
 socket.on("newPlayer", (player) => {
-    console.log(player);
     displayScoreboard(player);
 });
 
@@ -49,22 +48,37 @@ socket.on("leaveGame", (userID) => {
 });
 
 socket.on("updatePosition", (updatedPlayers) => {
+    console.log(updatedPlayers);
     updatedPlayers.forEach((updatedPlayer) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
         players[i] = updatedPlayer;
 
         // If the current player collided clear interval
-        if (
-            updatedPlayer.collided &&
-            updatedPlayer.userId === curPlayer.userId
-        ) {
-            clearInterval(window.gameLoop);
-            if (mode === "warmUp") warmupBtn.classList.remove("display-none");
+        if (updatedPlayer.userId === curPlayer.userId) {
+            if (updatedPlayer.collided) {
+                if (mode === "warmUp")
+                    warmupBtn.classList.remove("display-none");
+            } else if (updatedPlayer.isMoving) {
+                socket.emit("updatePosition", keyState);
+            }
         }
 
         draw(players);
     });
 });
+
+socket.on("countdown", (count) => {
+    console.log(count);
+    mode = "game";
+    warmupBtn.classList.add("display-none");
+    displayCountdown(count);
+});
+function displayCountdown(i) {
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bolder 60px Arial";
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    ctx.fillText(String(i), canvas.width / 2, canvas.height / 2); // draw countdown on the canvas
+}
 
 // socket.on("updatePosition", (updatedPlayers) => {
 //     updatedPlayers.forEach((updatedPlayer) => {
@@ -75,21 +89,21 @@ socket.on("updatePosition", (updatedPlayers) => {
 //     });
 // });
 
-socket.on("startRound", () => {
-    console.log("Game started");
-    clearInterval(window.gameLoop);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    warmupBtn.classList.add("display-none");
-    startCountdown().then(() => {
-        startRound();
-    });
-});
+// socket.on("startRound", () => {
+//     console.log("Game started");
+//     clearInterval(window.gameLoop);
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+//     startRound();
+// });
 
 socket.on("renderScoreTable", (updatedPlayers) => {
     updatedPlayers.forEach((updatedPlayer) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
-        players[i] = updatedPlayer;
+        players[i].leaderboardScore = updatedPlayer.leaderboardScore;
     });
+    // Sort leaderboard from highest to lowest
+    players.sort((a, b) => b.leaderboardScore - a.leaderboardScore);
     rerenderScoretable();
 });
 
@@ -97,33 +111,33 @@ socket.on("gameNotFound", function () {
     window.location.href = "/"; // redirects to home page
 });
 
-function startCountdown() {
-    console.log("Starting countdown");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let count = 3;
-    return new Promise((resolve) => {
-        var countdown = setInterval(() => {
-            count === 0
-                ? (clearInterval(countdown), resolve())
-                : displayCountdown(count);
-            count--;
-        }, 1000);
-        function displayCountdown(i) {
-            ctx.fillStyle = "#FFFFFF";
-            ctx.font = "bolder 60px Arial";
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-            ctx.fillText(String(i), canvas.width / 2, canvas.height / 2); // draw countdown on the canvas
-        }
-    });
-}
+// function startCountdown() {
+//     console.log("Starting countdown");
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+//     let count = 3;
+//     return new Promise((resolve) => {
+//         var countdown = setInterval(() => {
+//             count === 0
+//                 ? (clearInterval(countdown), resolve())
+//                 : displayCountdown(count);
+//             count--;
+//         }, 1000);
+//         function displayCountdown(i) {
+//             ctx.fillStyle = "#FFFFFF";
+//             ctx.font = "bolder 60px Arial";
+//             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+//             ctx.fillText(String(i), canvas.width / 2, canvas.height / 2); // draw countdown on the canvas
+//         }
+//     });
+// }
 
-function startRound() {
-    mode = "game";
-    socket.emit("gameStart", mode);
-    window.gameLoop = setInterval(() => {
-        socket.emit("updatePosition", keyState);
-    }, 1000 / 60);
-}
+// function startRound() {
+//     mode = "game";
+//     socket.emit("gameStart", mode);
+//     window.gameLoop = setInterval(() => {
+//         socket.emit("updatePosition", keyState);
+//     }, 1000 / 60);
+// }
 
 function draw(players) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -171,7 +185,7 @@ function draw(players) {
                 ctx.stroke();
                 ctx.closePath();
             }
-        } else console.log(player.isMoving);
+        }
     });
 }
 
@@ -189,11 +203,11 @@ const keyState = {
 };
 warmupBtn.addEventListener("click", startWarmup);
 function startWarmup() {
-    socket.emit("gameStart", "warmUp");
+    socket.emit("warmUp");
     warmupBtn.classList.add("display-none");
-    window.gameLoop = setInterval(() => {
-        socket.emit("updatePosition", keyState);
-    }, 1000 / 60);
+    // window.gameLoop = setInterval(() => {
+    //     socket.emit("updatePosition", keyState);
+    // }, 1000 / 60);
 }
 
 // Update keyState based on keydown and keyup events
@@ -252,7 +266,7 @@ function rerenderScoretable() {
         html += `<tr id="player${players[i].color}">
             <td>${i + 1}</td>
             <td style="color: ${players[i].color};">${players[i].username}</td>
-            <td>${players[i].roundRanking}</td>
+            <td>${players[i].leaderboardScore}</td>
         </tr>`;
     }
     scoretable.innerHTML = html;
