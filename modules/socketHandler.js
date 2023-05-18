@@ -22,6 +22,11 @@ module.exports = async (io) => {
             socket.to(gameID).emit("chat", profanity.censor(message));
         });
 
+        socket.on("keyState", (keyState) => {
+            let player = game.player(userID);
+            player.keyState = keyState;
+        });
+
         socket.on("newPlayer", (players) => {
             socket.to(gameID).emit("newPlayer", players[players.length - 1]);
             if (players.length >= gameStates.MAX_PLAYERS) {
@@ -31,6 +36,8 @@ module.exports = async (io) => {
         });
 
         socket.on("updatePosition", (keyState) => {
+            console.timeEnd("updatePosition");
+
             let player = game.updatePosition(userID, keyState);
             if (game.mode === "game") {
                 let score = game.players.filter((p) => p.collided).length + 1;
@@ -41,6 +48,7 @@ module.exports = async (io) => {
                     game.roundFinish(io);
                 }
             }
+            console.time("updatePosition");
         });
 
         socket.on("warmUp", () => {

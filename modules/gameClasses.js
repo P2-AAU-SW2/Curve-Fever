@@ -124,6 +124,14 @@ class Game {
     playerExists(player) {
         return this._players.includes(player);
     }
+
+    updateAll() {
+        this._players.forEach((player) => {
+            if (!player.collided) {
+                this.updatePosition(player.userId, player.keyState);
+            }
+        });
+    }
     // Hello
     updatePosition(userId, keyState) {
         let player = this.player(userId);
@@ -178,6 +186,8 @@ class Game {
         // });
         // this.updates.clear();
         this.interval = setInterval(() => {
+            // Update all players
+            this.updateAll();
             // Emit the batched updates at a fixed interval
             let updatedPlayers = Array.from(this.updates.values());
             if (updatedPlayers.length) {

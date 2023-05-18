@@ -38,6 +38,7 @@ socket.on("leaveGame", (userID) => {
 });
 
 socket.on("updatePosition", (updatedPlayers) => {
+    console.timeEnd("updatePosition");
     updatedPlayers.forEach((updatedPlayer) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
         players[i] = updatedPlayer;
@@ -47,13 +48,11 @@ socket.on("updatePosition", (updatedPlayers) => {
             if (updatedPlayer.collided) {
                 if (mode === "warmUp")
                     warmupBtn.classList.remove("display-none");
-            } else if (updatedPlayer.isMoving) {
-                socket.emit("updatePosition", keyState);
             }
         }
-
         draw(players);
     });
+    console.time("updatePosition");
 });
 
 socket.on("countdown", (count) => {
@@ -160,8 +159,10 @@ document.addEventListener("keydown", (event) => {
     if (!keyState[key]) {
         if (key == "ArrowLeft") {
             keyState[key] = keyState.ArrowRight + 1;
+            socket.emit("keyState", keyState);
         } else if (key == "ArrowRight") {
             keyState[key] = keyState.ArrowLeft + 1;
+            socket.emit("keyState", keyState);
         }
     }
 });
@@ -169,6 +170,7 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("keyup", (event) => {
     if (event.key in keyState) {
         keyState[event.key] = 0;
+        socket.emit("keyState", keyState);
     }
 });
 
