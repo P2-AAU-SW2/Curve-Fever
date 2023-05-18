@@ -93,6 +93,10 @@ socket.on("renderScoreTable", (updatedPlayers) => {
     rerenderScoretable();
 });
 
+socket.on("gameNotFound", function () {
+    window.location.href = "/"; // redirects to home page
+});
+
 function startCountdown() {
     console.log("Starting countdown");
     ctx.clearRect(0, 0, canvas.width, canvas.height);

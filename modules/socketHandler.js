@@ -7,6 +7,13 @@ module.exports = async (io) => {
         const gameID = socket.handshake.query.gameID;
         const userID = socket.handshake.query.userID;
 
+        const game = gameStates.getGame(gameID);
+
+        if (!game) {
+            socket.emit("gameNotFound");
+            return;
+        }
+
         // Join websocket room with client-provided ID
         socket.join(gameID);
 
@@ -20,13 +27,11 @@ module.exports = async (io) => {
         });
 
         socket.on("startRound", () => {
-            let game = gameStates.getGame(gameID);
             game.startGame(io, gameID);
             io.in(gameID).emit("startRound");
         });
 
         socket.on("updatePosition", (keyState) => {
-            let game = gameStates.getGame(gameID);
             let player = game.updatePosition(userID, keyState);
             if (game.mode === "game") {
                 let collidedPlayers = game.players.filter((p) => p.collided);
@@ -58,13 +63,11 @@ module.exports = async (io) => {
         // });
 
         socket.on("gameStart", (mode) => {
-            let game = gameStates.getGame(gameID);
             game.mode = mode;
             game.startGame(io, gameID);
         });
 
         socket.on("endGame", () => {
-            let game = gameStates.getGame(gameID);
             game.endGame(io, gameID);
         });
 
