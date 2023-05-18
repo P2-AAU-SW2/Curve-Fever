@@ -36,6 +36,7 @@ steps:
       image: node
       commands:
           - npm install
+          - npx prisma generate
           - npm test
     - name: docker_build
       image: plugins/docker
