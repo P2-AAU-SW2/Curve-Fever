@@ -1,49 +1,82 @@
+.container {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-rows: minmax(12rem, 20rem) minmax(max-content, auto) 3rem;
+    grid-template-columns: 5% minmax(23rem, auto) 5%;
+    gap: 1rem;
+}
+
+@media (max-height: 45em) {
+    .container {
+        grid-template-rows: minmax(12rem, 20rem) minmax(max-content, 32rem) 3rem;
+    }
+}
+
 /* Page setup */
 .page-wrapper {
     --page-size: 30rem;
     width: 100%;
     height: auto;
     overflow: hidden;
+    grid-column: 2;
 }
 
 .pages {
     width: 100%;
-    box-sizing: border-box;
+    margin-top: 1.5rem;
     display: grid;
     grid-template-columns: repeat(2, var(--page-size));
     justify-content: center;
-    transform: translateX(15rem);
+    justify-items: center;
+    align-items: center;
+    transform: translateX(calc((var(--page-size) / 2)));
     transition: all ease 0.2s;
+    overflow: visible;
 }
 
 .slide-left {
     transform: translateX(calc((var(--page-size) / 2) * -1)) !important;
 }
 
-.slide-left > :first-child {
+.slide-left .guest-page {
     visibility: hidden;
     opacity: 0;
 }
-.slide-left > :last-child {
+.slide-left .auth-page {
     visibility: initial !important;
     opacity: 1 !important;
 }
 
-.two {
+.auth-page {
     visibility: hidden;
     opacity: 0;
 }
 
 .page {
-    width: 100%;
+    width: 75%;
     height: auto;
     display: flex;
+    /* grid-template-rows: max-content 1rem; */
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     flex-direction: column;
-    gap: 10px;
+    gap: 1rem;
     transition: all ease 0.2s;
 }
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.password-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
 /* End page */
 
 /* Logo styling */
@@ -54,15 +87,14 @@
     align-items: center;
     flex-direction: column;
     font-family: var(--global-font-family);
-    margin-top: 70px;
-    margin-bottom: 50px;
+    grid-column: 2;
 }
 .logo h1 {
-    font-size: 100px;
+    font-size: 6.25rem;
 }
 .logo h2 {
     display: flex;
-    font-size: 75px;
+    font-size: 4.7rem;
 }
 
 .logo span {
@@ -95,12 +127,16 @@
     font-weight: 700;
     font-size: 15px;
     margin: 0px;
-    color: white;
+    color: var(--half-transparent);
 }
 
+#remember-label {
+    color: var(--half-transparent);
+}
+
+.remember-label p:hover,
 .loginOptions p:hover {
-    color: rgba(255, 255, 255, 0.2);
-    text-decoration: underline;
+    color: rgba(255, 255, 255, 1);
 }
 
 /* end */
@@ -115,17 +151,21 @@
     font-weight: 700;
     font-size: 20px;
     line-height: 24px;
-    color: rgba(255, 255, 255, 0.2);
+    color: var(--half-transparent);
 }
 
-.loginFooter p {
+/* .loginFooter p {
     color: #fff;
     text-decoration: none;
-}
+} */
 
 .loginFooter p:hover {
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 1);
     text-decoration: none;
+}
+
+.footer {
+    grid-column: 2;
 }
 
 /* End footer */
