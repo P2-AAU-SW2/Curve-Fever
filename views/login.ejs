@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <%- include("header")%>
-        <link href="/css/login.css" rel="stylesheet" />
-        <link href="/css/snackbar.css" rel="stylesheet" />
-    </head>
 
-    <body>
+<head>
+    <%- include("header")%>
+    <link href="/css/login.css" rel="stylesheet" />
+    <link href="/css/snackbar.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
         <div class="logo">
             <h1><span style="color: white">LINE</span></h1>
             <h2>
@@ -19,124 +21,73 @@
         </div>
         <div class="page-wrapper">
             <div class="pages">
-                <div class="page one">
-                    <div class="login-container">
-                        <form id="guestForm">
-                            <div class="input-container">
-                                <input
-                                    class="text-input"
-                                    type="text"
-                                    name="guestname"
-                                    placeholder=""
-                                    id="guestname"
-                                />
-                                <label>Username</label>
-                                <i class="fa-solid fa-user icon"></i>
-                            </div>
-                            <div class="input-container">
-                                <button
-                                    type="button"
-                                    id="loginButton"
-                                    class="green-btn button-input"
-                                    onclick="submitGuest()"
-                                >
-                                    PLAY
-                                </button>
-                            </div>
-                        </form>
-                        <div class="loginFooter">
-                            <p onClick="slide()">Login or sign up</p>
+                <div class="page guest-page">
+                    <form id="guestForm">
+                        <div class="input-container">
+                            <input class="text-input" type="text" name="guestname" placeholder=" " id="guestname" />
+                            <label>Username</label>
+                            <i class="fa-solid fa-user icon"></i>
                         </div>
+                        <div class="input-container">
+                            <button type="button" id="loginButton" class="green-btn button-input" onclick="submitGuest()">
+                                PLAY
+                            </button>
+                        </div>
+                    </form>
+                    <div class="loginFooter">
+                        <p class="link" onClick="slide()">Login / Sign up</p>
                     </div>
                 </div>
-                <div class="page two">
-                    <div class="login-container">
-                        <form id="authForm">
+                <div class="page auth-page">
+                    <form id="authForm">
+                        <div class="input-container">
+                            <input class="text-input" type="text" name="username" placeholder=" " id="username" />
+                            <label>Username</label>
+                            <i class="fa-solid fa-user icon"></i>
+                        </div>
+                        <div class="password-wrapper">
                             <div class="input-container">
-                                <input
-                                    class="text-input"
-                                    type="text"
-                                    name="username"
-                                    placeholder=" "
-                                    id="username"
-                                />
-                                <label>Email</label>
-                                <i class="fa-solid fa-envelope icon"></i>
-                            </div>
-                            <div class="input-container">
-                                <input
-                                    class="text-input"
-                                    type="password"
-                                    name="password"
-                                    placeholder=" "
-                                    id="password"
-                                />
+                                <input class="text-input" type="password" name="password" placeholder=" " id="password" />
                                 <label>Password</label>
                                 <i class="fa-solid fa-lock icon"></i>
                             </div>
                             <div class="loginOptions">
                                 <div class="rememberDiv">
                                     <input type="checkbox" id="rememberMe" />
-                                    <label for="rememberMe">Remember me</label>
+                                    <label id="remember-label" for="rememberMe">
+                                        <span class="link">Remember me</span>
+                                    </label>
                                 </div>
-                                <p id="forgotPassword">Forgot password?</p>
+                                <p class="link" id="forgotPassword">Forgot password?</p>
                             </div>
-                            <div class="input-container">
-                                <button
-                                    type="button"
-                                    id="loginButton"
-                                    class="blue-btn button-input"
-                                    onclick="submitSignup()"
-                                >
-                                    SIGN UP
-                                </button>
-                                <div style="width: 30px"></div>
-                                <button
-                                    type="button"
-                                    id="loginButton"
-                                    class="green-btn button-input"
-                                    onclick="submitLogin()"
-                                >
-                                    LOGIN
-                                </button>
-                            </div>
-                        </form>
-                        <div class="loginFooter">
-                            <p onClick="slide()">Play as guest</p>
                         </div>
+                        <div class="input-container">
+                            <button type="button" id="loginButton" class="blue-btn" onclick="submitSignup()">
+                                Sign up
+                            </button>
+                            <div style="width: 30px"></div>
+                            <button type="button" id="loginButton" class="green-btn" onclick="submitLogin()">
+                                Login
+                            </button>
+                        </div>
+                    </form>
+                    <div class="loginFooter">
+                        <p class="link" onClick="slide()">Play as guest</p>
                     </div>
                 </div>
             </div>
         </div>
         <%- include("footer")%>
-        <% if(error) { %>
-            <div id="snackbar"></div>
-        <%} %>
+    </div>
+    <% if(error) { %>
+    <div id="snackbar"></div>
+    <%} %>
 
-        <script>
-            const error = "<%= error %>";
-            function submitSignup() {
-                const form = document.getElementById("authForm");
-                form.action = "/login/createUser";
-                form.method = "post";
-                form.submit();
-            }
+    <script>
+        const error = "<%= error %>";
+    </script>
+    <script src="/javascript/snackbar.js"></script>
+    <script src="/javascript/login.js"></script>
+</body>
 
-            function submitLogin() {
-                const form = document.getElementById("authForm");
-                form.action = "/login/login";
-                form.method = "post";
-                form.submit();
-            }
-
-            function submitGuest() {
-                const form = document.getElementById("guestForm");
-                form.action = "/login/guest";
-                form.method = "post";
-                form.submit();
-            }
-        </script>
-        <script src="/javascript/snackbar.js"></script>
-        <script src="/javascript/login.js"></script>
-    </body>
 </html>

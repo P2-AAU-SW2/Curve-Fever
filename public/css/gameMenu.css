@@ -2,7 +2,7 @@
     position: relative;
     display: grid;
     height: 100vh;
-    grid-template-rows: 6rem minmax(30rem, calc(100% - 8rem)) 2rem;
+    grid-template-rows: 6rem minmax(30rem, calc(100% - 8rem)) 2.5rem;
     grid-template-columns: 10% minmax(20rem, auto) 10%;
 }
 
