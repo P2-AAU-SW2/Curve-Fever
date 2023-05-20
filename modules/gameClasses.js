@@ -1,9 +1,11 @@
 const { v4: uuidv4 } = require("uuid");
 
+const MAX_SCORE = 20;
+
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 5; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 6; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -205,15 +207,24 @@ class Game {
     }
 
     roundFinish(io) {
-        clearInterval(this.interval);
-        this.players.forEach((player) => {
-            player.resetState();
-        });
+        console.log("Round finished");
+        let highestScore = 0;
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].leaderboardScore > highestScore) {
+                highestScore = this.players[i].leaderboardScore;
+            }
+        }
+        if (highestScore >= MAX_SCORE) {
+            this.endGame();
+            return;
+        }
         this.countdown(io);
     }
 
     endGame() {
+        console.log("Game finished");
         clearInterval(this.interval);
+        this.mode = "warmUp";
     }
 }
 

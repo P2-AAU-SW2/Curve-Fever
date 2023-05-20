@@ -35,20 +35,19 @@ module.exports = async (io) => {
             }
         });
 
-        socket.on("updatePosition", (keyState) => {
-            console.timeEnd("updatePosition");
+        socket.on("colission", (player) => {
+            console.log("colission" + player);
 
-            let player = game.updatePosition(userID, keyState);
             if (game.mode === "game") {
                 let score = game.players.filter((p) => p.collided).length + 1;
 
                 if (player.collided) {
                     game.updateLeaderBoard(io, score);
-                } else if (score >= game.players.length) {
+                }
+                if (score >= game.count) {
                     game.roundFinish(io);
                 }
             }
-            console.time("updatePosition");
         });
 
         socket.on("warmUp", () => {

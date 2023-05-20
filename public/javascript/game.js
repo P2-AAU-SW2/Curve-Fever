@@ -43,6 +43,10 @@ socket.on("updatePosition", (updatedPlayers) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
         players[i] = updatedPlayer;
 
+        if (updatedPlayer.collided) {
+            socket.emit("colission", updatedPlayer);
+        }
+
         // If the current player collided clear interval
         if (updatedPlayer.userId === curPlayer.userId) {
             if (updatedPlayer.collided) {
