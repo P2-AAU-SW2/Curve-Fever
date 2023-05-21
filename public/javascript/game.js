@@ -2,11 +2,16 @@
 const messageInput = document.getElementById("usermsg");
 const form = document.getElementById("form");
 const scoretable = document.querySelector("#scoretable tbody");
-const canvas = document.getElementById("gameCanvas");
+const canvas = document.getElementById("game-canvas");
+const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const warmupBtn = document.getElementById("warmup-btn");
 // const roundCounter = document.getElementById("roundCounter");
-var mode = "warmUp";
+let mode = "warmUp";
+let initialCanvasSize, canvasSize;
+initialCanvasSize = canvasSize = 500;
+let scale = 1;
+
 const socket = io({
     query: {
         gameID: gameId,
@@ -68,8 +73,8 @@ socket.on("countdown", (count) => {
 function displayCountdown(i) {
     ctx.fillStyle = "#FFFFFF";
     ctx.font = "bolder 60px Arial";
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-    ctx.fillText(String(i), canvas.width / 2, canvas.height / 2); // draw countdown on the canvas
+    ctx.clearRect(0, 0, canvasSize, canvasSize); // Clear the canvas
+    ctx.fillText(String(i), canvasSize / 2, canvasSize / 2); // draw countdown on the canvas
 }
 
 socket.on("renderScoreTable", (updatedPlayers) => {
@@ -86,8 +91,23 @@ socket.on("gameNotFound", function () {
     window.location.href = "/"; // redirects to home page
 });
 
+window.addEventListener("resize", resizeCanvas);
+function resizeCanvas() {
+    let borderWidth = 6;
+    let width = canvasContainer.offsetWidth - borderWidth;
+    let height = canvasContainer.offsetHeight - borderWidth;
+    let size = width < height ? width : height; // -_-_- What should the max width/height for canvas be? -_-_-
+    canvas.width = canvas.height = size;
+    scale = size / initialCanvasSize; // scale as a ratio
+    canvasSize = size / scale; // ctx methods needs the scaled height/width
+    ctx.setTransform(1, 0, 0, 1, 0, 0); // removes any previous transformations
+    ctx.scale(scale, scale); // apply the scale factor
+    canvasContainer.classList.remove("visibility-hidden");
+}
+resizeCanvas();
+
 function draw(players) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvasSize, canvasSize);
     players.forEach((player) => {
         if (player.isMoving) {
             ctx.strokeStyle = player.color;

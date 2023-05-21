@@ -352,6 +352,10 @@ input:not(:placeholder-shown) + label {
     display: none !important;
 }
 
+.visibility-hidden {
+    visibility: hidden !important;
+}
+
 .settings {
     display: flex;
     justify-content: center;

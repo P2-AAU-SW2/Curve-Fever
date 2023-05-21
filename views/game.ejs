@@ -1,65 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <%- include('header') %>
-        <link href="/css/gameArea.css" rel="stylesheet" />
-        <script>
+
+<head>
+    <%- include('header') %>
+    <link href="/css/gameArea.css" rel="stylesheet" />
+    <script>
         let players = JSON.parse('<%- JSON.stringify(players) %>');
         let curPlayer = JSON.parse('<%- JSON.stringify(curPlayer) %>');
         let gameId = '<%= gameId %>';
-        </script>
-        <script defer src="/javascript/canvas.js"></script>
-    </head>
-    <body>
-        <div class="gameContainer">
-            <div class="left">
-                <div class="roundwrapper">
-                    <div class="roundcounter" id="roundCounter">Round 5</div>
-                    <div class="scoretarget">20</div>
-                </div>
+    </script>
+    <script defer src="/javascript/canvas.js"></script>
+</head>
 
-                <div class="leaderboard">
-                    <table id="scoretable">
-                        <% for (let i = 0; i < players.length; i++) { %>
-                            <tr id="player<%= players[i].color %>">
-                                <td><%= i+1 %></td>
-                                <td style="color: <%= players[i].color%>;"><%= players[i].username %></td>
-                                <td>0</td>
-                            </tr>
-                        <% } %>
-                    </table>
-                    <div class="loading">
-                        <span class="loader"></span>
-                    </div>
-                </div>
-                <div class="chatroom">
-                    <ul class="textbox" id="textbox"></ul>
-                    <form name="chat" action="" id="form">
-                        <input
-                            name="usermsg"
-                            placeholder="Chat..."
-                            type="text"
-                            id="usermsg"
-                        />
-                        <button name="submitmsg" type="submit" id="submitmsg">
-                            <img src="/assets/icons/arrow.svg" alt="Send" />
-                        </button>
-                    </form>
+<body>
+    <div class="game-container">
+        <div class="left">
+            <div class="roundwrapper">
+                <div class="roundcounter" id="roundCounter">Round 5</div>
+                <div class="scoretarget">20</div>
+            </div>
+
+            <div class="leaderboard">
+                <table id="scoretable">
+                    <% for (let i = 0; i < players.length; i++) { %>
+                    <tr id="player<%= players[i].color %>">
+                        <td><%= i+1 %></td>
+                        <td style="color: <%= players[i].color%>;"><%= players[i].username %></td>
+                        <td>0</td>
+                    </tr>
+                    <% } %>
+                </table>
+                <div class="loading">
+                    <span class="loader"></span>
                 </div>
             </div>
-            <div class="canvas-container">
-                <div class="btn-game-container">
-                    <button class="blue-btn" id="warmup-btn">Warm Up</button>
-                </div>
-                <canvas
-                    class="gameCanvas"
-                    id="gameCanvas"
-                    width="500"
-                    height="500"
-                ></canvas>
+            <div class="chatroom">
+                <ul class="textbox" id="textbox"></ul>
+                <form name="chat" action="" id="form">
+                    <input name="usermsg" placeholder="Chat..." type="text" id="usermsg" />
+                    <button name="submitmsg" type="submit" id="submitmsg">
+                        <img src="/assets/icons/arrow.svg" alt="Send" />
+                    </button>
+                </form>
             </div>
         </div>
-        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-        <script src="/javascript/game.js"></script>
-    </body>
+        <div class="canvas-container visibility-hidden">
+            <div class="btn-game-container">
+                <button class="blue-btn" id="warmup-btn">Warm Up</button>
+            </div>
+            <canvas class="game-canvas" id="game-canvas" width="500" height="500"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="/javascript/game.js"></script>
+</body>
+
 </html>

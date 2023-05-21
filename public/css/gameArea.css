@@ -2,14 +2,16 @@ html {
     font-family: var(--global-font-family);
 }
 
-.gameContainer {
+.game-container {
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: minmax(17rem, 20rem) minmax(30rem, 100%);
+    grid-template-rows: minmax(30rem, auto);
     height: 100%;
     width: 100%;
     padding: 30px;
+    justify-content: center;
 }
-.gameCanvas {
+.game-canvas {
     display: block;
     margin: 0 auto;
     position: relative;
@@ -17,27 +19,29 @@ html {
     grid-column-end: 3;
     border: 3px solid rgba(171, 225, 255, 0.5);
     border-radius: 10px;
+    background: #00000030;
 }
 
 .left {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 2;
     padding-right: 10px;
 
     font-weight: 700;
-    font-size: min(1.5rem, 3vh);
+    font-size: 1.5rem;
+    display: grid;
+    grid-template-rows: min-content auto 16rem;
+    gap: 2rem;
 }
 
 .chatroom {
-    background-color: rgba(171, 225, 255, 0.1);
+    background-color: rgba(171, 225, 255, 0.05);
     border-radius: 10px;
-    padding: 10px;
     position: relative;
-    margin-top: 5vh;
     overflow: hidden;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-rows: auto min-content;
+    gap: 1rem;
+    padding: 0.75rem;
 }
 
 #usermsg {
@@ -67,12 +71,9 @@ html {
 .textbox {
     color: white;
     font-size: 1rem;
-    padding-bottom: 10px;
-    padding-left: 5px;
     list-style: none;
     overflow: scroll;
-    max-height: 15rem;
-    min-height: 15rem;
+    height: 100%;
     word-wrap: break-word;
 }
 
@@ -113,7 +114,6 @@ table {
 .roundwrapper {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 5vh;
 }
 
 .roundcounter {
@@ -142,7 +142,11 @@ table {
 
 .canvas-container {
     position: relative;
-    height: min-content;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-game-container {
