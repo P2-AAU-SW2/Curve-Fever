@@ -167,6 +167,62 @@ table {
     text-align: center;
 }
 
+.game-winner-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Set the flex direction to column */
+    justify-content: center;
+    align-items: center;
+}
+
+.round-winner-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 20%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Set the flex direction to column */
+    justify-content: center;
+    align-items: center;
+}
+
+#round-winner-text {
+    padding: 1rem;
+    max-height: 4rem;
+    max-width: 80%;
+    z-index: 100;
+    text-align: center;
+    color: #ffffff; /* Set the text color to white */
+    font-size: 2rem; /* Increase the font size */
+    font-weight: bold; /* Add bold font weight */
+}
+
+#game-winner-text {
+    padding: 1rem;
+    max-height: 4rem;
+    max-width: 80%;
+    z-index: 100;
+    text-align: center;
+    color: #ffffff; /* Set the text color to white */
+    font-size: 2rem; /* Increase the font size */
+    font-weight: bold; /* Add bold font weight */
+}
+
+#leave-game-btn {
+    padding: 0 1rem;
+    max-height: 4rem;
+    max-width: fit-content;
+    z-index: 100;
+    text-align: center;
+    margin-top: 1rem;
+}
+
 .loading {
     height: 5rem;
     width: 100%;

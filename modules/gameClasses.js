@@ -208,23 +208,30 @@ class Game {
 
     roundFinish(io) {
         console.log("Round finished");
-        let highestScore = 0;
+        let highestScore = {
+            leaderboardScore: 0,
+        };
         for (let i = 0; i < this.players.length; i++) {
-            if (this.players[i].leaderboardScore > highestScore) {
-                highestScore = this.players[i].leaderboardScore;
+            if (
+                this.players[i].leaderboardScore >=
+                highestScore.leaderboardScore
+            ) {
+                highestScore = this.players[i];
             }
         }
-        if (highestScore >= MAX_SCORE) {
-            this.endGame();
+        if (highestScore.leaderboardScore >= MAX_SCORE) {
+            this.endGame(io, highestScore.username);
             return;
         }
+        io.in(this.id).emit("roundOver", highestScore.username, this._rounds);
         this.countdown(io);
     }
 
-    endGame() {
+    endGame(io, winner) {
         console.log("Game finished");
         clearInterval(this.interval);
-        this.mode = "warmUp";
+
+        io.in(this.id).emit("gameOver", winner);
     }
 }
 

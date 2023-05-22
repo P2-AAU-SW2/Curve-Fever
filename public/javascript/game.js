@@ -6,6 +6,7 @@ const canvas = document.getElementById("game-canvas");
 const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const warmupBtn = document.getElementById("warmup-btn");
+const leaveGameBtn = document.querySelector("#leave-game-btn");
 // const roundCounter = document.getElementById("roundCounter");
 let mode = "warmUp";
 let initialCanvasSize, canvasSize;
@@ -75,6 +76,9 @@ function displayCountdown(i) {
     ctx.font = "bolder 60px Arial";
     ctx.clearRect(0, 0, canvasSize, canvasSize); // Clear the canvas
     ctx.fillText(String(i), canvasSize / 2, canvasSize / 2); // draw countdown on the canvas
+    if (i <= 1) {
+        hideWinner();
+    }
 }
 
 socket.on("renderScoreTable", (updatedPlayers) => {
@@ -89,6 +93,41 @@ socket.on("renderScoreTable", (updatedPlayers) => {
 
 socket.on("gameNotFound", function () {
     window.location.href = "/"; // redirects to home page
+});
+
+socket.on("gameOver", (winnerName) => {
+    displayWinner(winnerName, true);
+});
+
+socket.on("roundOver", (winnerName, roundCounter) => {
+    displayWinner(winnerName, false, roundCounter);
+});
+function displayWinner(winnerName, game, roundCounter) {
+    ctx.clearRect(0, 0, canvasSize, canvasSize);
+    if (game) {
+        document
+            .querySelector(".game-winner-container")
+            .classList.remove("visibility-hidden");
+        document.querySelector(
+            "#game-winner-text"
+        ).textContent = `${winnerName} won the game!`;
+    } else {
+        document
+            .querySelector(".round-winner-container")
+            .classList.remove("visibility-hidden");
+        document.querySelector(
+            "#round-winner-text"
+        ).textContent = `${winnerName} won round ${roundCounter}!`;
+    }
+}
+function hideWinner() {
+    document
+        .querySelector(".round-winner-container")
+        .classList.add("visibility-hidden");
+}
+
+leaveGameBtn.addEventListener("click", () => {
+    window.location.href = "/";
 });
 
 window.addEventListener("resize", resizeCanvas);
