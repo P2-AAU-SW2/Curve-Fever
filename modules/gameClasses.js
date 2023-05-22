@@ -5,7 +5,7 @@ const MAX_SCORE = 20;
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 6; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 3; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -23,7 +23,7 @@ class GameStates {
             }
 
             // Generate a new room if no available, and push it to current games.
-            console.log("No games, creating a new!");
+            // console.log("No games, creating a new!");
             const newID = uuidv4();
             this.games.push(new Game(newID));
             return resolve(newID);
@@ -127,14 +127,27 @@ class Game {
         return this._players.includes(player);
     }
 
-    updateAll() {
+    updateAll(io) {
+        let playersCollided = 0;
         this._players.forEach((player) => {
             if (!player.collided) {
                 this.updatePosition(player.userId, player.keyState);
+                if (player.collided && this.mode === "game") {
+                    this.updateLeaderBoard(io);
+                    playersCollided++;
+                }
+            } else {
+                playersCollided++;
             }
         });
+        if (
+            playersCollided >= this.players.length - 1 &&
+            this.mode === "game"
+        ) {
+            this.roundFinish(io);
+        }
     }
-    // Hello
+
     updatePosition(userId, keyState) {
         let player = this.player(userId);
         player.keyState = keyState;
@@ -150,10 +163,9 @@ class Game {
         return playerDTO;
     }
 
-    updateLeaderBoard(io, score) {
-        let collidedPlayers = this.players.filter((p) => !p.collided);
-        collidedPlayers.forEach((player) => {
-            player.roundScore = score;
+    updateLeaderBoard(io) {
+        let activePlayers = this.players.filter((p) => !p.collided);
+        activePlayers.forEach((player) => {
             player.leaderboardScore++;
         });
 
@@ -189,7 +201,7 @@ class Game {
         // this.updates.clear();
         this.interval = setInterval(() => {
             // Update all players
-            this.updateAll();
+            this.updateAll(io);
             // Emit the batched updates at a fixed interval
             let updatedPlayers = Array.from(this.updates.values());
             if (updatedPlayers.length) {
@@ -207,7 +219,7 @@ class Game {
     }
 
     roundFinish(io) {
-        console.log("Round finished");
+        // console.log("Round finished");
         let highestScore = 0;
         for (let i = 0; i < this.players.length; i++) {
             if (this.players[i].leaderboardScore > highestScore) {
@@ -222,7 +234,7 @@ class Game {
     }
 
     endGame() {
-        console.log("Game finished");
+        // console.log("Game finished");
         clearInterval(this.interval);
         this.mode = "warmUp";
     }
@@ -248,7 +260,7 @@ function generateDTO(state) {
 }
 
 function generatePlayer(user, players) {
-    let canvas = { width: 500, height: 500 };
+    let canvas = { width: 1000, height: 1000 };
     return new Player(
         user,
         getColor(players),

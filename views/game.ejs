@@ -21,15 +21,15 @@
             </div>
 
             <div class="leaderboard">
-                <table id="scoretable">
+                <div class="scoretable" id="scoretable">
                     <% for (let i = 0; i < players.length; i++) { %>
-                    <tr id="player<%= players[i].color %>">
-                        <td><%= i+1 %></td>
-                        <td style="color: <%= players[i].color%>;"><%= players[i].username %></td>
-                        <td>0</td>
-                    </tr>
+                    <div id="player<%= players[i].color %>" class="player">                  
+                        <div class="playerIcon"><%= i+1 %></div>
+                        <div class="playerName" style="color: <%= players[i].color%>;"><%= players[i].username %></div>
+                        <div class="playerScore">0</div>
+                    </div>
                     <% } %>
-                </table>
+                </div>
                 <div class="loading">
                     <span class="loader"></span>
                 </div>

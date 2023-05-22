@@ -89,26 +89,32 @@ html {
     left: 0%;
 }
 
-td:nth-child(1) {
-    width: 20%;
+.scoretable {
+    background-color: transparent;
+    border: hidden;
+    position: relative;
+    overflow: hidden;
+    padding: 0.75rem;
 }
 
-td:nth-child(2) {
-    width: 60%;
+.player {
+    display: grid;
+    grid-template-columns: 1.5rem 12rem repeat(2, auto);
+    grid-auto-rows: 3rem;
+    row-gap: 1rem;
+    align-items: center;
 }
 
-td:nth-child(3) {
-    width: 30%;
-    text-align: right;
+.playerIcon {
+    grid-column: 1;
 }
 
-td {
-    padding: 5px;
+.playerName {
+    grid-column: 2;
 }
 
-table {
-    table-layout: fixed;
-    width: 100%;
+.playerScore {
+    grid-column: 3;
 }
 
 .roundwrapper {
