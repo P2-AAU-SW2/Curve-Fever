@@ -1,7 +1,7 @@
 /* global io, players, curPlayer, gameId */
 const messageInput = document.getElementById("usermsg");
 const form = document.getElementById("form");
-const scoretable = document.querySelector("#scoretable tbody");
+const scoretable = document.querySelector("#scoretable");
 const canvas = document.getElementById("game-canvas");
 const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
@@ -10,7 +10,7 @@ const leaveGameBtn = document.querySelector("#leave-game-btn");
 // const roundCounter = document.getElementById("roundCounter");
 let mode = "warmUp";
 let initialCanvasSize, canvasSize;
-initialCanvasSize = canvasSize = 500;
+initialCanvasSize = canvasSize = 1000;
 let scale = 1;
 
 const socket = io({
@@ -21,7 +21,7 @@ const socket = io({
 });
 
 socket.on("connect", () => {
-    console.log(players);
+    // console.log(players);
     socket.emit("newPlayer", players);
 });
 
@@ -44,14 +44,10 @@ socket.on("leaveGame", (userID) => {
 });
 
 socket.on("updatePosition", (updatedPlayers) => {
-    console.timeEnd("updatePosition");
+    // console.timeEnd("updatePosition");
     updatedPlayers.forEach((updatedPlayer) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
         players[i] = updatedPlayer;
-
-        if (updatedPlayer.collided) {
-            socket.emit("colission", updatedPlayer);
-        }
 
         // If the current player collided clear interval
         if (updatedPlayer.userId === curPlayer.userId) {
@@ -62,11 +58,11 @@ socket.on("updatePosition", (updatedPlayers) => {
         }
         draw(players);
     });
-    console.time("updatePosition");
+    // console.time("updatePosition");
 });
 
 socket.on("countdown", (count) => {
-    console.log(count);
+    // console.log(count);
     mode = "game";
     warmupBtn.classList.add("display-none");
     displayCountdown(count);
@@ -261,22 +257,24 @@ function displayMessage(message) {
 function displayScoreboard(newPlayer) {
     let html = scoretable.innerHTML;
     players.push(newPlayer);
-    html += `<tr id="player${newPlayer.color}">
-                <td>${players.length}</td>
-                <td style="color: ${newPlayer.color}">${newPlayer.username}</td>
-                <td>0</</td>
-            </tr>`;
+    html += `<div id="player${newPlayer.color}" class="player">
+                    <div>${players.length}</div>
+                    <div style="color: ${newPlayer.color}">${newPlayer.username}</div>
+                    <div>0</</div>
+            </div>`;
     scoretable.innerHTML = html;
 }
 
 function rerenderScoretable() {
     let html = "";
     for (let i = 0; i < players.length; i++) {
-        html += `<tr id="player${players[i].color}">
-            <td>${i + 1}</td>
-            <td style="color: ${players[i].color};">${players[i].username}</td>
-            <td>${players[i].leaderboardScore}</td>
-        </tr>`;
+        html += `<div id="player${players[i].color}" class="player">  
+                    <div>${i + 1}</div>
+                    <div style="color: ${players[i].color};">${
+            players[i].username
+        }</div>
+                    <div>${players[i].leaderboardScore}</div>
+            </div>`;
     }
     scoretable.innerHTML = html;
 }

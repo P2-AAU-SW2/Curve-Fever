@@ -35,20 +35,20 @@ module.exports = async (io) => {
             }
         });
 
-        socket.on("colission", (player) => {
-            console.log("colission" + player);
+        // socket.on("colission", (player) => {
+        //     // console.log("colission" + player);
 
-            if (game.mode === "game") {
-                let score = game.players.filter((p) => p.collided).length + 1;
+        //     if (game.mode === "game") {
+        //         let score = game.players.filter((p) => p.collided).length + 1;
 
-                if (player.collided) {
-                    game.updateLeaderBoard(io, score);
-                }
-                if (score >= game.count) {
-                    game.roundFinish(io);
-                }
-            }
-        });
+        //         if (player.collided) {
+        //             game.updateLeaderBoard(io, score);
+        //         }
+        //         if (score >= game.count) {
+        //             game.roundFinish(io);
+        //         }
+        //     }
+        // });
 
         socket.on("warmUp", () => {
             let player = game.player(userID);
@@ -66,7 +66,7 @@ module.exports = async (io) => {
         // Handle client disconnect, by error or on purpose. Removes the player from the gamestate logic.
         socket.on("disconnect", () => {
             socket.to(gameID).emit("leaveGame", userID);
-            console.log("Disconnect: " + gameID);
+            // console.log("Disconnect: " + gameID);
             gameStates.leaveGame(gameID, userID);
         });
     });
