@@ -1,11 +1,12 @@
 const { v4: uuidv4 } = require("uuid");
+const { updateScores } = require("./database.js");
 
 const MAX_SCORE = 20;
 
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 3; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 6; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -167,6 +168,7 @@ class Game {
         let activePlayers = this.players.filter((p) => !p.collided);
         activePlayers.forEach((player) => {
             player.leaderboardScore++;
+            player.roundScore++;
         });
 
         // console.log(leaderboard);
@@ -174,6 +176,7 @@ class Game {
     }
 
     async countdown(io) {
+        this._rounds++;
         // Clear and reset state
         clearInterval(this.interval);
         this.updates.clear();
@@ -219,24 +222,47 @@ class Game {
     }
 
     roundFinish(io) {
-        // console.log("Round finished");
-        let highestScore = 0;
+        console.log("Round finished");
+        let highestLeaderboardScore = {
+            leaderboardScore: 0,
+        };
+        let highestRoundScore = {
+            roundScore: 0,
+        };
         for (let i = 0; i < this.players.length; i++) {
-            if (this.players[i].leaderboardScore > highestScore) {
-                highestScore = this.players[i].leaderboardScore;
+            //find highest round score
+            if (this.players[i].roundScore >= highestRoundScore.roundScore) {
+                highestRoundScore = this.players[i];
+            }
+            //reset round score
+            this.players[i].roundScore = 0;
+
+            //find highest leaderboard score
+            if (
+                this.players[i].leaderboardScore >=
+                highestLeaderboardScore.leaderboardScore
+            ) {
+                highestScore = this.players[i];
             }
         }
-        if (highestScore >= MAX_SCORE) {
-            this.endGame();
+        if (highestScore.leaderboardScore >= MAX_SCORE) {
+            this.endGame(io, highestLeaderboardScore.username);
             return;
         }
+        io.in(this.id).emit(
+            "roundOver",
+            highestRoundScore.username,
+            this._rounds
+        );
         this.countdown(io);
     }
 
-    endGame() {
-        // console.log("Game finished");
+    endGame(io, winner) {
+        console.log("Game finished");
         clearInterval(this.interval);
-        this.mode = "warmUp";
+        updateScores(this.players);
+
+        io.in(this.id).emit("gameOver", winner);
     }
 }
 
