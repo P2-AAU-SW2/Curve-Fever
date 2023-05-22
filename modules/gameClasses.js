@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
+const { updateScores } = require("./database.js");
 
 const MAX_SCORE = 20;
 
@@ -230,6 +231,7 @@ class Game {
     endGame(io, winner) {
         console.log("Game finished");
         clearInterval(this.interval);
+        updateScores(this.players);
 
         io.in(this.id).emit("gameOver", winner);
     }
