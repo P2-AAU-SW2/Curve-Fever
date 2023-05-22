@@ -167,6 +167,7 @@ class Game {
         let activePlayers = this.players.filter((p) => !p.collided);
         activePlayers.forEach((player) => {
             player.leaderboardScore++;
+            player.roundScore++;
         });
 
         // console.log(leaderboard);
@@ -182,7 +183,6 @@ class Game {
             player.isMoving = true;
             this.updates.set(player.userId, player.playerDTO());
         });
-
         // Initialize countdown
         let count = 3;
         this.interval = setInterval(() => {
@@ -215,7 +215,7 @@ class Game {
                 if (this.players.length === collisions)
                     clearInterval(this.interval);
             }
-        }, 1000 / 60);
+        }, 1000 / 100);
     }
 
     roundFinish(io) {
@@ -260,15 +260,15 @@ function generateDTO(state) {
 }
 
 function generatePlayer(user, players) {
-    let canvas = { width: 1000, height: 1000 };
+    let canvas = { width: 960, height: 960 };
     return new Player(
         user,
         getColor(players),
         canvas.width * (Math.random() * 0.7 + 0.15),
         canvas.width * (Math.random() * 0.7 + 0.15),
-        7,
+        10,
         Math.random() * (Math.PI + Math.PI / 2),
-        1.5,
+        Math.PI / 2,
         { ArrowLeft: 0, ArrowRight: 0 },
         canvas
     );

@@ -35,21 +35,6 @@ module.exports = async (io) => {
             }
         });
 
-        // socket.on("colission", (player) => {
-        //     // console.log("colission" + player);
-
-        //     if (game.mode === "game") {
-        //         let score = game.players.filter((p) => p.collided).length + 1;
-
-        //         if (player.collided) {
-        //             game.updateLeaderBoard(io, score);
-        //         }
-        //         if (score >= game.count) {
-        //             game.roundFinish(io);
-        //         }
-        //     }
-        // });
-
         socket.on("warmUp", () => {
             let player = game.player(userID);
             player.resetState();

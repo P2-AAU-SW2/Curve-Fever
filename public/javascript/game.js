@@ -9,7 +9,7 @@ const warmupBtn = document.getElementById("warmup-btn");
 // const roundCounter = document.getElementById("roundCounter");
 let mode = "warmUp";
 let initialCanvasSize, canvasSize;
-initialCanvasSize = canvasSize = 1000;
+initialCanvasSize = canvasSize = 960;
 let scale = 1;
 
 const socket = io({
@@ -168,9 +168,6 @@ warmupBtn.addEventListener("click", startWarmup);
 function startWarmup() {
     socket.emit("warmUp");
     warmupBtn.classList.add("display-none");
-    // window.gameLoop = setInterval(() => {
-    //     socket.emit("updatePosition", keyState);
-    // }, 1000 / 60);
 }
 
 // Update keyState based on keydown and keyup events
@@ -219,9 +216,10 @@ function displayScoreboard(newPlayer) {
     let html = scoretable.innerHTML;
     players.push(newPlayer);
     html += `<div id="player${newPlayer.color}" class="player">
-                    <div>${players.length}</div>
-                    <div style="color: ${newPlayer.color}">${newPlayer.username}</div>
-                    <div>0</</div>
+                    <div class="playerRoundScore"></div>
+                    <div class="playerIcon">${players.length}</div>
+                    <div class="playerName" style="color: ${newPlayer.color}">${newPlayer.username}</div>
+                    <div class="playerScore">0</</div>
             </div>`;
     scoretable.innerHTML = html;
 }
@@ -229,12 +227,20 @@ function displayScoreboard(newPlayer) {
 function rerenderScoretable() {
     let html = "";
     for (let i = 0; i < players.length; i++) {
+        // let displayPlayerRoundScore = players[i].collided
+        //     ? "display: block"
+        //     : "display: none";
         html += `<div id="player${players[i].color}" class="player">  
-                    <div>${i + 1}</div>
-                    <div style="color: ${players[i].color};">${
-            players[i].username
-        }</div>
-                    <div>${players[i].leaderboardScore}</div>
+                    <div class="playerRoundScore">+ ${
+                        players[i].roundScore
+                    }</div>
+                    <div class="playerIcon">${i + 1}</div>
+                    <div class="playerName" style="color: ${
+                        players[i].color
+                    };">${players[i].username}</div>
+                    <div class="playerScore">${
+                        players[i].leaderboardScore
+                    }</div>
             </div>`;
     }
     scoretable.innerHTML = html;
