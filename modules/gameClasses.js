@@ -6,7 +6,7 @@ const MAX_SCORE = 20;
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 3; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 2; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -166,10 +166,12 @@ class Game {
         let playersCollided = 0;
         this._players.forEach((player) => {
             if (!player.collided) {
-                this.updatePosition(player.userId, player.keyState);
-                if (player.collided && this.mode === "game") {
-                    this.updateLeaderBoard(io);
-                    playersCollided++;
+                if (player.isMoving) {
+                    this.updatePosition(player.userId, player.keyState);
+                    if (player.collided && this.mode === "game") {
+                        this.updateLeaderBoard(io);
+                        playersCollided++;
+                    }
                 }
             } else {
                 playersCollided++;
