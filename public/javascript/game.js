@@ -56,8 +56,8 @@ socket.on("updatePosition", (updatedPlayers) => {
                     warmupBtn.classList.remove("display-none");
             }
         }
-        draw(players);
     });
+    draw(players);
     // console.time("updatePosition");
 });
 
