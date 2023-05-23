@@ -77,7 +77,7 @@ socket.on("updatePosition", (updatedPlayers) => {
 socket.on("countdown", (count) => {
     // console.log(count);
     mode = "game";
-    warmupBtn.classList.add("display-none");
+    // warmupBtn.classList.add("display-none");
     displayCountdown(count);
 });
 function displayCountdown(i) {
@@ -110,6 +110,10 @@ socket.on("gameOver", (winnerName) => {
 
 socket.on("roundOver", (winnerName, roundCounter) => {
     displayWinner(winnerName, false, roundCounter);
+});
+
+socket.on("gameMode", () => {
+    warmupBtn.classList.add("display-none");
 });
 
 async function getArrowSVG(player) {

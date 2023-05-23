@@ -36,6 +36,7 @@ module.exports = async (io) => {
             socket.to(gameID).emit("newPlayer", players[players.length - 1]);
             if (players.length >= gameStates.MAX_PLAYERS) {
                 game.mode = "game";
+                io.in(gameID).emit("gameMode");
                 game.countdown(io);
             }
         });
