@@ -19,10 +19,15 @@ class GameStates {
         return new Promise((resolve) => {
             //Check if user is already in a game
             for (let i = 0; i < this.games.length; i++) {
-                if (this.games[i].mode == "game") {
-                    if (this.games[i].player(user.id)) {
-                        this.games[i].player(user.id).reconnect();
-                        return resolve(this.games[i].id);
+                console.log("Checking game:", this.games[i]);
+                const game = this.games[i];
+                for (let j = 0; j < game._players.length; j++) {
+                    const player = game._players[j];
+                    console.log("Checking player:", player);
+                    if (player.userId == user.id) {
+                        console.log("Player already in game, reconnecting...");
+                        player.reconnect();
+                        return resolve(game.id);
                     }
                 }
             }
@@ -30,12 +35,13 @@ class GameStates {
             //Check if there is an available room to join
             for (let i = 0; i < this.games.length; i++) {
                 if (this.games[i]._players.length < this.MAX_PLAYERS) {
+                    console.log("Joining existing game:", this.games[i].id);
                     return resolve(this.games[i].id);
                 }
             }
 
             // Generate a new room if no available, and push it to current games.
-            // console.log("No games, creating a new!");
+            console.log("No available games, creating a new one...");
             const newID = uuidv4();
             this.games.push(new Game(newID));
             return resolve(newID);
@@ -51,6 +57,11 @@ class GameStates {
         return new Promise((resolve, reject) => {
             for (let i = 0; i < this.games.length; i++) {
                 if (this.games[i].id == id) {
+                    if (this.games[i].player(user.id)) {
+                        console.log("player already in game JoinById");
+                        this.games[i].player(user.id).reconnect();
+                        return resolve(this.games[i]);
+                    }
                     if (this.games[i]._players.length < this.MAX_PLAYERS) {
                         this.games[i].players.push(
                             generatePlayer(user, this.games[i].players)
@@ -74,24 +85,27 @@ class GameStates {
         Logic for removing a player. Gets called in socketHandler.js when a client disconnects.
     */
     leaveGame(id, userId) {
+        console.log("leaveGame called with id:" + id + " and userId:" + userId);
         this.games = this.games.filter((game) => {
             if (game.id === id) {
                 // If the game is in game mode, and the player disconnects, keep user in array.
+                if (game.activeCount > 1) {
+                    return false;
+                }
+
                 if (game.mode === "game") {
                     game.player(userId).disconnect();
-                    return;
-                }
-                if (game.count == 1) {
-                    return false;
+                    return true;
                 } else {
                     // Find the index of the player within a game, and remove them.
-                    let index = game.players
+                    let index = game._players
                         .map((user) => user.id)
                         .indexOf(userId);
-                    game.players.splice(index, 1);
+                    game._players.splice(index, 1);
                 }
                 return true;
             }
+            return true;
         });
     }
 }
@@ -114,8 +128,14 @@ class Game {
         return this._players;
     }
 
-    get count() {
-        return this._players.length;
+    get activeCount() {
+        let res = 0;
+        for (let i = 0; i < this._players.length; i++) {
+            if (!this._players[i].isConnected) {
+                res++;
+            }
+        }
+        return res;
     }
 
     get updates() {

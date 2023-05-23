@@ -28,6 +28,11 @@ module.exports = async (io) => {
         });
 
         socket.on("newPlayer", (players) => {
+            if (game.mode === "game") {
+                socket.emit("gameInProgress");
+                return;
+            }
+
             socket.to(gameID).emit("newPlayer", players[players.length - 1]);
             if (players.length >= gameStates.MAX_PLAYERS) {
                 game.mode = "game";

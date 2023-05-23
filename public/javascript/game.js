@@ -22,7 +22,13 @@ const socket = io({
 
 socket.on("connect", () => {
     // console.log(players);
+    console.log(mode);
     socket.emit("newPlayer", players);
+});
+
+socket.on("gameInProgress", () => {
+    mode = "game";
+    warmupBtn.classList.add("display-none");
 });
 
 socket.on("chat", (message) => {
