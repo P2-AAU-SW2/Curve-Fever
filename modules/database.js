@@ -121,6 +121,25 @@ exports.createGuest = async (req, res, next) => {
             },
         });
         if (existingUser) {
+            if (existingUser.id.startsWith("guest-")) {
+                const guestUser = {
+                    id: existingUser.id,
+                    name: guestName,
+                    password: "",
+                };
+                req.login(guestUser, (err) => {
+                    if (err) {
+                        const error = new Error(
+                            "An error occurred while logging in."
+                        );
+                        error.status = 500;
+                        error.redirectTo = "/login";
+                        return next(error);
+                    }
+                    res.redirect("/");
+                });
+                return;
+            }
             //TODO: User exists, so redirect to login with the username
             const error = new Error("User already exists");
             error.status = 409;
@@ -131,7 +150,14 @@ exports.createGuest = async (req, res, next) => {
         // Generate a unique ID for the guest user
         const guestId = `guest-${uuidv4()}-${guestName}`;
 
-        const guestUser = { id: guestId, name: guestName };
+        const guestUser = await prisma.user.create({
+            data: {
+                id: guestId,
+                name: guestName,
+                password: "",
+            },
+        });
+        console.log(guestUser);
 
         req.login(guestUser, (err) => {
             if (err) {
@@ -143,6 +169,7 @@ exports.createGuest = async (req, res, next) => {
             res.redirect("/");
         });
     } catch (err) {
+        console.log(err);
         const error = new Error("An error occurred while creating the user.");
         error.status = 500;
         error.redirectTo = "/login";
@@ -188,4 +215,24 @@ exports.logoutUser = (req, res, next) => {
         }
         res.redirect("/login");
     });
+};
+
+exports.updateScores = async (players) => {
+    for (let i = 0; i < players.length; i++) {
+        const player = players[i];
+        try {
+            await prisma.user.update({
+                where: {
+                    id: player.userId,
+                },
+                data: {
+                    score: {
+                        increment: player.leaderboardScore + 1,
+                    },
+                },
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
 };

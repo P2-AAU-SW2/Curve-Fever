@@ -1,11 +1,12 @@
 const { v4: uuidv4 } = require("uuid");
+const { updateScores } = require("./database.js");
 
 const MAX_SCORE = 20;
 
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 3; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 6; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -175,6 +176,7 @@ class Game {
     }
 
     async countdown(io) {
+        this._rounds++;
         // Clear and reset state
         clearInterval(this.interval);
         this.updates.clear();
@@ -219,24 +221,47 @@ class Game {
     }
 
     roundFinish(io) {
-        // console.log("Round finished");
-        let highestScore = 0;
+        console.log("Round finished");
+        let highestLeaderboardScore = {
+            leaderboardScore: 0,
+        };
+        let highestRoundScore = {
+            roundScore: 0,
+        };
         for (let i = 0; i < this.players.length; i++) {
-            if (this.players[i].leaderboardScore > highestScore) {
-                highestScore = this.players[i].leaderboardScore;
+            //find highest round score
+            if (this.players[i].roundScore >= highestRoundScore.roundScore) {
+                highestRoundScore = this.players[i];
+            }
+            //reset round score
+            this.players[i].roundScore = 0;
+
+            //find highest leaderboard score
+            if (
+                this.players[i].leaderboardScore >=
+                highestLeaderboardScore.leaderboardScore
+            ) {
+                highestLeaderboardScore = this.players[i];
             }
         }
-        if (highestScore >= MAX_SCORE) {
-            this.endGame();
+        if (highestLeaderboardScore.leaderboardScore >= MAX_SCORE) {
+            this.endGame(io, highestLeaderboardScore.username);
             return;
         }
+        io.in(this.id).emit(
+            "roundOver",
+            highestRoundScore.username,
+            this._rounds
+        );
         this.countdown(io);
     }
 
-    endGame() {
-        // console.log("Game finished");
+    endGame(io, winner) {
+        console.log("Game finished");
         clearInterval(this.interval);
-        this.mode = "warmUp";
+        updateScores(this.players);
+
+        io.in(this.id).emit("gameOver", winner);
     }
 }
 
@@ -246,6 +271,7 @@ function generateDTO(state) {
     obj.username = state.username;
     obj.x = state.x;
     obj.y = state.y;
+    obj.direction = state.direction;
     obj.color = state.color;
     obj.jumps = state.jumps;
     obj.path = state.path;
@@ -281,6 +307,7 @@ function getColor(players) {
         "#FFF116",
         "#B9FF32",
         "#FF6D6D",
+        "#0D38D2",
     ];
     if (players.length) {
         for (let i in playerColors) {
@@ -314,7 +341,6 @@ class Player {
         this.speed = speed;
         this.path = [];
         this.turnSpeed = 0.05;
-        this.turnDirection = 0;
         this.lineWidth = lineWidth;
         this.collided = false;
         this.jumps = [];

@@ -6,6 +6,7 @@ const canvas = document.getElementById("game-canvas");
 const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const warmupBtn = document.getElementById("warmup-btn");
+const leaveGameBtn = document.querySelector("#leave-game-btn");
 // const roundCounter = document.getElementById("roundCounter");
 let mode = "warmUp";
 let initialCanvasSize, canvasSize;
@@ -71,6 +72,9 @@ function displayCountdown(i) {
     ctx.font = "bolder 60px Arial";
     ctx.clearRect(0, 0, canvasSize, canvasSize); // Clear the canvas
     ctx.fillText(String(i), canvasSize / 2, canvasSize / 2); // draw countdown on the canvas
+    if (i <= 1) {
+        hideWinner();
+    }
 }
 
 socket.on("renderScoreTable", (updatedPlayers) => {
@@ -85,6 +89,41 @@ socket.on("renderScoreTable", (updatedPlayers) => {
 
 socket.on("gameNotFound", function () {
     window.location.href = "/"; // redirects to home page
+});
+
+socket.on("gameOver", (winnerName) => {
+    displayWinner(winnerName, true);
+});
+
+socket.on("roundOver", (winnerName, roundCounter) => {
+    displayWinner(winnerName, false, roundCounter);
+});
+function displayWinner(winnerName, game, roundCounter) {
+    ctx.clearRect(0, 0, canvasSize, canvasSize);
+    if (game) {
+        document
+            .querySelector(".game-winner-container")
+            .classList.remove("visibility-hidden");
+        document.querySelector(
+            "#game-winner-text"
+        ).textContent = `${winnerName} won the game!`;
+    } else {
+        document
+            .querySelector(".round-winner-container")
+            .classList.remove("visibility-hidden");
+        document.querySelector(
+            "#round-winner-text"
+        ).textContent = `${winnerName} won round ${roundCounter}!`;
+    }
+}
+function hideWinner() {
+    document
+        .querySelector(".round-winner-container")
+        .classList.add("visibility-hidden");
+}
+
+leaveGameBtn.addEventListener("click", () => {
+    window.location.href = "/";
 });
 
 window.addEventListener("resize", resizeCanvas);
@@ -111,34 +150,11 @@ function draw(players) {
             ctx.lineWidth = player.lineWidth;
             ctx.lineCap = "round";
             const radius = player.lineWidth * 0.0933 + 0.1;
-            if (player.isFlying || player.path.length === 1)
+            if (player.isFlying || player.path.length === 1) {
                 drawDot(player, radius * 5);
-            else if (player.path.length > 1) {
-                // Draws the entire path for every animation frame so the line is smooth
-                ctx.beginPath();
-                ctx.moveTo(player.path[0].x, player.path[0].y);
-                for (let i = 1, j = 0; i < player.path.length; i++) {
-                    if (i == player.jumps[j]) {
-                        // Draws the gaps in the line. Checks if the jump value is closed with another value
-                        if (player.jumps.length > j + 1) {
-                            i = player.jumps[j + 1];
-                            // If the position in the path is equal to the current player position after a jump then there is not enough points to make a line, therefore we need to draw a dot instead
-                            if (
-                                player.path[i].x === player.x &&
-                                player.path[i].y === player.y
-                            ) {
-                                ctx.stroke();
-                                ctx.closePath();
-                                drawDot(player, radius);
-                                break;
-                            }
-                            if (player.jumps.length >= j + 2) j += 2;
-                            ctx.moveTo(player.path[i].x, player.path[i].y);
-                        }
-                    } else {
-                        ctx.lineTo(player.path[i].x, player.path[i].y);
-                    }
-                }
+                drawArrowSvg(player);
+            } else if (player.path.length > 1) {
+                drawLine(player, radius);
                 // If line is currently jumping then draw line as a dot
                 if (player.isJumping || player.isFlying) {
                     ctx.stroke();
@@ -150,6 +166,63 @@ function draw(players) {
             }
         }
     });
+}
+
+function drawLine(player, radius) {
+    // Draws the entire path for every animation frame so the line is smooth
+    ctx.beginPath();
+    ctx.moveTo(player.path[0].x, player.path[0].y);
+    for (let i = 1, j = 0; i < player.path.length; i++) {
+        if (i == player.jumps[j]) {
+            // Draws the gaps in the line. Checks if the jump value is closed with another value
+            if (player.jumps.length > j + 1) {
+                i = player.jumps[j + 1];
+                // If the position in the path is equal to the current player position after a jump then there is not enough points to make a line, therefore we need to draw a dot instead
+                if (
+                    player.path[i].x === player.x &&
+                    player.path[i].y === player.y
+                ) {
+                    ctx.stroke();
+                    ctx.closePath();
+                    drawDot(player, radius);
+                    break;
+                }
+                if (player.jumps.length >= j + 2) j += 2;
+                ctx.moveTo(player.path[i].x, player.path[i].y);
+            }
+        } else {
+            ctx.lineTo(player.path[i].x, player.path[i].y);
+        }
+    }
+}
+
+function drawArrowSvg(player) {
+    let img = new Image();
+    let imgScale = canvasSize * 0.0007;
+
+    img.onload = function () {
+        let newWidth = img.width * imgScale;
+        let newHeight = img.height * imgScale;
+
+        ctx.save(); // save the current transformation matrix
+
+        // translate the context to the center point and rotate
+        ctx.translate(player.x, player.y);
+        ctx.rotate(player.direction + Math.PI / 2); // Turn direction by 90 degrees in radians
+
+        // draw the image centered on the point and rotated
+        ctx.drawImage(
+            img,
+            -newWidth / 2,
+            -newHeight - player.lineWidth,
+            newWidth,
+            newHeight
+        );
+        ctx.restore(); // restore the saved transformation matrix
+    };
+    let isPlayer = player.userId === curPlayer.userId ? "s" : "";
+    let file = `directionArrow${isPlayer}_${player.color.replace("#", "")}.svg`;
+    img.src = `/assets/icons/${file}`;
 }
 
 function drawDot(player, radius) {
