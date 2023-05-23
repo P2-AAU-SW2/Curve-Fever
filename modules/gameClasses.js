@@ -242,10 +242,10 @@ class Game {
                 this.players[i].leaderboardScore >=
                 highestLeaderboardScore.leaderboardScore
             ) {
-                highestScore = this.players[i];
+                highestLeaderboardScore = this.players[i];
             }
         }
-        if (highestScore.leaderboardScore >= MAX_SCORE) {
+        if (highestLeaderboardScore.leaderboardScore >= MAX_SCORE) {
             this.endGame(io, highestLeaderboardScore.username);
             return;
         }
