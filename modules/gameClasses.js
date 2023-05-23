@@ -6,7 +6,7 @@ const MAX_SCORE = 20;
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 6; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 2; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -18,7 +18,8 @@ class GameStates {
     joinPublic() {
         return new Promise((resolve) => {
             for (let i = 0; i < this.games.length; i++) {
-                if (this.games[i].count < this.MAX_PLAYERS) {
+                if (this.games[i]._players.length < this.MAX_PLAYERS) {
+                    console.log("Joining existing game");
                     return resolve(this.games[i].id);
                 }
             }
@@ -39,16 +40,15 @@ class GameStates {
     joinByID(id, user) {
         return new Promise((resolve, reject) => {
             for (let i = 0; i < this.games.length; i++) {
-                if (
-                    this.games[i].count < this.MAX_PLAYERS &&
-                    this.games[i].id == id
-                ) {
-                    this.games[i].players.push(
-                        generatePlayer(user, this.games[i].players)
-                    );
-                    return resolve(this.games[i]);
-                } else if (this.games[i].count >= this.MAX_PLAYERS) {
-                    reject(new Error("This game is full."));
+                if (this.games[i].id == id) {
+                    if (this.games[i]._players.length < this.MAX_PLAYERS) {
+                        this.games[i].players.push(
+                            generatePlayer(user, this.games[i].players)
+                        );
+                        return resolve(this.games[i]);
+                    } else {
+                        reject(new Error("This game is full."));
+                    }
                 }
             }
             reject(new Error("Game does not exist."));
@@ -217,7 +217,7 @@ class Game {
                 if (this.players.length === collisions)
                     clearInterval(this.interval);
             }
-        }, 1000 / 100);
+        }, 1000 / 60);
     }
 
     roundFinish(io) {
@@ -282,6 +282,8 @@ function generateDTO(state) {
     obj.isMoving = state.isMoving;
     obj.leaderboardScore = state.leaderboardScore;
     obj.roundScore = state.roundScore;
+    obj.arrowsImg = state.arrowsImg;
+    obj.arrowImg = state.arrowImg;
     return obj;
 }
 
@@ -294,7 +296,7 @@ function generatePlayer(user, players) {
         canvas.width * (Math.random() * 0.7 + 0.15),
         10,
         Math.random() * (Math.PI + Math.PI / 2),
-        Math.PI / 2,
+        2.5,
         { ArrowLeft: 0, ArrowRight: 0 },
         canvas
     );
@@ -330,7 +332,9 @@ class Player {
         direction,
         speed,
         keyState,
-        canvas
+        canvas,
+        arrowImg,
+        arrowsImg
     ) {
         this.userId = user.id;
         this.username = user.name;
@@ -340,11 +344,11 @@ class Player {
         this.color = color;
         this.speed = speed;
         this.path = [];
-        this.turnSpeed = 0.05;
+        this.turnSpeed = 0.075;
         this.lineWidth = lineWidth;
         this.collided = false;
         this.jumps = [];
-        this.jumpFrames = lineWidth * 2;
+        this.jumpFrames = lineWidth;
         this.flyFrames = lineWidth * 10;
         this.AccJumpFrames = 0;
         this.jumpChance = 0.0;
@@ -356,6 +360,8 @@ class Player {
         this.isMoving = false;
         this.leaderboardScore = 0;
         this.roundScore = 0;
+        this.arrowsImg = arrowsImg;
+        this.arrowImg = arrowImg;
     }
 
     // Data Transfer Object (DTO)

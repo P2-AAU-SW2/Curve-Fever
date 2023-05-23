@@ -24,7 +24,7 @@ module.exports = async (io) => {
 
         socket.on("keyState", (keyState) => {
             let player = game.player(userID);
-            player.keyState = keyState;
+            if (player) player.keyState = keyState;
         });
 
         socket.on("newPlayer", (players) => {
