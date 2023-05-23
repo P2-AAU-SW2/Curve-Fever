@@ -57,7 +57,9 @@ describe("getGameById", () => {
         };
 
         game = new Game(req.params.id);
-        game.players.push(generatePlayer(req.user, game.players));
+        generatePlayer(req.user, game.players).then((player) => {
+            game.players.push(player);
+        });
     });
 
     beforeEach(() => {

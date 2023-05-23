@@ -282,8 +282,6 @@ function generateDTO(state) {
     obj.isMoving = state.isMoving;
     obj.leaderboardScore = state.leaderboardScore;
     obj.roundScore = state.roundScore;
-    obj.arrowsImg = state.arrowsImg;
-    obj.arrowImg = state.arrowImg;
     return obj;
 }
 
@@ -295,7 +293,7 @@ function generatePlayer(user, players) {
         canvas.width * (Math.random() * 0.7 + 0.15),
         canvas.width * (Math.random() * 0.7 + 0.15),
         10,
-        Math.random() * (Math.PI + Math.PI / 2),
+        Math.random() * (3.14 + 3.14 / 2),
         2,
         { ArrowLeft: 0, ArrowRight: 0 },
         canvas
@@ -332,9 +330,7 @@ class Player {
         direction,
         speed,
         keyState,
-        canvas,
-        arrowImg,
-        arrowsImg
+        canvas
     ) {
         this.userId = user.id;
         this.username = user.name;
@@ -344,11 +340,11 @@ class Player {
         this.color = color;
         this.speed = speed;
         this.path = [];
-        this.turnSpeed = 0.075;
+        this.turnSpeed = 0.045;
         this.lineWidth = lineWidth;
         this.collided = false;
         this.jumps = [];
-        this.jumpFrames = lineWidth;
+        this.jumpFrames = lineWidth * 1.5;
         this.flyFrames = lineWidth * 10;
         this.AccJumpFrames = 0;
         this.jumpChance = 0.0;
@@ -360,8 +356,6 @@ class Player {
         this.isMoving = false;
         this.leaderboardScore = 0;
         this.roundScore = 0;
-        this.arrowsImg = arrowsImg;
-        this.arrowImg = arrowImg;
     }
 
     // Data Transfer Object (DTO)
