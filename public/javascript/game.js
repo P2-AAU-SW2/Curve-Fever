@@ -150,34 +150,11 @@ function draw(players) {
             ctx.lineWidth = player.lineWidth;
             ctx.lineCap = "round";
             const radius = player.lineWidth * 0.0933 + 0.1;
-            if (player.isFlying || player.path.length === 1)
+            if (player.isFlying || player.path.length === 1) {
                 drawDot(player, radius * 5);
-            else if (player.path.length > 1) {
-                // Draws the entire path for every animation frame so the line is smooth
-                ctx.beginPath();
-                ctx.moveTo(player.path[0].x, player.path[0].y);
-                for (let i = 1, j = 0; i < player.path.length; i++) {
-                    if (i == player.jumps[j]) {
-                        // Draws the gaps in the line. Checks if the jump value is closed with another value
-                        if (player.jumps.length > j + 1) {
-                            i = player.jumps[j + 1];
-                            // If the position in the path is equal to the current player position after a jump then there is not enough points to make a line, therefore we need to draw a dot instead
-                            if (
-                                player.path[i].x === player.x &&
-                                player.path[i].y === player.y
-                            ) {
-                                ctx.stroke();
-                                ctx.closePath();
-                                drawDot(player, radius);
-                                break;
-                            }
-                            if (player.jumps.length >= j + 2) j += 2;
-                            ctx.moveTo(player.path[i].x, player.path[i].y);
-                        }
-                    } else {
-                        ctx.lineTo(player.path[i].x, player.path[i].y);
-                    }
-                }
+                drawArrowSvg(player);
+            } else if (player.path.length > 1) {
+                drawLine(player, radius);
                 // If line is currently jumping then draw line as a dot
                 if (player.isJumping || player.isFlying) {
                     ctx.stroke();
@@ -189,6 +166,63 @@ function draw(players) {
             }
         }
     });
+}
+
+function drawLine(player, radius) {
+    // Draws the entire path for every animation frame so the line is smooth
+    ctx.beginPath();
+    ctx.moveTo(player.path[0].x, player.path[0].y);
+    for (let i = 1, j = 0; i < player.path.length; i++) {
+        if (i == player.jumps[j]) {
+            // Draws the gaps in the line. Checks if the jump value is closed with another value
+            if (player.jumps.length > j + 1) {
+                i = player.jumps[j + 1];
+                // If the position in the path is equal to the current player position after a jump then there is not enough points to make a line, therefore we need to draw a dot instead
+                if (
+                    player.path[i].x === player.x &&
+                    player.path[i].y === player.y
+                ) {
+                    ctx.stroke();
+                    ctx.closePath();
+                    drawDot(player, radius);
+                    break;
+                }
+                if (player.jumps.length >= j + 2) j += 2;
+                ctx.moveTo(player.path[i].x, player.path[i].y);
+            }
+        } else {
+            ctx.lineTo(player.path[i].x, player.path[i].y);
+        }
+    }
+}
+
+function drawArrowSvg(player) {
+    let img = new Image();
+    let imgScale = canvasSize * 0.0007;
+
+    img.onload = function () {
+        let newWidth = img.width * imgScale;
+        let newHeight = img.height * imgScale;
+
+        ctx.save(); // save the current transformation matrix
+
+        // translate the context to the center point and rotate
+        ctx.translate(player.x, player.y);
+        ctx.rotate(player.direction + Math.PI / 2); // Turn direction by 90 degrees in radians
+
+        // draw the image centered on the point and rotated
+        ctx.drawImage(
+            img,
+            -newWidth / 2,
+            -newHeight - player.lineWidth,
+            newWidth,
+            newHeight
+        );
+        ctx.restore(); // restore the saved transformation matrix
+    };
+    let isPlayer = player.userId === curPlayer.userId ? "s" : "";
+    let file = `directionArrow${isPlayer}_${player.color.replace("#", "")}.svg`;
+    img.src = `/assets/icons/${file}`;
 }
 
 function drawDot(player, radius) {

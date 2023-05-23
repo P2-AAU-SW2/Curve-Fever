@@ -272,6 +272,7 @@ function generateDTO(state) {
     obj.username = state.username;
     obj.x = state.x;
     obj.y = state.y;
+    obj.direction = state.direction;
     obj.color = state.color;
     obj.jumps = state.jumps;
     obj.path = state.path;
@@ -307,6 +308,7 @@ function getColor(players) {
         "#FFF116",
         "#B9FF32",
         "#FF6D6D",
+        "#0D38D2",
     ];
     if (players.length) {
         for (let i in playerColors) {
@@ -340,7 +342,6 @@ class Player {
         this.speed = speed;
         this.path = [];
         this.turnSpeed = 0.05;
-        this.turnDirection = 0;
         this.lineWidth = lineWidth;
         this.collided = false;
         this.jumps = [];
