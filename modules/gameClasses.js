@@ -381,7 +381,7 @@ class Player {
         this.lineWidth = lineWidth;
         this.collided = false;
         this.jumps = [];
-        this.jumpFrames = lineWidth * 1.5;
+        this.jumpFrames = lineWidth * 1.7;
         this.flyFrames = lineWidth * 10;
         this.AccJumpFrames = 0;
         this.jumpChance = 0.0;
