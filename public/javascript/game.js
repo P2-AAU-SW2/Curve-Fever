@@ -34,11 +34,13 @@ socket.on("newPlayer", (player) => {
 });
 
 socket.on("leaveGame", (userID) => {
-    for (let i in players) {
-        if (userID === players[i].userId) {
-            players.splice(i, 1);
-            rerenderScoretable(players);
-            break;
+    if (mode === "warmUp") {
+        for (let i in players) {
+            if (userID === players[i].userId) {
+                players.splice(i, 1);
+                rerenderScoretable(players);
+                break;
+            }
         }
     }
 });

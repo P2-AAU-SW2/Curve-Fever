@@ -15,11 +15,21 @@ class GameStates {
 
         If a game is not found, a new will be created with a unique ID.
     */
-    joinPublic() {
+    joinPublic(user) {
         return new Promise((resolve) => {
+            //Check if user is already in a game
+            for (let i = 0; i < this.games.length; i++) {
+                if (this.games[i].mode == "game") {
+                    if (this.games[i].player(user.id)) {
+                        this.games[i].player(user.id).reconnect();
+                        return resolve(this.games[i].id);
+                    }
+                }
+            }
+
+            //Check if there is an available room to join
             for (let i = 0; i < this.games.length; i++) {
                 if (this.games[i]._players.length < this.MAX_PLAYERS) {
-                    console.log("Joining existing game");
                     return resolve(this.games[i].id);
                 }
             }
@@ -66,6 +76,11 @@ class GameStates {
     leaveGame(id, userId) {
         this.games = this.games.filter((game) => {
             if (game.id === id) {
+                // If the game is in game mode, and the player disconnects, keep user in array.
+                if (game.mode === "game") {
+                    game.player(userId).disconnect();
+                    return;
+                }
                 if (game.count == 1) {
                     return false;
                 } else {
@@ -86,7 +101,6 @@ class Game {
     constructor(id) {
         this._id = id;
         this._players = [];
-        this._playerParking = [];
         this._updates = new Map();
         this._rounds = 0;
         this.mode = "warmUp";
@@ -101,7 +115,7 @@ class Game {
     }
 
     get count() {
-        return this._players.length + this._playerParking.length;
+        return this._players.length;
     }
 
     get updates() {
@@ -142,7 +156,7 @@ class Game {
             }
         });
         if (
-            playersCollided >= this.players.length - 1 &&
+            playersCollided >= this._players.length - 1 &&
             this.mode === "game"
         ) {
             this.roundFinish(io);
@@ -362,6 +376,7 @@ class Player {
         this.roundScore = 0;
         this.arrowsImg = arrowsImg;
         this.arrowImg = arrowImg;
+        this.isConnected = true;
     }
 
     // Data Transfer Object (DTO)
@@ -471,6 +486,14 @@ class Player {
         this.isFlying = true;
         this.isMoving = false;
         this.roundScore = 0;
+    }
+
+    disconnect() {
+        this.isConnected = false;
+    }
+
+    reconnect() {
+        this.isConnected = true;
     }
 }
 
