@@ -24,7 +24,7 @@
                 <div class="scoretable" id="scoretable">
                     <% for (let i = 0; i < players.length; i++) { %>
                     <div id="player<%= players[i].color %>" class="player">
-                        <div class="playerRoundScore"></div>                  
+                        <div id="playerRoundScore" class="playerRoundScore"></div>                  
                         <div class="playerIcon"><%= i+1 %></div>
                         <div class="playerName" style="color: <%= players[i].color %>"><%= players[i].username %></div>
                         <div class="playerScore">0</div>

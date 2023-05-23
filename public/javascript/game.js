@@ -7,6 +7,7 @@ const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const warmupBtn = document.getElementById("warmup-btn");
 const leaveGameBtn = document.querySelector("#leave-game-btn");
+const playerRoundScore = document.getElementById(`#playerRoundScore`);
 // const roundCounter = document.getElementById("roundCounter");
 let mode = "warmUp";
 let initialCanvasSize, canvasSize;
@@ -286,7 +287,7 @@ function displayScoreboard(newPlayer) {
     let html = scoretable.innerHTML;
     players.push(newPlayer);
     html += `<div id="player${newPlayer.color}" class="player">
-                    <div class="playerRoundScore"></div>
+                    <div id="playerRoundScore" class="playerRoundScore"></div>
                     <div class="playerIcon">${players.length}</div>
                     <div class="playerName" style="color: ${newPlayer.color}">${newPlayer.username}</div>
                     <div class="playerScore">0</</div>
@@ -297,13 +298,11 @@ function displayScoreboard(newPlayer) {
 function rerenderScoretable(updatedPlayers) {
     let html = "";
     for (let i = 0; i < updatedPlayers.length; i++) {
-        let displayRoundScore = updatedPlayers[i].collided
-            ? "display: none;"
-            : "display: block;";
+        // Add some function to hide playerRoundScore when player.collided is false and vice versa
         html += `<div id="player${updatedPlayers[i].color}" class="player">  
-                    <div class="playerRoundScore" style=${displayRoundScore} style="background-color: ${
-            updatedPlayers[i].color
-        };">+ ${updatedPlayers[i].roundScore}</div>
+                    <div id="playerRoundScore" class="playerRoundScore" style="background-color: ${
+                        updatedPlayers[i].color
+                    }">+${updatedPlayers[i].roundScore}</div>
                     <div class="playerIcon">${i + 1}</div>
                     <div class="playerName" style="color: ${
                         updatedPlayers[i].color
@@ -312,6 +311,6 @@ function rerenderScoretable(updatedPlayers) {
                         updatedPlayers[i].leaderboardScore
                     }</div>
             </div>`;
+        scoretable.innerHTML = html;
     }
-    scoretable.innerHTML = html;
 }

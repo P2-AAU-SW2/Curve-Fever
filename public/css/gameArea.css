@@ -110,7 +110,12 @@ html {
     transition: 0.5s ease-in;
 }
 
+.display-none {
+    display: none;
+}
+
 .playerIcon {
+    margin-left: 0.5rem;
     grid-column: 2;
 }
 

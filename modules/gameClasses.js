@@ -201,6 +201,7 @@ class Game {
         //     player.resetState();
         // });
         // this.updates.clear();
+        io.in(this.id).emit("renderScoreTable", this.playersDTO);
         this.interval = setInterval(() => {
             // Update all players
             this.updateAll(io);
