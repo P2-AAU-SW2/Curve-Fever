@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: prod
+name: production
 steps:
     - name: test
       image: node
