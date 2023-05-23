@@ -390,8 +390,6 @@ class Player {
         this.isMoving = false;
         this.leaderboardScore = 0;
         this.roundScore = 0;
-        this.arrowsImg = arrowsImg;
-        this.arrowImg = arrowImg;
         this.isConnected = true;
     }
 
