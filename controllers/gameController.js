@@ -25,7 +25,7 @@ exports.getGameById = async (req, res, next) => {
 exports.play = async (req, res, next) => {
     // Call the class/object method "joinPublic" from "gameClasses" to get a game to join.
     gameStates
-        .joinPublic()
+        .joinPublic(req.user)
         .then((id) => {
             res.redirect(`/game/${id}`); // Redirect to the game page.
         })

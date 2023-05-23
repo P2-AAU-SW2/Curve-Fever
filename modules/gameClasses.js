@@ -6,7 +6,7 @@ const MAX_SCORE = 20;
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 3; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 2; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -15,17 +15,33 @@ class GameStates {
 
         If a game is not found, a new will be created with a unique ID.
     */
-    joinPublic() {
+    joinPublic(user) {
         return new Promise((resolve) => {
+            //Check if user is already in a game
+            for (let i = 0; i < this.games.length; i++) {
+                console.log("Checking game:", this.games[i]);
+                const game = this.games[i];
+                for (let j = 0; j < game._players.length; j++) {
+                    const player = game._players[j];
+                    console.log("Checking player:", player);
+                    if (player.userId == user.id) {
+                        console.log("Player already in game, reconnecting...");
+                        player.reconnect();
+                        return resolve(game.id);
+                    }
+                }
+            }
+
+            //Check if there is an available room to join
             for (let i = 0; i < this.games.length; i++) {
                 if (this.games[i]._players.length < this.MAX_PLAYERS) {
-                    console.log("Joining existing game");
+                    console.log("Joining existing game:", this.games[i].id);
                     return resolve(this.games[i].id);
                 }
             }
 
             // Generate a new room if no available, and push it to current games.
-            // console.log("No games, creating a new!");
+            console.log("No available games, creating a new one...");
             const newID = uuidv4();
             this.games.push(new Game(newID));
             return resolve(newID);
@@ -41,6 +57,11 @@ class GameStates {
         return new Promise((resolve, reject) => {
             for (let i = 0; i < this.games.length; i++) {
                 if (this.games[i].id == id) {
+                    if (this.games[i].player(user.id)) {
+                        console.log("player already in game JoinById");
+                        this.games[i].player(user.id).reconnect();
+                        return resolve(this.games[i]);
+                    }
                     if (this.games[i]._players.length < this.MAX_PLAYERS) {
                         this.games[i].players.push(
                             generatePlayer(user, this.games[i].players)
@@ -64,19 +85,27 @@ class GameStates {
         Logic for removing a player. Gets called in socketHandler.js when a client disconnects.
     */
     leaveGame(id, userId) {
+        console.log("leaveGame called with id:" + id + " and userId:" + userId);
         this.games = this.games.filter((game) => {
             if (game.id === id) {
-                if (game.count == 1) {
+                // If the game is in game mode, and the player disconnects, keep user in array.
+                if (game.activeCount > 1) {
                     return false;
+                }
+
+                if (game.mode === "game") {
+                    game.player(userId).disconnect();
+                    return true;
                 } else {
                     // Find the index of the player within a game, and remove them.
-                    let index = game.players
+                    let index = game._players
                         .map((user) => user.id)
                         .indexOf(userId);
-                    game.players.splice(index, 1);
+                    game._players.splice(index, 1);
                 }
                 return true;
             }
+            return true;
         });
     }
 }
@@ -86,7 +115,6 @@ class Game {
     constructor(id) {
         this._id = id;
         this._players = [];
-        this._playerParking = [];
         this._updates = new Map();
         this._rounds = 0;
         this.mode = "warmUp";
@@ -100,8 +128,14 @@ class Game {
         return this._players;
     }
 
-    get count() {
-        return this._players.length + this._playerParking.length;
+    get activeCount() {
+        let res = 0;
+        for (let i = 0; i < this._players.length; i++) {
+            if (!this._players[i].isConnected) {
+                res++;
+            }
+        }
+        return res;
     }
 
     get updates() {
@@ -132,17 +166,19 @@ class Game {
         let playersCollided = 0;
         this._players.forEach((player) => {
             if (!player.collided) {
-                this.updatePosition(player.userId, player.keyState);
-                if (player.collided && this.mode === "game") {
-                    this.updateLeaderBoard(io);
-                    playersCollided++;
+                if (player.isMoving) {
+                    this.updatePosition(player.userId, player.keyState);
+                    if (player.collided && this.mode === "game") {
+                        this.updateLeaderBoard(io);
+                        playersCollided++;
+                    }
                 }
             } else {
                 playersCollided++;
             }
         });
         if (
-            playersCollided >= this.players.length - 1 &&
+            playersCollided >= this._players.length - 1 &&
             this.mode === "game"
         ) {
             this.roundFinish(io);
@@ -283,8 +319,6 @@ function generateDTO(state) {
     obj.isMoving = state.isMoving;
     obj.leaderboardScore = state.leaderboardScore;
     obj.roundScore = state.roundScore;
-    obj.arrowsImg = state.arrowsImg;
-    obj.arrowImg = state.arrowImg;
     return obj;
 }
 
@@ -296,7 +330,7 @@ function generatePlayer(user, players) {
         canvas.width * (Math.random() * 0.7 + 0.15),
         canvas.width * (Math.random() * 0.7 + 0.15),
         10,
-        Math.random() * (Math.PI + Math.PI / 2),
+        Math.random() * (3.14 + 3.14 / 2),
         2,
         { ArrowLeft: 0, ArrowRight: 0 },
         canvas
@@ -333,9 +367,7 @@ class Player {
         direction,
         speed,
         keyState,
-        canvas,
-        arrowImg,
-        arrowsImg
+        canvas
     ) {
         this.userId = user.id;
         this.username = user.name;
@@ -345,11 +377,11 @@ class Player {
         this.color = color;
         this.speed = speed;
         this.path = [];
-        this.turnSpeed = 0.075;
+        this.turnSpeed = 0.045;
         this.lineWidth = lineWidth;
         this.collided = false;
         this.jumps = [];
-        this.jumpFrames = lineWidth;
+        this.jumpFrames = lineWidth * 1.5;
         this.flyFrames = lineWidth * 10;
         this.AccJumpFrames = 0;
         this.jumpChance = 0.0;
@@ -361,8 +393,7 @@ class Player {
         this.isMoving = false;
         this.leaderboardScore = 0;
         this.roundScore = 0;
-        this.arrowsImg = arrowsImg;
-        this.arrowImg = arrowImg;
+        this.isConnected = true;
     }
 
     // Data Transfer Object (DTO)
@@ -472,6 +503,14 @@ class Player {
         this.isFlying = true;
         this.isMoving = false;
         this.roundScore = 0;
+    }
+
+    disconnect() {
+        this.isConnected = false;
+    }
+
+    reconnect() {
+        this.isConnected = true;
     }
 }
 

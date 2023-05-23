@@ -12,6 +12,7 @@ const playerRoundScore = document.getElementById(`#playerRoundScore`);
 let mode = "warmUp";
 let initialCanvasSize, canvasSize;
 initialCanvasSize = canvasSize = 960;
+let arrowsSVG = new Map();
 let scale = 1;
 
 const socket = io({
@@ -22,8 +23,15 @@ const socket = io({
 });
 
 socket.on("connect", () => {
-    // console.log(players);
     socket.emit("newPlayer", players);
+    players.forEach((player) => {
+        getArrowSVG(player);
+    });
+});
+
+socket.on("gameInProgress", () => {
+    mode = "game";
+    warmupBtn.classList.add("display-none");
 });
 
 socket.on("chat", (message) => {
@@ -32,16 +40,20 @@ socket.on("chat", (message) => {
 
 socket.on("newPlayer", (player) => {
     displayScoreboard(player);
+    getArrowSVG(player);
 });
 
 socket.on("leaveGame", (userID) => {
-    for (let i in players) {
-        if (userID === players[i].userId) {
-            players.splice(i, 1);
-            rerenderScoretable(players);
-            break;
+    if (mode === "warmUp") {
+        for (let i in players) {
+            if (userID === players[i].userId) {
+                players.splice(i, 1);
+                rerenderScoretable(players);
+                break;
+            }
         }
     }
+    arrowsSVG.delete(userID);
 });
 
 socket.on("updatePosition", (updatedPlayers) => {
@@ -99,6 +111,25 @@ socket.on("gameOver", (winnerName) => {
 socket.on("roundOver", (winnerName, roundCounter) => {
     displayWinner(winnerName, false, roundCounter);
 });
+
+async function getArrowSVG(player) {
+    let imgPath = (plural = "s") =>
+        `/assets/icons/arrow${plural}_${player.color.replace("#", "")}.svg`;
+    let src = player.userId === curPlayer.userId ? imgPath("s") : imgPath("");
+    let arrow = await loadImage(src);
+    arrowsSVG.set(player.userId, arrow);
+}
+
+// Load an image and return a Promise that resolves when the image has loaded
+function loadImage(src) {
+    return new Promise((resolve) => {
+        let img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+    });
+}
+
 function displayWinner(winnerName, game, roundCounter) {
     ctx.clearRect(0, 0, canvasSize, canvasSize);
     if (game) {
@@ -198,10 +229,9 @@ function drawLine(player, radius) {
 }
 
 function drawArrowSvg(player) {
-    let img = new Image();
     let imgScale = canvasSize * 0.0007;
-
-    img.onload = function () {
+    let img = arrowsSVG.get(player.userId);
+    if (img) {
         let newWidth = img.width * imgScale;
         let newHeight = img.height * imgScale;
 
@@ -220,7 +250,7 @@ function drawArrowSvg(player) {
             newHeight
         );
         ctx.restore(); // restore the saved transformation matrix
-    };
+    }
 }
 
 function drawDot(player, radius) {
