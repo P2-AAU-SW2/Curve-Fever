@@ -20,7 +20,7 @@ pids
 lib-cov
 
 # DB
-#*.db
+*.db
 
 # Coverage directory used by tools like istanbul
 coverage
