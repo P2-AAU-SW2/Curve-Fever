@@ -463,13 +463,14 @@ class Player {
         if (this.isFlying || this.isJumping) {
             this.AccJumpFrames++;
         } else {
-            let chance = Math.floor(Math.random() * 11) * this.jumpChance;
-            if (chance >= 5) {
+            let chance = Math.random() * 1;
+            if (chance >= 0.992) {
                 this.toggleJump();
-                this.jumpChance = 0.0;
-            } else {
-                this.jumpChance += this.jumpFrequency;
             }
+            // this.jumpChance = 0.0;
+            // } else {
+            //     this.jumpChance += this.jumpFrequency;
+            // }
         }
         if (
             (this.isFlying && this.flyFrames <= this.AccJumpFrames) ||
