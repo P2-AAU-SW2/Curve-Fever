@@ -99,15 +99,14 @@ html {
 
 .player {
     display: grid;
-    grid-template-columns: 2rem 1.5rem 12rem auto;
+    grid-template-columns: 2.5rem 1.5rem 12rem auto;
     grid-auto-rows: 3rem;
-    row-gap: 1rem;
+    gap: 0.5rem;
     align-items: center;
 }
 
 .playerRoundScore {
     grid-column: 1;
-    transform: translateX(-100%);
     transition: 0.5s ease-in;
 }
 

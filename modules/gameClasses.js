@@ -296,7 +296,7 @@ function generatePlayer(user, players) {
         canvas.width * (Math.random() * 0.7 + 0.15),
         10,
         Math.random() * (Math.PI + Math.PI / 2),
-        2.5,
+        2,
         { ArrowLeft: 0, ArrowRight: 0 },
         canvas
     );

@@ -37,7 +37,7 @@ socket.on("leaveGame", (userID) => {
     for (let i in players) {
         if (userID === players[i].userId) {
             players.splice(i, 1);
-            rerenderScoretable();
+            rerenderScoretable(players);
             break;
         }
     }
@@ -84,7 +84,7 @@ socket.on("renderScoreTable", (updatedPlayers) => {
     });
     // Sort leaderboard from highest to lowest
     players.sort((a, b) => b.leaderboardScore - a.leaderboardScore);
-    rerenderScoretable();
+    rerenderScoretable(updatedPlayers);
 });
 
 socket.on("gameNotFound", function () {
@@ -220,9 +220,6 @@ function drawArrowSvg(player) {
         );
         ctx.restore(); // restore the saved transformation matrix
     };
-    let isPlayer = player.userId === curPlayer.userId ? "s" : "";
-    let file = `directionArrow${isPlayer}_${player.color.replace("#", "")}.svg`;
-    img.src = `/assets/icons/${file}`;
 }
 
 function drawDot(player, radius) {
@@ -297,22 +294,22 @@ function displayScoreboard(newPlayer) {
     scoretable.innerHTML = html;
 }
 
-function rerenderScoretable() {
+function rerenderScoretable(updatedPlayers) {
     let html = "";
-    for (let i = 0; i < players.length; i++) {
-        // let displayPlayerRoundScore = players[i].collided
-        //     ? "display: block"
-        //     : "display: none";
-        html += `<div id="player${players[i].color}" class="player">  
-                    <div class="playerRoundScore">+ ${
-                        players[i].roundScore
-                    }</div>
+    for (let i = 0; i < updatedPlayers.length; i++) {
+        let displayRoundScore = updatedPlayers[i].collided
+            ? "display: none;"
+            : "display: block;";
+        html += `<div id="player${updatedPlayers[i].color}" class="player">  
+                    <div class="playerRoundScore" style=${displayRoundScore} style="background-color: ${
+            updatedPlayers[i].color
+        };">+ ${updatedPlayers[i].roundScore}</div>
                     <div class="playerIcon">${i + 1}</div>
                     <div class="playerName" style="color: ${
-                        players[i].color
-                    };">${players[i].username}</div>
+                        updatedPlayers[i].color
+                    };">${updatedPlayers[i].username}</div>
                     <div class="playerScore">${
-                        players[i].leaderboardScore
+                        updatedPlayers[i].leaderboardScore
                     }</div>
             </div>`;
     }
