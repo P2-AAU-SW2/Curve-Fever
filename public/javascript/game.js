@@ -8,6 +8,8 @@ const ctx = canvas.getContext("2d");
 const warmupBtn = document.getElementById("warmup-btn");
 const leaveGameBtn = document.querySelector("#leave-game-btn");
 const playerRoundScore = document.getElementById(`#playerRoundScore`);
+const roundCounter = document.getElementById(`roundCounter`);
+
 // const roundCounter = document.getElementById("roundCounter");
 let mode = "warmUp";
 let initialCanvasSize, canvasSize;
@@ -29,9 +31,10 @@ socket.on("connect", () => {
     });
 });
 
-socket.on("gameInProgress", () => {
+socket.on("gameInProgress", (roundNumber) => {
     mode = "game";
     warmupBtn.classList.add("display-none");
+    displayRoundNumber(roundNumber);
 });
 
 socket.on("chat", (message) => {
@@ -118,6 +121,14 @@ socket.on("roundOver", (winnerName, color, roundCounter) => {
 socket.on("gameMode", () => {
     warmupBtn.classList.add("display-none");
 });
+
+socket.on("round", (roundNumber) => {
+    displayRoundNumber(roundNumber);
+});
+
+function displayRoundNumber(roundNumber) {
+    roundCounter.textContent = "Round " + roundNumber;
+}
 
 async function getArrowSVG(player) {
     let imgPath = (plural = "s") =>

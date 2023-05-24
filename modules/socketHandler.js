@@ -29,7 +29,7 @@ module.exports = async (io) => {
 
         socket.on("newPlayer", (players) => {
             if (game.mode === "game") {
-                socket.emit("gameInProgress");
+                socket.emit("gameInProgress", game._rounds);
                 return;
             }
 

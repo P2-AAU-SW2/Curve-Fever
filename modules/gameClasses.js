@@ -209,6 +209,9 @@ class Game {
 
     async countdown(io) {
         this._rounds++;
+        // Send round number to clients
+        io.in(this.id).emit("round", this._rounds);
+
         // Clear and reset state
         clearInterval(this.interval);
         this.updates.clear();
