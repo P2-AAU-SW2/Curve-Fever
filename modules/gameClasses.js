@@ -3,7 +3,7 @@ const { updateScores } = require("./database.js");
 
 const LINE_WIDTH = 10;
 const MAX_SCORE = 20;
-const CELL_SIZE = LINE_WIDTH * 1.5;
+const CELL_SIZE = LINE_WIDTH * 2;
 
 // Class for keeping all logic related to running games.
 class GameStates {
@@ -65,6 +65,7 @@ class GameStates {
                         this.games[i].players.push(
                             generatePlayer(user, this.games[i].players)
                         );
+                        console.log(this.games[i].players);
                         return resolve(this.games[i]);
                     } else {
                         reject(new Error("This game is full."));
@@ -189,9 +190,7 @@ class Game {
     updatePosition(userId) {
         let player = this.player(userId);
         player.update(this.players);
-        if (player.collided && this.mode === "warmUp") {
-            player.resetState();
-        }
+        if (player.collided && this.mode === "warmUp") player.resetState();
         let playerDTO = player.playerDTO();
         // Add the update to the map
         this.updates.set(userId, playerDTO);
@@ -335,10 +334,10 @@ function generatePlayer(user, players) {
     return new Player(
         user,
         getColor(players),
-        canvas.width * (Math.random() * 0.7 + 0.15),
-        canvas.width * (Math.random() * 0.7 + 0.15),
+        Number((canvas.width * (Math.random() * 0.7 + 0.15)).toFixed(3)),
+        Number((canvas.width * (Math.random() * 0.7 + 0.15)).toFixed(3)),
         LINE_WIDTH,
-        Math.random() * (3.14 + 3.14 / 2),
+        Number((Math.random() * (3.14 + 3.14 / 2)).toFixed(3)),
         2,
         { ArrowLeft: 0, ArrowRight: 0 },
         canvas
@@ -424,8 +423,12 @@ class Player {
         }
 
         // Update position based on direction and speed
-        this.x += Math.cos(this.direction) * this.speed;
-        this.y += Math.sin(this.direction) * this.speed;
+        this.x = Number(
+            (this.x + Math.cos(this.direction) * this.speed).toFixed(3)
+        );
+        this.y = Number(
+            (this.y + Math.sin(this.direction) * this.speed).toFixed(3)
+        );
 
         // Add the current position to the path
         if (!this.isJumping && !this.isFlying) {
@@ -527,9 +530,15 @@ class Player {
 
     resetState() {
         // FIND BETTER DYNAMIC SOLUTION
-        this.x = this.canvas.width * (Math.random() * 0.7 + 0.15);
-        this.y = this.canvas.width * (Math.random() * 0.7 + 0.15);
-        this.direction = Math.random() * (Math.PI + Math.PI / 2);
+        this.x = Number(
+            (this.canvas.width * (Math.random() * 0.7 + 0.15)).toFixed(3)
+        );
+        this.y = Number(
+            (this.canvas.width * (Math.random() * 0.7 + 0.15)).toFixed(3)
+        );
+        this.direction = Number(
+            (Math.random() * (Math.PI + Math.PI / 2)).toFixed(3)
+        );
         this.path = [];
         this.collided = false;
         this.jumps = [];

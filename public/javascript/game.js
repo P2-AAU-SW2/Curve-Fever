@@ -161,16 +161,6 @@ function displayWinner(winnerName, color) {
     document
         .querySelector(".winner-container")
         .classList.remove("visibility-hidden");
-    var myCanvas = document.createElement("canvas");
-    document.body.appendChild(myCanvas);
-    var myConfetti = confetti.create(myCanvas, {
-        resize: true,
-        useWorker: true,
-    });
-    myConfetti({
-        particleCount: 100,
-        spread: 160,
-    });
     confetti();
 }
 
