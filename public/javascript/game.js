@@ -78,16 +78,18 @@ socket.on("updatePosition", (updatedPlayers) => {
 });
 
 socket.on("countdown", (count) => {
-    console.log(count);
-    // console.log(count);
+    if (mode === "warmUp")
+        document.querySelector(".loader").classList.remove("loader");
     mode = "game";
     // warmupBtn.classList.add("display-none");
     displayCountdown(count);
 });
 function displayCountdown(i) {
+    console.log(i);
     if (i === 3) {
-        let element = document.getElementById("round-win-loader");
-        element.classList.add("pulse-loader");
+        document
+            .getElementById("round-win-loader")
+            .classList.add("pulse-loader");
         document
             .querySelector(".winner-container")
             .classList.remove("visibility-hidden");
@@ -163,10 +165,8 @@ function displayWinner(winnerName, color) {
 }
 
 function displayRoundWinner(winnerName, color, roundCounter) {
-    console.log(roundCounter);
     if (roundCounter === 1) {
         let element = document.querySelector(".winner-text");
-        console.log(element);
         element.classList.remove("display-none");
     }
     let winner = document.querySelector("#winner");

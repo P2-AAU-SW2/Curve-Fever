@@ -330,23 +330,33 @@ input:not(:placeholder-shown) + label {
     animation: scaleUp 1s linear infinite;
 }
 
-@keyframes scaleUp {
+/* @keyframes scaleUp {
     0% {
-        transform: translate(-50%, -50%) scale(0);
+        transform: translate(-50%, -50%) scale(0.8)
     }
-    60%,
-    100% {
+    20% {
         transform: translate(-50%, -50%) scale(1);
     }
-}
-@keyframes pulse {
-    0%,
-    60%,
+    21%,
+    21% {
+        transform: translate(-50%, -50%) scale(0);
+    }
     100% {
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+} */
+@keyframes pulse {
+    0% {
         transform: scale(1);
     }
-    80% {
+    20% {
         transform: scale(1.2);
+    }
+    40% {
+        transform: scale(1);
+    }
+    60%,
+    100% {
     }
 }
 
