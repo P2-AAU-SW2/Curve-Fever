@@ -6,7 +6,7 @@ const MAX_SCORE = 20;
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 2; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 5; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
