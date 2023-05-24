@@ -34,6 +34,7 @@ function createMenuModal(type, item) {
         menuModal.input.placeholder = "Room name";
         menuModal.btn1.text = "Join room";
         menuModal.btn1.color = "red";
+        menuModal.btn1.onClick = "joinButton()";
     }
     createModal();
 }
@@ -43,6 +44,16 @@ function setFocus() {
     var iconsBtn = document.getElementById("icons-btn");
     skinsBtn.classList.toggle("active");
     iconsBtn.classList.toggle("active");
+}
+
+function joinButton() {
+    let textInput = document.getElementById("modalInput").value;
+
+    if (textInput != "") {
+        window.location.href = `/game/${textInput}`;
+    } else {
+        showSnackbar("Please enter a game ID");
+    }
 }
 
 function displayShop() {
