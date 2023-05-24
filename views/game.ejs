@@ -24,7 +24,7 @@
                 <div class="scoretable" id="scoretable">
                     <% for (let i = 0; i < players.length; i++) { %>
                     <div id="player<%= players[i].color %>" class="player">
-                        <div id="playerRoundScore" class="playerRoundScore"></div>                  
+                        <div class="playerRoundScore"></div>
                         <div class="playerIcon"><%= i+1 %></div>
                         <div class="playerName" style="color: <%= players[i].color %>"><%= players[i].username %></div>
                         <div class="playerScore">0</div>
@@ -46,12 +46,13 @@
             </div>
         </div>
         <div class="canvas-container visibility-hidden">
-            <div class="game-winner-container visibility-hidden">
-                <span id="game-winner-text"></span>
-                <button class="blue-btn" id="leave-game-btn">Leave Game</button>
-            </div>
-            <div class="round-winner-container visibility-hidden">
-                <span id="round-winner-text"></span>
+            <div class="winner-container visibility-hidden">
+                <div class="winner-wrapper">
+                    <span class="winner-text display-none"><span id="winner">Development</span> won <span id="game">round</span></span>
+                    <span id="new-round">Round starts in</span>
+                    <button class="blue-btn display-none" id="leave-game-btn">Leave Game</button>
+                    <span id="round-win-loader"></span>
+                </div>
             </div>
             <div class="btn-game-container">
                 <button class="blue-btn" id="warmup-btn">Warm Up</button>
