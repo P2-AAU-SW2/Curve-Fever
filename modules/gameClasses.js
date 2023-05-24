@@ -21,11 +21,13 @@ class GameStates {
             //Check if user is already in a game
             for (let i = 0; i < this.games.length; i++) {
                 const game = this.games[i];
-                for (let j = 0; j < game._players.length; j++) {
-                    const player = game._players[j];
-                    if (player.userId == user.id) {
-                        player.reconnect();
-                        return resolve(game.id);
+                if (game.mode === "game") {
+                    for (let j = 0; j < game._players.length; j++) {
+                        const player = game._players[j];
+                        if (player.userId == user.id) {
+                            player.reconnect();
+                            return resolve(game.id);
+                        }
                     }
                 }
             }
