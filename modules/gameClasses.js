@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require("uuid");
 const { updateScores } = require("./database.js");
 
 const MAX_SCORE = 20;
+const CELL_SIZE = 20;
 
 // Class for keeping all logic related to running games.
 class GameStates {
@@ -114,6 +115,7 @@ class Game {
         this._updates = new Map();
         this._rounds = 0;
         this.mode = "warmUp";
+        this.spatialHashTable = {};
     }
 
     get id() {
@@ -401,6 +403,7 @@ class Player {
         this.leaderboardScore = 0;
         this.roundScore = 0;
         this.isConnected = true;
+        this.spatialHashTable = {};
     }
 
     // Data Transfer Object (DTO)
@@ -411,7 +414,7 @@ class Player {
     update(players) {
         if (!this.isMoving) this.isMoving = true;
         // console.time("collision");
-        this.collision(players);
+
         // console.timeEnd("collision");
         if (!this.collided) {
             this.jumping();
@@ -427,12 +430,32 @@ class Player {
             this.y += Math.sin(this.direction) * this.speed;
 
             // Add the current position to the path
-            if (!this.isJumping && !this.isFlying)
+            if (!this.isJumping && !this.isFlying) {
+                let hashValue = this.hash(this.x, this.y);
+                this.hashMapping(hashValue);
+                this.collision(players, hashValue);
                 this.path.push({ x: this.x, y: this.y });
+            }
         }
     }
 
-    collision(players) {
+    hashMapping(hashValue) {
+        if (!this.spatialHashTable[hashValue]) {
+            this.spatialHashTable[hashValue] = [];
+        }
+        this.spatialHashTable[hashValue].push({
+            x: this.x,
+            y: this.y,
+        });
+    }
+
+    hash(x, y) {
+        let cellX = Math.floor(x / CELL_SIZE);
+        let cellY = Math.floor(y / CELL_SIZE);
+        return cellX + "-" + cellY;
+    }
+
+    collision(players, hashValue) {
         // Check if curve hit the wall
         if (!this.isFlying) {
             if (
@@ -447,21 +470,30 @@ class Player {
             if (!this.isJumping) {
                 // Check if curve hit its own path. Don't check recent points in path since it can collide with them
                 // given the current point is close enough. This logic needs to be different for hitting other players
-                players.forEach((player) => {
+                for (let i = 0; i < players.length; i++) {
+                    let player = players[i];
+                    let potentialCollisions =
+                        player.spatialHashTable[hashValue];
                     let buffer =
                         player.userId === this.userId ? this.lineWidth : 0;
-                    for (let i = 0; i < player.path.length - buffer; i++) {
-                        // L2 norm: get shortest distance
-                        const distance = Math.sqrt(
-                            (player.path[i].x - this.x) ** 2 +
-                                (player.path[i].y - this.y) ** 2
-                        );
-                        if (distance < this.lineWidth - 0.1) {
-                            this.collided = true;
-                            break;
+                    if (potentialCollisions) {
+                        for (
+                            let i = 0;
+                            i < potentialCollisions.length - buffer;
+                            i++
+                        ) {
+                            // L2 norm: get shortest distance
+                            const distance = Math.sqrt(
+                                (potentialCollisions[i].x - this.x) ** 2 +
+                                    (potentialCollisions[i].y - this.y) ** 2
+                            );
+                            if (distance < this.lineWidth - 0.1) {
+                                this.collided = true;
+                                break;
+                            }
                         }
                     }
-                });
+                }
             }
         }
     }
@@ -511,6 +543,7 @@ class Player {
         this.isFlying = true;
         this.isMoving = false;
         this.roundScore = 0;
+        this.spatialHashTable = {};
     }
 
     disconnect() {
