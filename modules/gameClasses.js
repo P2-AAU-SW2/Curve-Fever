@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const { updateScores } = require("./database.js");
 
-const MAX_SCORE = 2;
+const MAX_SCORE = 20;
 
 // Class for keeping all logic related to running games.
 class GameStates {
