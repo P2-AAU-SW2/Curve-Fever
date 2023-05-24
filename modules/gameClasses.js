@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const { updateScores } = require("./database.js");
 
-const MAX_SCORE = 20;
+const MAX_SCORE = 2;
 
 // Class for keeping all logic related to running games.
 class GameStates {
@@ -223,9 +223,11 @@ class Game {
         });
         // Initialize countdown
         let count = 3;
+        io.in(this.id).emit("countdown", count--);
         this.interval = setInterval(() => {
             if (count <= 0) {
                 clearInterval(this.interval);
+                io.in(this.id).emit("countdown", count);
                 this.startGame(io);
             } else io.in(this.id).emit("countdown", count--);
         }, 1000);
@@ -270,9 +272,6 @@ class Game {
             if (this.players[i].roundScore >= highestRoundScore.roundScore) {
                 highestRoundScore = this.players[i];
             }
-            //reset round score
-            this.players[i].roundScore = 0;
-
             //find highest leaderboard score
             if (
                 this.players[i].leaderboardScore >=
@@ -282,23 +281,32 @@ class Game {
             }
         }
         if (highestLeaderboardScore.leaderboardScore >= MAX_SCORE) {
-            this.endGame(io, highestLeaderboardScore.username);
+            this.endGame(
+                io,
+                highestLeaderboardScore.username,
+                highestLeaderboardScore.color
+            );
             return;
         }
         io.in(this.id).emit(
             "roundOver",
             highestRoundScore.username,
+            highestRoundScore.color,
             this._rounds
         );
+        // Need to reset the roundscore at the end because of inheritance
+        this.players.forEach((player) => {
+            player.roundScore = 0;
+        });
         this.countdown(io);
     }
 
-    endGame(io, winner) {
+    endGame(io, winner, color) {
         console.log("Game finished");
         clearInterval(this.interval);
         updateScores(this.players);
 
-        io.in(this.id).emit("gameOver", winner);
+        io.in(this.id).emit("gameOver", winner, color);
     }
 }
 

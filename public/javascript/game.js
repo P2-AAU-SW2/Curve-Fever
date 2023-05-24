@@ -75,19 +75,22 @@ socket.on("updatePosition", (updatedPlayers) => {
 });
 
 socket.on("countdown", (count) => {
+    console.log(count);
     // console.log(count);
     mode = "game";
     // warmupBtn.classList.add("display-none");
     displayCountdown(count);
 });
 function displayCountdown(i) {
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bolder 60px Arial";
-    ctx.clearRect(0, 0, canvasSize, canvasSize); // Clear the canvas
-    ctx.fillText(String(i), canvasSize / 2, canvasSize / 2); // draw countdown on the canvas
-    if (i <= 1) {
-        hideWinner();
+    if (i === 3) {
+        let element = document.getElementById("round-win-loader");
+        element.classList.add("pulse-loader");
+        document
+            .querySelector(".winner-container")
+            .classList.remove("visibility-hidden");
     }
+    if (i > 0) document.getElementById("round-win-loader").textContent = i;
+    else hideWinner();
 }
 
 socket.on("renderScoreTable", (updatedPlayers) => {
@@ -104,12 +107,12 @@ socket.on("gameNotFound", function () {
     window.location.href = "/"; // redirects to home page
 });
 
-socket.on("gameOver", (winnerName) => {
-    displayWinner(winnerName, true);
+socket.on("gameOver", (winnerName, color) => {
+    displayWinner(winnerName, color);
 });
 
-socket.on("roundOver", (winnerName, roundCounter) => {
-    displayWinner(winnerName, false, roundCounter);
+socket.on("roundOver", (winnerName, color, roundCounter) => {
+    displayRoundWinner(winnerName, color, roundCounter);
 });
 
 socket.on("gameMode", () => {
@@ -134,28 +137,46 @@ function loadImage(src) {
     });
 }
 
-function displayWinner(winnerName, game, roundCounter) {
+function displayWinner(winnerName, color) {
     ctx.clearRect(0, 0, canvasSize, canvasSize);
-    if (game) {
-        document
-            .querySelector(".game-winner-container")
-            .classList.remove("visibility-hidden");
-        document.querySelector(
-            "#game-winner-text"
-        ).textContent = `${winnerName} won the game!`;
-    } else {
-        document
-            .querySelector(".round-winner-container")
-            .classList.remove("visibility-hidden");
-        document.querySelector(
-            "#round-winner-text"
-        ).textContent = `${winnerName} won round ${roundCounter}!`;
-    }
+    let winner = document.querySelector("#winner");
+    winner.textContent = winnerName;
+    winner.style.color = color;
+    document.querySelector("#new-round").classList.add("display-none");
+    document.querySelector("#game").textContent = "the game!";
+    document.querySelector("#round-win-loader").classList.add("display-none");
+    document.querySelector("#leave-game-btn").classList.remove("display-none");
+    document
+        .querySelector(".winner-container")
+        .classList.remove("visibility-hidden");
 }
+
+function displayRoundWinner(winnerName, color, roundCounter) {
+    console.log(roundCounter);
+    if (roundCounter === 1) {
+        let element = document.querySelector(".winner-text");
+        console.log(element);
+        element.classList.remove("display-none");
+    }
+    let winner = document.querySelector("#winner");
+    winner.textContent = winnerName;
+    winner.style.color = color;
+    document.querySelector("#game").textContent = `round ${roundCounter}`;
+    document
+        .querySelector(".winner-container")
+        .classList.remove("visibility-hidden");
+}
+
 function hideWinner() {
     document
-        .querySelector(".round-winner-container")
+        .querySelector(".winner-container")
         .classList.add("visibility-hidden");
+    let winner = document.querySelector("#winner");
+    winner.textContent = "";
+    winner.style.color = "";
+    document.querySelector("#game").textContent = "";
+    let element = document.getElementById("round-win-loader");
+    element.classList.remove("pulse-loader");
 }
 
 leaveGameBtn.addEventListener("click", () => {
@@ -174,6 +195,7 @@ function resizeCanvas() {
     ctx.setTransform(1, 0, 0, 1, 0, 0); // removes any previous transformations
     ctx.scale(scale, scale); // apply the scale factor
     canvasContainer.classList.remove("visibility-hidden");
+    document.querySelector(".winner-wrapper").style.width = `${size}px`;
 }
 resizeCanvas();
 
