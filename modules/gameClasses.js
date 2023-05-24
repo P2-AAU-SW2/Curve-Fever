@@ -1,8 +1,9 @@
 const { v4: uuidv4 } = require("uuid");
 const { updateScores } = require("./database.js");
 
+const LINE_WIDTH = 10;
 const MAX_SCORE = 20;
-const CELL_SIZE = 20;
+const CELL_SIZE = LINE_WIDTH * 1.5;
 
 // Class for keeping all logic related to running games.
 class GameStates {
@@ -250,11 +251,10 @@ class Game {
                 this.updates.clear(); // Clear updates for next interval
             } else if (this.mode === "warmUp") {
                 // If every player has collided then clear the interval
-                let collisions = this.players.filter(
-                    (el) => el.collided
+                let movingPlayers = this.players.filter(
+                    (el) => el.isMoving
                 ).length;
-                if (this.players.length === collisions)
-                    clearInterval(this.interval);
+                if (movingPlayers <= 0) clearInterval(this.interval);
             }
         }, 1000 / 60);
     }
@@ -337,7 +337,7 @@ function generatePlayer(user, players) {
         getColor(players),
         canvas.width * (Math.random() * 0.7 + 0.15),
         canvas.width * (Math.random() * 0.7 + 0.15),
-        10,
+        LINE_WIDTH,
         Math.random() * (3.14 + 3.14 / 2),
         2,
         { ArrowLeft: 0, ArrowRight: 0 },

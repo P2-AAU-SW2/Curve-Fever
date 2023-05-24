@@ -14,6 +14,13 @@ module.exports = async (io) => {
             return;
         }
 
+        const player = game.player(userID);
+
+        if (!player) {
+            socket.emit("gameNotFound");
+            return;
+        }
+
         // Join websocket room with client-provided ID
         socket.join(gameID);
 
@@ -23,7 +30,6 @@ module.exports = async (io) => {
         });
 
         socket.on("keyState", (keyState) => {
-            let player = game.player(userID);
             if (player) player.keyState = keyState;
         });
 
@@ -42,7 +48,6 @@ module.exports = async (io) => {
         });
 
         socket.on("warmUp", () => {
-            let player = game.player(userID);
             player.resetState();
             player.isMoving = true;
             game.updates.set(userID, game.playerDTO(userID));

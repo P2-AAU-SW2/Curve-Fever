@@ -66,14 +66,14 @@ socket.on("updatePosition", (updatedPlayers) => {
         players[i] = updatedPlayer;
 
         // If the current player collided clear interval
-        if (updatedPlayer.userId === curPlayer.userId) {
-            if (!updatedPlayer.isMoving && mode === "warmUp") {
+        if (updatedPlayer.userId === curPlayer.userId && mode === "warmUp") {
+            if (!updatedPlayer.isMoving) {
                 warmupBtn.classList.remove("display-none");
             }
         }
     });
+
     draw(players);
-    // console.time("updatePosition");
 });
 
 socket.on("countdown", (count) => {
