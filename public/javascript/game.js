@@ -67,9 +67,8 @@ socket.on("updatePosition", (updatedPlayers) => {
 
         // If the current player collided clear interval
         if (updatedPlayer.userId === curPlayer.userId) {
-            if (updatedPlayer.collided) {
-                if (mode === "warmUp")
-                    warmupBtn.classList.remove("display-none");
+            if (!updatedPlayer.isMoving && mode === "warmUp") {
+                warmupBtn.classList.remove("display-none");
             }
         }
     });

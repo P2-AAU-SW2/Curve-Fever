@@ -7,7 +7,7 @@ const CELL_SIZE = 20;
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 5; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 2; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -185,14 +185,11 @@ class Game {
         }
     }
 
-    updatePosition(userId, keyState) {
+    updatePosition(userId) {
         let player = this.player(userId);
-        player.keyState = keyState;
-        if (player.collided && this.mode === "warmUp") player.resetState();
         player.update(this.players);
         if (player.collided && this.mode === "warmUp") {
-            player.path = [];
-            player.isMoving = false;
+            player.resetState();
         }
         let playerDTO = player.playerDTO();
         // Add the update to the map
@@ -418,26 +415,24 @@ class Player {
         // console.time("collision");
 
         // console.timeEnd("collision");
-        if (!this.collided) {
-            this.jumping();
-            // Update direction based on keyState
-            if (this.keyState.ArrowLeft > this.keyState.ArrowRight) {
-                this.direction -= this.turnSpeed;
-            } else if (this.keyState.ArrowLeft < this.keyState.ArrowRight) {
-                this.direction += this.turnSpeed;
-            }
+        this.jumping();
+        // Update direction based on keyState
+        if (this.keyState.ArrowLeft > this.keyState.ArrowRight) {
+            this.direction -= this.turnSpeed;
+        } else if (this.keyState.ArrowLeft < this.keyState.ArrowRight) {
+            this.direction += this.turnSpeed;
+        }
 
-            // Update position based on direction and speed
-            this.x += Math.cos(this.direction) * this.speed;
-            this.y += Math.sin(this.direction) * this.speed;
+        // Update position based on direction and speed
+        this.x += Math.cos(this.direction) * this.speed;
+        this.y += Math.sin(this.direction) * this.speed;
 
-            // Add the current position to the path
-            if (!this.isJumping && !this.isFlying) {
-                let hashValue = this.hash(this.x, this.y);
-                this.hashMapping(hashValue);
-                this.collision(players, hashValue);
-                this.path.push({ x: this.x, y: this.y });
-            }
+        // Add the current position to the path
+        if (!this.isJumping && !this.isFlying) {
+            let hashValue = this.hash(this.x, this.y);
+            this.hashMapping(hashValue);
+            this.collision(players, hashValue);
+            this.path.push({ x: this.x, y: this.y });
         }
     }
 
