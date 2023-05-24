@@ -22,6 +22,9 @@ lib-cov
 # DB
 *.db
 
+# DS_store
+.DS_store
+
 # Coverage directory used by tools like istanbul
 coverage
 *.lcov
