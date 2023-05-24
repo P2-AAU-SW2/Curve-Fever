@@ -20,11 +20,13 @@ class GameStates {
             //Check if user is already in a game
             for (let i = 0; i < this.games.length; i++) {
                 const game = this.games[i];
-                for (let j = 0; j < game._players.length; j++) {
-                    const player = game._players[j];
-                    if (player.userId == user.id) {
-                        player.reconnect();
-                        return resolve(game.id);
+                if (game.mode === "game") {
+                    for (let j = 0; j < game._players.length; j++) {
+                        const player = game._players[j];
+                        if (player.userId == user.id) {
+                            player.reconnect();
+                            return resolve(game.id);
+                        }
                     }
                 }
             }
@@ -452,11 +454,11 @@ class Player {
                         player.userId === this.userId ? this.lineWidth : 0;
                     for (let i = 0; i < player.path.length - buffer; i++) {
                         // L2 norm: get shortest distance
-                        const distance = Math.sqrt(
+                        const distanceSquared =
                             (player.path[i].x - this.x) ** 2 +
-                                (player.path[i].y - this.y) ** 2
-                        );
-                        if (distance < this.lineWidth - 0.1) {
+                            (player.path[i].y - this.y) ** 2;
+                        const lineWidthSquared = this.lineWidth ** 2;
+                        if (distanceSquared < lineWidthSquared) {
                             this.collided = true;
                             break;
                         }
