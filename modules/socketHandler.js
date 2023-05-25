@@ -59,6 +59,10 @@ module.exports = async (io) => {
             game.endGame(io, gameID);
         });
 
+        socket.on("ping", () => {
+            socket.emit("pong");
+        });
+
         // Handle client disconnect, by error or on purpose. Removes the player from the gamestate logic.
         socket.on("disconnect", () => {
             socket.to(gameID).emit("leaveGame", userID);

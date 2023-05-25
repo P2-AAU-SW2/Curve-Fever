@@ -293,11 +293,21 @@ const keyState = {
     ArrowLeft: 0,
     ArrowRight: 0,
 };
+
+let startTime;
+
 warmupBtn.addEventListener("click", startWarmup);
 function startWarmup() {
+    startTime = Date.now();
     socket.emit("warmUp");
     warmupBtn.classList.add("display-none");
+    socket.emit("ping");
 }
+
+socket.on("pong", () => {
+    let latency = Date.now() - startTime;
+    console.log("latency: " + latency);
+});
 
 // Update keyState based on keydown and keyup events
 document.addEventListener("keydown", (event) => {
