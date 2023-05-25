@@ -167,13 +167,11 @@ class Game {
     updateAll(io) {
         let playersCollided = 0;
         this._players.forEach((player) => {
-            if (!player.collided) {
-                if (player.isMoving) {
-                    this.updatePosition(player.userId, player.keyState);
-                    if (player.collided && this.mode === "game") {
-                        this.updateLeaderBoard(io);
-                        playersCollided++;
-                    }
+            if (player.isMoving) {
+                this.updatePosition(player.userId);
+                if (player.collided && this.mode === "game") {
+                    this.updateLeaderBoard(io);
+                    playersCollided++;
                 }
             } else {
                 playersCollided++;
@@ -235,10 +233,6 @@ class Game {
 
     startGame(io) {
         clearInterval(this.interval);
-        // this.players.forEach((player) => {
-        //     player.resetState();
-        // });
-        // this.updates.clear();
         io.in(this.id).emit("renderScoreTable", this.playersDTO);
         this.interval = setInterval(() => {
             // Update all players
@@ -279,6 +273,7 @@ class Game {
                 highestLeaderboardScore = this.players[i];
             }
         }
+        //Check if game should end
         if (highestLeaderboardScore.leaderboardScore >= MAX_SCORE) {
             this.endGame(
                 io,
@@ -430,7 +425,7 @@ class Player {
             (this.y + Math.sin(this.direction) * this.speed).toFixed(3)
         );
 
-        // Add the current position to the path
+        // Add the current position to the path and check collision
         if (!this.isJumping && !this.isFlying) {
             let hashValue = this.hash(this.x, this.y);
             this.hashMapping(hashValue);
