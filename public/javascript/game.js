@@ -196,9 +196,8 @@ leaveGameBtn.addEventListener("click", () => {
 
 window.addEventListener("resize", resizeCanvas);
 function resizeCanvas() {
-    let borderWidth = 6;
-    let width = canvasContainer.offsetWidth - borderWidth;
-    let height = canvasContainer.offsetHeight - borderWidth;
+    let width = canvasContainer.clientWidth;
+    let height = canvasContainer.clientHeight;
     let size = width < height ? width : height; // -_-_- What should the max width/height for canvas be? -_-_-
     canvas.width = canvas.height = size;
     scale = size / initialCanvasSize; // scale as a ratio
@@ -218,20 +217,13 @@ function draw(players) {
             ctx.fillStyle = player.color;
             ctx.lineWidth = player.lineWidth;
             ctx.lineCap = "round";
-            const radius = player.lineWidth * 0.0933 + 0.1;
+            const radius = player.lineWidth / 2;
             if (player.isFlying || player.path.length === 1) {
-                drawDot(player, radius * 5);
+                drawDot(player, radius);
                 drawArrowSvg(player);
             } else if (player.path.length > 1) {
                 drawLine(player, radius);
-                // If line is currently jumping then draw line as a dot
-                if (player.isJumping || player.isFlying) {
-                    ctx.stroke();
-                    ctx.closePath();
-                    drawDot(player, radius);
-                }
-                ctx.stroke();
-                ctx.closePath();
+                if (player.isJumping) drawDot(player, radius);
             }
         }
     });
@@ -252,9 +244,8 @@ function drawLine(player, radius) {
                     player.path[i].y === player.y
                 ) {
                     ctx.stroke();
-                    ctx.closePath();
                     drawDot(player, radius);
-                    break;
+                    return;
                 }
                 if (player.jumps.length >= j + 2) j += 2;
                 ctx.moveTo(player.path[i].x, player.path[i].y);
@@ -263,6 +254,7 @@ function drawLine(player, radius) {
             ctx.lineTo(player.path[i].x, player.path[i].y);
         }
     }
+    ctx.stroke();
 }
 
 function drawArrowSvg(player) {
@@ -294,7 +286,6 @@ function drawDot(player, radius) {
     ctx.beginPath();
     ctx.arc(player.x, player.y, radius, 0, 2 * Math.PI);
     ctx.fill();
-    ctx.closePath();
 }
 
 // Object to store the state of the arrow keys
