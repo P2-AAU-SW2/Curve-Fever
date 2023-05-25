@@ -8,7 +8,7 @@ const CELL_SIZE = LINE_WIDTH * 2;
 // Class for keeping all logic related to running games.
 class GameStates {
     constructor() {
-        this.MAX_PLAYERS = 5; // Limits the number of people in the same room
+        this.MAX_PLAYERS = 3; // Limits the number of people in the same room
         this.games = []; // Array for games
     }
 
@@ -167,11 +167,13 @@ class Game {
     updateAll(io) {
         let playersCollided = 0;
         this._players.forEach((player) => {
-            if (player.isMoving) {
-                this.updatePosition(player.userId);
-                if (player.collided && this.mode === "game") {
-                    this.updateLeaderBoard(io);
-                    playersCollided++;
+            if (!player.collided) {
+                if (player.isMoving) {
+                    this.updatePosition(player.userId);
+                    if (player.collided && this.mode === "game") {
+                        this.updateLeaderBoard(io);
+                        playersCollided++;
+                    }
                 }
             } else {
                 playersCollided++;
