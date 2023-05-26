@@ -10,10 +10,9 @@ const leaveGameBtn = document.querySelector("#leave-game-btn");
 const playerRoundScore = document.getElementById(`#playerRoundScore`);
 const roundCounter = document.getElementById(`roundCounter`);
 
-// const roundCounter = document.getElementById("roundCounter");
 let mode = "warmUp";
 let initialCanvasSize, canvasSize;
-initialCanvasSize = canvasSize = 960;
+initialCanvasSize = canvasSize = 1000;
 let arrowsSVG = new Map();
 let scale = 1;
 
@@ -60,7 +59,6 @@ socket.on("leaveGame", (userID) => {
 });
 
 socket.on("updatePosition", (updatedPlayers) => {
-    // console.timeEnd("updatePosition");
     updatedPlayers.forEach((updatedPlayer) => {
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
         players[i] = updatedPlayer;
@@ -80,7 +78,6 @@ socket.on("countdown", (count) => {
     if (mode === "warmUp")
         document.querySelector(".loader").classList.remove("loader");
     mode = "game";
-    // warmupBtn.classList.add("display-none");
     displayCountdown(count);
 });
 function displayCountdown(i) {
@@ -198,7 +195,7 @@ window.addEventListener("resize", resizeCanvas);
 function resizeCanvas() {
     let width = canvasContainer.clientWidth;
     let height = canvasContainer.clientHeight;
-    let size = width < height ? width : height; // -_-_- What should the max width/height for canvas be? -_-_-
+    let size = width < height ? width : height;
     canvas.width = canvas.height = size;
     scale = size / initialCanvasSize; // scale as a ratio
     canvasSize = size / scale; // ctx methods needs the scaled height/width
@@ -223,7 +220,6 @@ function draw(players) {
                 drawArrowSvg(player);
             } else if (player.path.length > 1) {
                 drawLine(player, radius);
-                if (player.isJumping) drawDot(player, radius);
             }
         }
     });
@@ -247,14 +243,15 @@ function drawLine(player, radius) {
                     drawDot(player, radius);
                     return;
                 }
-                if (player.jumps.length >= j + 2) j += 2;
+                j += 2;
                 ctx.moveTo(player.path[i].x, player.path[i].y);
-            }
+            } else break;
         } else {
             ctx.lineTo(player.path[i].x, player.path[i].y);
         }
     }
     ctx.stroke();
+    if (player.isJumping) drawDot(player, radius);
 }
 
 function drawArrowSvg(player) {
@@ -294,20 +291,11 @@ const keyState = {
     ArrowRight: 0,
 };
 
-let startTime;
-
 warmupBtn.addEventListener("click", startWarmup);
 function startWarmup() {
-    startTime = Date.now();
     socket.emit("warmUp");
     warmupBtn.classList.add("display-none");
-    socket.emit("ping");
 }
-
-socket.on("pong", () => {
-    let latency = Date.now() - startTime;
-    console.log("latency: " + latency);
-});
 
 // Update keyState based on keydown and keyup events
 document.addEventListener("keydown", (event) => {
@@ -334,7 +322,6 @@ form.addEventListener("submit", (e) => {
     e.preventDefault();
     let message = messageInput.value;
     if (message === "") return;
-    // VULNERABLE TO XSS ATTACKS
     message = `<span style="color: ${curPlayer.color}">${curPlayer.username}:</span> ${message}`;
     socket.emit("chat", message);
     displayMessage(message);

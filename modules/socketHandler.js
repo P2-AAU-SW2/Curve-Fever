@@ -51,7 +51,6 @@ module.exports = async (io) => {
             player.resetState();
             player.isMoving = true;
             game.updates.set(userID, game.playerDTO(userID));
-            // game.mode = "warmUp";
             game.startGame(io);
         });
 
@@ -59,14 +58,9 @@ module.exports = async (io) => {
             game.endGame(io, gameID);
         });
 
-        socket.on("ping", () => {
-            socket.emit("pong");
-        });
-
         // Handle client disconnect, by error or on purpose. Removes the player from the gamestate logic.
         socket.on("disconnect", () => {
             socket.to(gameID).emit("leaveGame", userID);
-            // console.log("Disconnect: " + gameID);
             gameStates.leaveGame(gameID, userID);
         });
     });

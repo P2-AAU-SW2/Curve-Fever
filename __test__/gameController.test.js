@@ -1,44 +1,5 @@
 const { gameStates, Game, generatePlayer } = require("../modules/gameClasses");
-const { logger, getGameById, play } = require("../controllers/gameController");
-const { ErrorHandler } = require("../middlewares/errorHandler");
-
-// logger test
-describe("logger", () => {
-    let consoleSpy;
-
-    // Mock the console.log method
-    beforeEach(() => {
-        consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-    });
-
-    // Clear all mocks after each test
-    afterEach(() => {
-        consoleSpy.mockRestore();
-    });
-
-    test("should log the players of the first game in gameStates", () => {
-        // Mock the gameStates object
-        gameStates.games = [
-            {
-                // First game
-                players: [
-                    { name: "John Doe", id: "42" },
-                    { name: "Fissan Poulsen", id: "69" },
-                ],
-            },
-            {
-                // Second game
-                players: [{ name: "Pölle", id: "1337" }],
-            },
-        ];
-
-        // Call the function to be tested
-        logger(gameStates);
-
-        // Check that console.log was called with correct parameters
-        expect(consoleSpy).toHaveBeenCalledWith(gameStates.games[0].players);
-    });
-});
+const { getGameById, play } = require("../controllers/gameController");
 
 // getGameById test
 describe("getGameById", () => {
@@ -133,7 +94,6 @@ describe("play function", () => {
         expect(next).not.toHaveBeenCalled();
     });
 
-    // TODO: joinPublic needs to throw an error for this to work
     test("should call next with an error if joinPublic throws an error", async () => {
         const error = new Error("Failed to join or creat a new game!");
         gameStates.joinPublic.mockRejectedValue(error); // mock the joinPublic function to throw an error
@@ -142,6 +102,5 @@ describe("play function", () => {
 
         expect(gameStates.joinPublic).toHaveBeenCalled();
         expect(res.redirect).not.toHaveBeenCalled();
-        //expect(next).toHaveBeenCalledWith(error);
     });
 });

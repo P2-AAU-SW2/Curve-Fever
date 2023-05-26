@@ -65,7 +65,6 @@ class GameStates {
                         this.games[i].players.push(
                             generatePlayer(user, this.games[i].players)
                         );
-                        console.log(this.games[i].players);
                         return resolve(this.games[i]);
                     } else {
                         reject(new Error("This game is full."));
@@ -133,9 +132,7 @@ class Game {
     get activeCount() {
         let res = 0;
         for (let i = 0; i < this._players.length; i++) {
-            if (this._players[i].isConnected) {
-                res++;
-            }
+            if (this._players[i].isConnected) res++;
         }
         return res;
     }
@@ -204,7 +201,6 @@ class Game {
             player.roundScore++;
         });
 
-        // console.log(leaderboard);
         io.in(this.id).emit("renderScoreTable", this.playersDTO);
     }
 
@@ -327,7 +323,7 @@ function generateDTO(state) {
 }
 
 function generatePlayer(user, players) {
-    let canvas = { width: 960, height: 960 };
+    let canvas = { width: 1000, height: 1000 };
     return new Player(
         user,
         getColor(players),
@@ -408,9 +404,6 @@ class Player {
 
     update(players) {
         if (!this.isMoving) this.isMoving = true;
-        // console.time("collision");
-
-        // console.timeEnd("collision");
         this.jumping();
         // Update direction based on keyState
         if (this.keyState.ArrowLeft > this.keyState.ArrowRight) {
@@ -471,6 +464,8 @@ class Player {
                     let player = players[i];
                     let potentialCollisions =
                         player.spatialHashTable[hashValue];
+                    // Buffer value was initially used to not check the last points in the current player path so it didn't collide with itself instantly.
+                    // This value doesn't work with spatial hashing and was only intended for the linear way of checking for collisions
                     let buffer =
                         player.userId === this.userId ? this.lineWidth : 0;
                     if (potentialCollisions) {
@@ -503,10 +498,6 @@ class Player {
             if (chance >= 0.992) {
                 this.toggleJump();
             }
-            // this.jumpChance = 0.0;
-            // } else {
-            //     this.jumpChance += this.jumpFrequency;
-            // }
         }
         if (
             (this.isFlying && this.flyFrames <= this.AccJumpFrames) ||
@@ -526,7 +517,6 @@ class Player {
     }
 
     resetState() {
-        // FIND BETTER DYNAMIC SOLUTION
         this.x = Number(
             (this.canvas.width * (Math.random() * 0.7 + 0.15)).toFixed(3)
         );

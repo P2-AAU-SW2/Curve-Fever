@@ -6,37 +6,28 @@ const LocalStrategy = require("passport-local").Strategy;
 const { v4: uuidv4 } = require("uuid");
 
 passport.use(
-    new LocalStrategy(
-        // { usernameField: "username", passwordField: "password" },
-        async (username, password, done) => {
-            try {
-                const user = await prisma.user.findUnique({
-                    where: { name: username },
+    new LocalStrategy(async (username, password, done) => {
+        try {
+            const user = await prisma.user.findUnique({
+                where: { name: username },
+            });
+
+            const isPasswordValid = await bcrypt.compare(
+                password,
+                user.password
+            );
+
+            if (!user || !isPasswordValid) {
+                return done(null, false, {
+                    message: "Invalid username or password",
                 });
-
-                // if (!user) {
-                //     return done(null, false, {
-                //         message: "Invalid username or password",
-                //     });
-                // }
-
-                const isPasswordValid = await bcrypt.compare(
-                    password,
-                    user.password
-                );
-
-                if (!user || !isPasswordValid) {
-                    return done(null, false, {
-                        message: "Invalid username or password",
-                    });
-                }
-
-                return done(null, user);
-            } catch (err) {
-                return done(err);
             }
+
+            return done(null, user);
+        } catch (err) {
+            return done(err);
         }
-    )
+    })
 );
 
 passport.serializeUser((user, done) => {
@@ -140,7 +131,6 @@ exports.createGuest = async (req, res, next) => {
                 });
                 return;
             }
-            //TODO: User exists, so redirect to login with the username
             const error = new Error("User already exists");
             error.status = 409;
             error.redirectTo = "/login";

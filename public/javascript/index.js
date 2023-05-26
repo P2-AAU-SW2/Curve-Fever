@@ -1,18 +1,12 @@
 let skinsInFocus = "<%- JSON.stringify(skinsInFocus) %>";
 let container = document.querySelector(".main-container");
-//container.addEventListener("resize", resizeContainer);
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (error) {
-        showSnackbar(error);
-    }
-});
+container.addEventListener("resize", resizeContainer);
 
 function changeFocus(value) {
     if (skinsInFocus !== value) {
         setFocus();
         skinsInFocus = value;
-        // renderModalContent();
         renderContent();
     }
 }
@@ -34,7 +28,6 @@ function createMenuModal(type, item) {
         menuModal.input.placeholder = "Room name";
         menuModal.btn1.text = "Join room";
         menuModal.btn1.color = "red";
-        menuModal.btn1.onClick = "joinButton()";
     }
     createModal();
 }
@@ -46,16 +39,6 @@ function setFocus() {
     iconsBtn.classList.toggle("active");
 }
 
-function joinButton() {
-    let textInput = document.getElementById("modalInput").value;
-
-    if (textInput != "") {
-        window.location.href = `/game/${textInput}`;
-    } else {
-        showSnackbar("Please enter a game ID");
-    }
-}
-
 function displayShop() {
     let shop = document.querySelector(".shop");
     shop.classList.toggle("show-mini-shop");
@@ -64,7 +47,7 @@ function displayShop() {
 function renderContent() {
     const content = document.querySelector(".content");
     let html = "";
-    for (let i = 0; i < 11; i++) {
+    for (let i = 0; i < 9; i++) {
         if (skinsInFocus) {
             html += `
         <div class="shop-item" onclick="createMenuModal('shop', 'line${
@@ -77,8 +60,8 @@ function renderContent() {
     `;
         } else {
             html += `
-        <div onclick="createMenuModal('shop icon', 'fa-solid fa-poo icon-item')" class="shop-item" tabindex="0">
-        <i class="icon-item fa-solid fa-poo"></i>
+        <div onclick="createMenuModal('shop icon', 'fa-solid fa-rocket-launch icon-item')" class="shop-item" tabindex="0">
+            <i class="icon-item fa-solid fa-rocket-launch"></i>
         </div>
     `;
         }
