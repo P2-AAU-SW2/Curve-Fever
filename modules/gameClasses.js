@@ -119,6 +119,7 @@ class Game {
         this._rounds = 0;
         this.mode = "warmUp";
         this.spatialHashTable = {};
+        this.syncTime = 2; // Sync with client every 2 seconds
     }
 
     get id() {
@@ -147,6 +148,17 @@ class Game {
 
     playerDTO(id) {
         return generateDTO(this.player(id));
+    }
+
+    playerPosDTO(player) {
+        let obj = {};
+        obj.userId = player.userId;
+        obj.isJumping = player.isJumping;
+        obj.isFlying = player.isFlying;
+        obj.jumps = player.jumps;
+        obj.x = player.x;
+        obj.y = player.y;
+        return obj;
     }
 
     get playersDTO() {
@@ -187,7 +199,13 @@ class Game {
     updatePosition(userId) {
         let player = this.player(userId);
         player.update(this.players);
-        if (player.collided && this.mode === "warmUp") player.resetState();
+        if (player.collided) {
+            if (this.mode === "warmUp") player.resetState();
+        } else if (!this.timeToSync(player)) {
+            let playerPosDTO = this.playerPosDTO(player);
+            this.updates.set(userId, playerPosDTO);
+            return playerPosDTO;
+        }
         let playerDTO = player.playerDTO();
         // Add the update to the map
         this.updates.set(userId, playerDTO);
@@ -227,6 +245,10 @@ class Game {
                 this.startGame(io);
             } else io.in(this.id).emit("countdown", count--);
         }, 1000);
+    }
+
+    timeToSync(player) {
+        return (player.path.length / 60) % this.syncTime === 0;
     }
 
     startGame(io) {

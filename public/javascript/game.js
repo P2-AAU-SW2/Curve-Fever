@@ -60,12 +60,26 @@ socket.on("leaveGame", (userID) => {
 
 socket.on("updatePosition", (updatedPlayers) => {
     updatedPlayers.forEach((updatedPlayer) => {
+        console.log(updatedPlayer);
+        if ("path" in updatedPlayer)
+            console.log(
+                "-_-_--__-_-_-__---_-_-_-_-_----_-_-_-_-_----_-_-_-_-_-"
+            );
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
-        players[i] = updatedPlayer;
+        if ("path" in updatedPlayer) players[i] = updatedPlayer;
+        else {
+            for (let key in updatedPlayer) {
+                players[i][key] = updatedPlayer[key];
+            }
+            if (!updatedPlayer.isJumping && !updatedPlayer.isFlying) {
+                let pos = { x: updatedPlayer.x, y: updatedPlayer.y };
+                players[i].path.push(pos);
+            }
+        }
 
         // If the current player collided clear interval
         if (updatedPlayer.userId === curPlayer.userId && mode === "warmUp") {
-            if (!updatedPlayer.isMoving) {
+            if (!players[i].isMoving) {
                 warmupBtn.classList.remove("display-none");
             }
         }
