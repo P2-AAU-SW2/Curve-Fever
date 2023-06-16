@@ -359,6 +359,23 @@ function generatePlayer(user, players) {
     );
 }
 
+function areObjectsEqual(obj1, obj2) {
+    const obj1Keys = Object.keys(obj1);
+    const obj2Keys = Object.keys(obj2);
+
+    if (obj1Keys.length !== obj2Keys.length) {
+        return false;
+    }
+
+    for (let key of obj1Keys) {
+        if (obj1[key] !== obj2[key]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 function getColor(players) {
     const playerColors = [
         "#32BEFF",
@@ -475,33 +492,37 @@ class Player {
                 this.x > this.canvas.width ||
                 this.y < 0 ||
                 this.y > this.canvas.height
-            ) {
+            )
                 this.collided = true;
-            }
 
             if (!this.isJumping) {
                 // Check if curve hit its own path. Don't check recent points in path since it can collide with them
                 // given the current point is close enough. This logic needs to be different for hitting other players
                 for (let i = 0; i < players.length; i++) {
                     let player = players[i];
-                    let potentialCollisions =
-                        player.spatialHashTable[hashValue];
-                    // Buffer value was initially used to not check the last points in the current player path so it didn't collide with itself instantly.
-                    // This value doesn't work with spatial hashing and was only intended for the linear way of checking for collisions
-                    let buffer =
-                        player.userId === this.userId ? this.lineWidth : 0;
-                    if (potentialCollisions) {
-                        for (
-                            let i = 0;
-                            i < potentialCollisions.length - buffer;
-                            i++
-                        ) {
+                    let spatialPos = player.spatialHashTable[hashValue];
+                    let curPlayer = player.userId === this.userId;
+                    if (spatialPos) {
+                        for (let i = 0; i < spatialPos.length; i++) {
                             // L2 norm: get shortest distance
                             const distance = Math.sqrt(
-                                (potentialCollisions[i].x - this.x) ** 2 +
-                                    (potentialCollisions[i].y - this.y) ** 2
+                                (spatialPos[i].x - this.x) ** 2 +
+                                    (spatialPos[i].y - this.y) ** 2
                             );
                             if (distance < this.lineWidth - 0.1) {
+                                if (curPlayer) {
+                                    // Check if collided with recent points in path to ensure it doesn't collide with itself instantly.
+                                    let recentPath = player.path.slice(
+                                        -this.lineWidth
+                                    );
+                                    recentPath.push({ x: this.x, y: this.y });
+                                    if (
+                                        recentPath.some((el) =>
+                                            areObjectsEqual(el, spatialPos[i])
+                                        )
+                                    )
+                                        break;
+                                }
                                 this.collided = true;
                                 break;
                             }
