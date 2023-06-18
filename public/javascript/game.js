@@ -11,8 +11,7 @@ const playerRoundScore = document.getElementById(`#playerRoundScore`);
 const roundCounter = document.getElementById(`roundCounter`);
 
 let mode = "warmUp";
-let initialCanvasSize, canvasSize;
-initialCanvasSize = canvasSize = 1000;
+let initialCanvasSize = 1000;
 let arrowsSVG = new Map();
 let scale = 1;
 
@@ -60,9 +59,15 @@ socket.on("leaveGame", (userID) => {
 
 socket.on("updatePosition", (updatedPlayers) => {
     updatedPlayers.forEach((updatedPlayer) => {
+        updatedPlayer.x *= scale;
+        updatedPlayer.y *= scale;
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
-        if ("path" in updatedPlayer) players[i] = updatedPlayer;
-        else {
+        if ("path" in updatedPlayer) {
+            updatedPlayer.lineWidth *= scale;
+            updatedPlayer.synched = true;
+            players[i] = updatedPlayer;
+        } else {
+            updatedPlayer.synched = false;
             for (let key in updatedPlayer) {
                 players[i][key] = updatedPlayer[key];
             }
@@ -90,7 +95,6 @@ socket.on("countdown", (count) => {
     displayCountdown(count);
 });
 function displayCountdown(i) {
-    console.log(i);
     if (i === 3) {
         document
             .getElementById("round-win-loader")
@@ -156,7 +160,7 @@ function loadImage(src) {
 }
 
 function displayWinner(winnerName, color) {
-    ctx.clearRect(0, 0, canvasSize, canvasSize);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     let winner = document.querySelector("#winner");
     winner.textContent = winnerName;
     winner.style.color = color;
@@ -207,21 +211,18 @@ function resizeCanvas() {
     let size = width < height ? width : height;
     canvas.width = canvas.height = size;
     scale = size / initialCanvasSize; // scale as a ratio
-    canvasSize = size / scale; // ctx methods needs the scaled height/width
-    // ctx.setTransform(1, 0, 0, 1, 0, 0); // removes any previous transformations
-    // ctx.scale(scale, scale); // apply the scale factor
     canvasContainer.classList.remove("visibility-hidden");
     document.querySelector(".winner-wrapper").style.width = `${size}px`;
 }
 resizeCanvas();
 
 function draw(players) {
-    ctx.clearRect(0, 0, canvasSize, canvasSize);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     players.forEach((player) => {
         if (player.isMoving) {
             ctx.strokeStyle = player.color;
             ctx.fillStyle = player.color;
-            ctx.lineWidth = player.lineWidth * scale;
+            ctx.lineWidth = player.lineWidth;
             ctx.lineCap = "round";
             const radius = player.lineWidth / 2;
 
@@ -238,12 +239,13 @@ function draw(players) {
 function drawLine(player, radius) {
     // Draws the entire path for every animation frame so the line is smooth
     ctx.beginPath();
-    ctx.moveTo(player.path[0].x * scale, player.path[0].y * scale);
+    if (player.synched) scalePathVal(player, 0);
+    ctx.moveTo(player.path[0].x, player.path[0].y);
     for (let i = 1, j = 0; i < player.path.length; i++) {
+        if (player.synched) scalePathVal(player, i);
         if (i == player.jumps[j]) {
-            // Draws the gaps in the line. Checks if the jump value is closed with another value
-            if (player.jumps.length > j + 1) {
-                i = player.jumps[j + 1];
+            // Draws the gaps in the line. Checks if last jump
+            if (player.jumps.length > j) {
                 // If the position in the path is equal to the current player position after a jump then there is not enough points to make a line, therefore we need to draw a dot instead
                 if (
                     player.path[i].x === player.x &&
@@ -253,19 +255,24 @@ function drawLine(player, radius) {
                     drawDot(player, radius);
                     return;
                 }
-                j += 2;
-                ctx.moveTo(player.path[i].x * scale, player.path[i].y * scale);
+                j++;
+                ctx.moveTo(player.path[i].x, player.path[i].y);
             } else break;
         } else {
-            ctx.lineTo(player.path[i].x * scale, player.path[i].y * scale);
+            ctx.lineTo(player.path[i].x, player.path[i].y);
         }
     }
     ctx.stroke();
     if (player.isJumping) drawDot(player, radius);
 }
 
+function scalePathVal(player, i) {
+    player.path[i].x *= scale;
+    player.path[i].y *= scale;
+}
+
 function drawArrowSvg(player) {
-    let imgScale = scale * 0.7;
+    let imgScale = scale * 0.75;
     let img = arrowsSVG.get(player.userId);
     if (img) {
         let newWidth = img.width * imgScale;
@@ -274,14 +281,14 @@ function drawArrowSvg(player) {
         ctx.save(); // save the current transformation matrix
 
         // translate the context to the center point and rotate
-        ctx.translate(player.x * scale, player.y * scale);
+        ctx.translate(player.x, player.y);
         ctx.rotate(player.direction + Math.PI / 2); // Turn direction by 90 degrees in radians
 
         // draw the image centered on the point and rotated
         ctx.drawImage(
             img,
             -newWidth / 2,
-            -newHeight - player.lineWidth * scale,
+            -newHeight - player.lineWidth,
             newWidth,
             newHeight
         );
@@ -291,7 +298,7 @@ function drawArrowSvg(player) {
 
 function drawDot(player, radius) {
     ctx.beginPath();
-    ctx.arc(player.x * scale, player.y * scale, radius * scale, 0, 2 * Math.PI);
+    ctx.arc(player.x, player.y, radius, 0, 2 * Math.PI);
     ctx.fill();
 }
 

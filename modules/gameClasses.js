@@ -553,8 +553,8 @@ class Player {
     toggleJump() {
         if (this.isFlying) this.isFlying = !this.isFlying;
         else {
-            this.jumps.push(this.path.length);
             this.isJumping = !this.isJumping;
+            if (this.isJumping) this.jumps.push(this.path.length);
         }
         this.AccJumpFrames = 0;
     }
