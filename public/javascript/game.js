@@ -232,6 +232,7 @@ function draw(players) {
             } else if (player.path.length > 1) {
                 drawLine(player, radius);
             }
+            player.synched = false;
         }
     });
 }
