@@ -153,7 +153,6 @@ class Game {
     playerPosDTO(player) {
         let obj = {};
         obj.userId = player.userId;
-        obj.isMoving = player.isMoving;
         obj.isJumping = player.isJumping;
         obj.isFlying = player.isFlying;
         obj.jumps = player.jumps;
