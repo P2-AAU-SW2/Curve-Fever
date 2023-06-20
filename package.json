@@ -1,6 +1,6 @@
 {
     "name": "line-fever",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "Linefever game",
     "main": "server.js",
     "scripts": {

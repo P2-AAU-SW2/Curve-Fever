@@ -59,8 +59,10 @@ socket.on("leaveGame", (userID) => {
 
 socket.on("updatePosition", (updatedPlayers) => {
     updatedPlayers.forEach((updatedPlayer) => {
-        updatedPlayer.x *= scale;
-        updatedPlayer.y *= scale;
+        if (updatedPlayer.isMoving) {
+            updatedPlayer.x *= scale;
+            updatedPlayer.y *= scale;
+        }
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
         if ("path" in updatedPlayer) {
             updatedPlayer.lineWidth *= scale;
