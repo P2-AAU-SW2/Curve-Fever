@@ -10,11 +10,12 @@ const leaveGameBtn = document.querySelector("#leave-game-btn");
 const playerRoundScore = document.getElementById(`#playerRoundScore`);
 const roundCounter = document.getElementById(`roundCounter`);
 
-let mode = "warmUp";
-let initialCanvasSize = 1000;
-let arrowsSVG = new Map();
-let scale = 1;
+let mode = "warmUp"; // Initial mode is warmUp
+let initialCanvasSize = 1000; // Initial size of canvas is 1000x1000 pixels
+let arrowsSVG = new Map(); // Map of different colored arrow SVG images
+let scale = 1; // Initial scale is 1. Changes on resize
 
+// Establish socket connection
 const socket = io({
     query: {
         gameID: gameId,
@@ -22,6 +23,9 @@ const socket = io({
     },
 });
 
+/* Listen to socket events */
+
+// On connection emit to others that
 socket.on("connect", () => {
     socket.emit("newPlayer", players);
     players.forEach((player) => {
@@ -59,18 +63,22 @@ socket.on("leaveGame", (userID) => {
 
 socket.on("updatePosition", (updatedPlayers) => {
     updatedPlayers.forEach((updatedPlayer) => {
+        // Scale the updated x and y coordinates to fit the canvas on the client
         updatedPlayer.x *= scale;
         updatedPlayer.y *= scale;
         let i = players.findIndex((el) => el.userId === updatedPlayer.userId);
+        // If the object contains a "path" keyword we have just synchronized with server
         if ("path" in updatedPlayer) {
             updatedPlayer.lineWidth *= scale;
-            updatedPlayer.synched = true;
+            updatedPlayer.synched = true; // Indicate path values should be scaled in draw
             players[i] = updatedPlayer;
         } else {
-            updatedPlayer.synched = false;
+            updatedPlayer.synched = false; // Indicate path values should not be scaled in draw
+            // Update player properties with updated values
             for (let key in updatedPlayer) {
                 players[i][key] = updatedPlayer[key];
             }
+            // Push current position into path
             if (!updatedPlayer.isJumping && !updatedPlayer.isFlying) {
                 let pos = { x: updatedPlayer.x, y: updatedPlayer.y };
                 players[i].path.push(pos);
@@ -85,6 +93,7 @@ socket.on("updatePosition", (updatedPlayers) => {
         }
     });
 
+    // Draw every player
     draw(players);
 });
 
@@ -216,8 +225,9 @@ function resizeCanvas() {
 }
 resizeCanvas();
 
+// Upper function: Calls all operations required to draw the line / dot / svg arrows
 function draw(players) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear entire canvas each time
     players.forEach((player) => {
         if (player.isMoving) {
             ctx.strokeStyle = player.color;
@@ -244,21 +254,20 @@ function drawLine(player, radius) {
     ctx.moveTo(player.path[0].x, player.path[0].y);
     for (let i = 1, j = 0; i < player.path.length; i++) {
         if (player.synched) scalePathVal(player, i);
+        // Check if the current coordinate is a jump and make a gap in the line
         if (i == player.jumps[j]) {
-            // Draws the gaps in the line. Checks if last jump
-            if (player.jumps.length > j) {
-                // If the position in the path is equal to the current player position after a jump then there is not enough points to make a line, therefore we need to draw a dot instead
-                if (
-                    player.path[i].x === player.x &&
-                    player.path[i].y === player.y
-                ) {
-                    ctx.stroke();
-                    drawDot(player, radius);
-                    return;
-                }
-                j++;
-                ctx.moveTo(player.path[i].x, player.path[i].y);
-            } else break;
+            // Check if only one point after jump (need to draw a dot instead then)  -  If the position in the path is equal to the current player position after a jump then there is not enough points to make a line, therefore we need to draw a dot instead
+            if (
+                player.path[i].x === player.x &&
+                player.path[i].y === player.y
+            ) {
+                // Draw the stroke of line before drawing the dot
+                ctx.stroke();
+                drawDot(player, radius);
+                return;
+            }
+            j++;
+            ctx.moveTo(player.path[i].x, player.path[i].y);
         } else {
             ctx.lineTo(player.path[i].x, player.path[i].y);
         }
@@ -315,20 +324,24 @@ function startWarmup() {
     warmupBtn.classList.add("display-none");
 }
 
-// Update keyState based on keydown and keyup events
+// Update keyState based on keydown and later keyup events
 document.addEventListener("keydown", (event) => {
     let key = event.key;
+    // If there's already a value in the specific keystate, no need to update  -  When holding down a key the event keeps getting triggered. To ensure that we don't send the same unecessary information to the server we need to check if there is already a value
     if (!keyState[key]) {
         if (key == "ArrowLeft") {
+            // Assign a higher value to the left arrow key state than the right arrow key state
             keyState[key] = keyState.ArrowRight + 1;
             socket.emit("keyState", keyState);
         } else if (key == "ArrowRight") {
+            // Assign a higher value to the right arrow key state than the left arrow key state
             keyState[key] = keyState.ArrowLeft + 1;
             socket.emit("keyState", keyState);
         }
     }
 });
 
+// Reset key state to 0 when lifting finger from key
 document.addEventListener("keyup", (event) => {
     if (event.key in keyState) {
         keyState[event.key] = 0;

@@ -33,17 +33,20 @@ module.exports = async (io) => {
             if (player) player.keyState = keyState;
         });
 
+        // When new player joins
         socket.on("newPlayer", (players) => {
+            // On reconnect send the current game rounds
             if (game.mode === "game") {
                 socket.emit("gameInProgress", game._rounds);
                 return;
             }
 
+            // Send new player state to every other player and check if we can begin match
             socket.to(gameID).emit("newPlayer", players[players.length - 1]);
             if (players.length >= gameStates.MAX_PLAYERS) {
                 game.mode = "game";
                 io.in(gameID).emit("gameMode");
-                game.countdown(io);
+                game.countdown(io); // Starts new round with countdown
             }
         });
 

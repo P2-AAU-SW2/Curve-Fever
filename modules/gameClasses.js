@@ -130,6 +130,7 @@ class Game {
         return this._players;
     }
 
+    // Get the amount of players that are connected
     get activeCount() {
         let res = 0;
         for (let i = 0; i < this._players.length; i++) {
@@ -146,10 +147,12 @@ class Game {
         return this._players[this._players.findIndex((el) => el.userId === id)];
     }
 
+    // Get minified version of player instance
     playerDTO(id) {
         return generateDTO(this.player(id));
     }
 
+    // Get very minified version of player instance (doesn't include path)
     playerPosDTO(player) {
         let obj = {};
         obj.userId = player.userId;
@@ -161,6 +164,7 @@ class Game {
         return obj;
     }
 
+    // Get minified version of all player instances
     get playersDTO() {
         let arr = [];
         this.players.forEach((player) => {
@@ -169,16 +173,19 @@ class Game {
         return arr;
     }
 
+    // Check if player exists in the game. Used for reconnection
     playerExists(player) {
         return this._players.includes(player);
     }
 
+    // Upper function: calls all other functions requried to update all players
     updateAll(io) {
         let playersCollided = 0;
         this._players.forEach((player) => {
+            // Only update position if player hasn't collided and is moving. A player can be both not collided and not moving in warm up
             if (!player.collided) {
                 if (player.isMoving) {
-                    this.updatePosition(player.userId);
+                    this.updatePosition(player.userId); // Update position of current player
                     if (player.collided && this.mode === "game") {
                         this.updateLeaderBoard(io);
                         playersCollided++;
@@ -196,22 +203,25 @@ class Game {
         }
     }
 
+    // Calls all the required functions and operations to update a specific player
     updatePosition(userId) {
-        let player = this.player(userId);
-        player.update(this.players);
+        let player = this.player(userId); // Get current player
+        player.update(this.players); // Actually update the player state
         if (player.collided) {
-            if (this.mode === "warmUp") player.resetState();
+            if (this.mode === "warmUp") player.resetState(); // reset state on collision in warmup  -  Line only have to be removed from canvas on collision in warm up mode
         } else if (!this.timeToSync(player)) {
-            let playerPosDTO = this.playerPosDTO(player);
+            let playerPosDTO = this.playerPosDTO(player); // Only send updated position
             this.updates.set(userId, playerPosDTO);
             return playerPosDTO;
         }
+        // Every other second client needs to sync with server (send entire path of coordinates)
         let playerDTO = player.playerDTO();
         // Add the update to the map
         this.updates.set(userId, playerDTO);
         return playerDTO;
     }
 
+    // Update the leaderboard
     updateLeaderBoard(io) {
         let activePlayers = this.players.filter((p) => !p.collided);
         activePlayers.forEach((player) => {
@@ -222,6 +232,7 @@ class Game {
         io.in(this.id).emit("renderScoreTable", this.playersDTO);
     }
 
+    // Start new round and send countdown to players. Only called in "game" mode
     async countdown(io) {
         this._rounds++;
         // Send round number to clients
@@ -232,7 +243,7 @@ class Game {
         this.updates.clear();
         this.players.forEach((player) => {
             player.resetState();
-            player.isMoving = true;
+            player.isMoving = true; // Means that we want to draw a dot before the countdown starts
             this.updates.set(player.userId, player.playerDTO());
         });
         // Initialize countdown
@@ -247,19 +258,21 @@ class Game {
         }, 1000);
     }
 
+    // Sync client with server every other second
     timeToSync(player) {
         return (player.path.length / 60) % this.syncTime === 0;
     }
 
+    // Start game / round with interval that constantly updates the players
     startGame(io) {
         clearInterval(this.interval);
         io.in(this.id).emit("renderScoreTable", this.playersDTO);
         this.interval = setInterval(() => {
-            // Update all players
-            this.updateAll(io);
+            this.updateAll(io); // Update all players
             // Emit the batched updates at a fixed interval
-            let updatedPlayers = Array.from(this.updates.values());
+            let updatedPlayers = Array.from(this.updates.values()); // Turn updated player map values into an array
             if (updatedPlayers.length) {
+                // If any updates send it to the client
                 io.in(this.id).emit("updatePosition", updatedPlayers);
                 this.updates.clear(); // Clear updates for next interval
             } else if (this.mode === "warmUp") {
@@ -272,6 +285,7 @@ class Game {
         }, 1000 / 60);
     }
 
+    // Whenever round finishes update scoreboard and reset current score to 0
     roundFinish(io) {
         console.log("Round finished");
         let highestLeaderboardScore = {
@@ -308,7 +322,7 @@ class Game {
             highestRoundScore.color,
             this._rounds
         );
-        // Need to reset the roundscore at the end because of inheritance
+        // Need to reset the roundscore at the end because we are using shallow copies
         this.players.forEach((player) => {
             player.roundScore = 0;
         });
@@ -324,6 +338,7 @@ class Game {
     }
 }
 
+// Genereate the data transfer object that abstracts any irrelevant information for the client
 function generateDTO(state) {
     let obj = {};
     obj.userId = state.userId;
@@ -344,6 +359,7 @@ function generateDTO(state) {
     return obj;
 }
 
+// Generate player instance
 function generatePlayer(user, players) {
     let canvas = { width: 1000, height: 1000 };
     return new Player(
@@ -359,6 +375,7 @@ function generatePlayer(user, players) {
     );
 }
 
+// Used to check if two objects are equal (can't just use equality operator)
 function areObjectsEqual(obj1, obj2) {
     const obj1Keys = Object.keys(obj1);
     const obj2Keys = Object.keys(obj2);
@@ -376,6 +393,7 @@ function areObjectsEqual(obj1, obj2) {
     return true;
 }
 
+// Get the specific color of a line. Needs to be different for every player
 function getColor(players) {
     const playerColors = [
         "#32BEFF",
@@ -441,9 +459,10 @@ class Player {
         return generateDTO(this);
     }
 
+    // Update the current player position, check for collision and make jumps
     update(players) {
         if (!this.isMoving) this.isMoving = true;
-        this.jumping();
+        this.jumping(); //
         // Update direction based on keyState
         if (this.keyState.ArrowLeft > this.keyState.ArrowRight) {
             this.direction -= this.turnSpeed;
@@ -533,6 +552,7 @@ class Player {
         }
     }
 
+    // Check if the player should jump
     jumping() {
         if (this.isFlying || this.isJumping) {
             this.AccJumpFrames++;
@@ -550,6 +570,7 @@ class Player {
         }
     }
 
+    // Start or stop the jump
     toggleJump() {
         if (this.isFlying) this.isFlying = !this.isFlying;
         else {
