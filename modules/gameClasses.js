@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require("uuid");
 const { updateScores } = require("./database.js");
 
 const LINE_WIDTH = 10;
-const MAX_SCORE = 20;
+const MAX_SCORE = 10;
 const CELL_SIZE = LINE_WIDTH * 2;
 
 // Class for keeping all logic related to running games.
